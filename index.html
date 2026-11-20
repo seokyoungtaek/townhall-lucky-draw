@@ -1709,63 +1709,70 @@
         }
 
         // -----------------------------
-        // 5. GAME 1: 3D CLAW + LONG CHASE-CAM TUNNEL ROLL (BUG FIXED!)
+        // 5. GAME 1: UPGRADED 3D CLAW MACHINE (TALL CHUTE + REAL DROP PHYSICS + CLEAR PIPE ROLL!)
         // -----------------------------
-        const BOX = { width: 9.2, height: 9.6, depth: 2.8, clawMinX: -3.65, clawMaxX: 3.75, chuteX: -3.65, clawTopY: 8.15, clawBottomY: 1.85 };
+        const BOX = { width: 9.2, height: 9.6, depth: 2.8, clawMinX: -3.55, clawMaxX: 3.75, chuteX: -3.55, chuteTopY: 4.6, clawTopY: 8.15, clawBottomY: 1.85 };
         let scene, camera, renderer, world, clock, capPhysMat, wallPhysMat;
         let capsules = [], bedInstMesh = null, bedRingInstMesh = null, bedFloorBody = null, bokehParticles = null, interiorRefs = {};
-        let clawCarriageMesh, clawGroup, aimBeamMesh, cableSegments = [], clawProngs = [];
-        let tunnelGroup = null, tunnelBallMesh = null, tunnelLight = null;
+        let clawCarriageMesh, clawGroup, aimBeamMesh, clawSpotCone = null, cableSegments = [], clawProngs = [];
+        let chuteRimMesh = null, chuteChevrons = [];
+        let tunnelGroup = null, tunnelBallMesh = null, tunnelFlapPivot = null;
+        let chuteDropState = { vx: 0, vy: 0, rx: 0, rz: 0, passedRing: false, bounceCount: 0 };
         const CABLE_SEG_COUNT = 8;
-        const clawPos = { x: 0.6, y: BOX.clawTopY, z: 0.0 };
-        let clawPrevX = 0.6, clawVelX = 0, clawSwayAngle = 0, clawSwayVel = 0, prongJiggleAngle = 0, prongJiggleVel = 0, clawOpenAngle = 0.52, targetClawOpenAngle = 0.52;
+        const clawPos = { x: 0.8, y: BOX.clawTopY, z: 0.0 };
+        let clawPrevX = 0.8, clawVelX = 0, clawSwayAngle = 0, clawSwayVel = 0, prongJiggleAngle = 0, prongJiggleVel = 0, clawOpenAngle = 0.52, targetClawOpenAngle = 0.52;
 
         function init3D() {
             const container = document.getElementById('canvas-container'); clock = new THREE.Clock();
-            scene = new THREE.Scene(); scene.background = new THREE.Color(0x0b1536); scene.fog = new THREE.FogExp2(0x0b1536, 0.012);
-            camera = new THREE.PerspectiveCamera(42, Math.max(1,container.clientWidth)/Math.max(1,container.clientHeight), 0.1, 90);
+            scene = new THREE.Scene(); scene.background = new THREE.Color(0x0b1536); scene.fog = new THREE.FogExp2(0x0b1536, 0.011);
+            camera = new THREE.PerspectiveCamera(42, Math.max(1, container.clientWidth) / Math.max(1, container.clientHeight), 0.1, 100);
             updateFixedCamera(container.clientWidth || 500, container.clientHeight || 600);
             renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(container.clientWidth || 500, container.clientHeight || 600);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.8));
-            renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.25;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.26;
             container.appendChild(renderer.domElement);
 
-            scene.add(new THREE.HemisphereLight(0xe0f2fe, 0x0f172a, 1.2));
-            const dl = new THREE.DirectionalLight(0xffffff, 1.2); dl.position.set(3.2,11.5,8.5); scene.add(dl);
-            const cf = new THREE.PointLight(0x38bdf8, 0.9, 24); cf.position.set(-4,6,6.5); scene.add(cf);
-            const rp = new THREE.PointLight(0xf43f5e, 0.85, 18); rp.position.set(4.5,3.2,3.5); scene.add(rp);
+            scene.add(new THREE.HemisphereLight(0xe0f2fe, 0x0f172a, 1.25));
+            const dl = new THREE.DirectionalLight(0xffffff, 1.25); dl.position.set(3.2, 11.5, 8.5); scene.add(dl);
+            const cf = new THREE.PointLight(0x38bdf8, 0.95, 24); cf.position.set(-4, 6.5, 6.5); scene.add(cf);
+            const rp = new THREE.PointLight(0xf43f5e, 0.88, 18); rp.position.set(4.5, 3.2, 3.5); scene.add(rp);
             interiorRefs.rimLight = rp;
 
             world = new CANNON.World(); world.gravity.set(0, -19, 0); world.broadphase = new CANNON.NaiveBroadphase(); world.solver.iterations = 10;
             capPhysMat = new CANNON.Material('capsule'); wallPhysMat = new CANNON.Material('wall');
-            world.addContactMaterial(new CANNON.ContactMaterial(capPhysMat, wallPhysMat, { friction: 0.3, restitution: 0.2 }));
-            world.addContactMaterial(new CANNON.ContactMaterial(capPhysMat, capPhysMat, { friction: 0.25, restitution: 0.22 }));
+            world.addContactMaterial(new CANNON.ContactMaterial(capPhysMat, wallPhysMat, { friction: 0.32, restitution: 0.18 }));
+            world.addContactMaterial(new CANNON.ContactMaterial(capPhysMat, capPhysMat, { friction: 0.26, restitution: 0.2 }));
 
-            buildOriginalInteriorAndChute(); buildLongExitTunnel(); buildPrismClaw();
-            applyThemeSettings(); spawnHybridCapsules(getActiveGameSettings().capsuleCount);
+            buildOriginalInteriorAndChute();
+            buildLongExitTunnel();
+            buildPrismClaw();
+            applyThemeSettings();
+            spawnHybridCapsules(getActiveGameSettings().capsuleCount);
             window.addEventListener('resize', onResize);
             animate();
         }
 
         function updateFixedCamera(w, h) {
             if (!camera) return;
-            const aspect = Math.max(0.42, (w||500)/Math.max(1,h||600));
-            camera.aspect = aspect; camera.position.set(0, 4.75, Math.max(14.3, 12.7/aspect)); camera.lookAt(0, 4.55, 0); camera.updateProjectionMatrix();
+            const aspect = Math.max(0.42, (w || 500) / Math.max(1, h || 600));
+            camera.aspect = aspect; camera.position.set(0, 4.75, Math.max(14.3, 12.7 / aspect)); camera.lookAt(0, 4.55, 0); camera.updateProjectionMatrix();
         }
+
         function createBackWallTexture(key = 'midnight_prism') {
             const th = INTERIOR_THEMES[key] || INTERIOR_THEMES.midnight_prism;
             const cvs = document.createElement('canvas'); cvs.width = 512; cvs.height = 512; const ctx = cvs.getContext('2d');
-            const g = ctx.createRadialGradient(256,150,30,256,256,420); g.addColorStop(0,th.gradTop); g.addColorStop(0.55,th.gradMid); g.addColorStop(1,th.gradBot);
-            ctx.fillStyle = g; ctx.fillRect(0,0,512,512);
+            const g = ctx.createRadialGradient(256, 150, 30, 256, 256, 420); g.addColorStop(0, th.gradTop); g.addColorStop(0.55, th.gradMid); g.addColorStop(1, th.gradBot);
+            ctx.fillStyle = g; ctx.fillRect(0, 0, 512, 512);
             ctx.strokeStyle = 'rgba(125,211,252,0.14)'; ctx.lineWidth = 2;
-            for (let x=-512;x<1024;x+=64) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x+256,512); ctx.stroke(); }
-            for (let y=64;y<512;y+=64) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(512,y); ctx.stroke(); }
+            for (let x = -512; x < 1024; x += 64) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x + 256, 512); ctx.stroke(); }
+            for (let y = 64; y < 512; y += 64) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(512, y); ctx.stroke(); }
             const tex = new THREE.CanvasTexture(cvs); tex.needsUpdate = true; return tex;
         }
+
         function applyThemeSettings() {
             const gs = getActiveGameSettings(), shell = document.getElementById('kiosk-shell');
-            shell.classList.remove('theme-frame-prism','theme-frame-gold','theme-frame-emerald','theme-frame-crimson');
+            shell.classList.remove('theme-frame-prism', 'theme-frame-gold', 'theme-frame-emerald', 'theme-frame-crimson');
             shell.classList.add('theme-frame-' + (gs.frameTheme || 'prism'));
             if (!scene || !interiorRefs.backMat) return;
             const key = gs.interiorTheme || 'midnight_prism', th = INTERIOR_THEMES[key] || INTERIOR_THEMES.midnight_prism;
@@ -1777,75 +1784,188 @@
             interiorRefs.ledMat.color.setHex(th.led);
             if (interiorRefs.rimLight) interiorRefs.rimLight.color.setHex(th.rim);
         }
+
         function buildOriginalInteriorAndChute() {
-            const hw = BOX.width/2, hd = BOX.depth/2, h = BOX.height;
+            const hw = BOX.width / 2, hd = BOX.depth / 2, h = BOX.height;
             const backMat = new THREE.MeshStandardMaterial({ map: createBackWallTexture(getActiveGameSettings().interiorTheme), roughness: 0.5, metalness: 0.15 });
             const sideMat = new THREE.MeshStandardMaterial({ color: 0x111f4d, roughness: 0.45, metalness: 0.2 });
             const floorMat = new THREE.MeshStandardMaterial({ color: 0x0b1330, roughness: 0.35, metalness: 0.3 });
             const ceilMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.6 });
-            const backWall = new THREE.Mesh(new THREE.PlaneGeometry(BOX.width,h), backMat); backWall.position.set(0,h/2,-hd); scene.add(backWall);
-            const floor = new THREE.Mesh(new THREE.PlaneGeometry(BOX.width,BOX.depth), floorMat); floor.rotation.x = -Math.PI/2; scene.add(floor);
-            const gridMat = new THREE.LineBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.32 });
-            for (let x=-hw;x<=hw+0.01;x+=1.15) scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(x,0.015,-hd), new THREE.Vector3(x,0.015,hd)]), gridMat));
-            const ceiling = new THREE.Mesh(new THREE.PlaneGeometry(BOX.width,BOX.depth), ceilMat); ceiling.rotation.x = Math.PI/2; ceiling.position.set(0,h,0); scene.add(ceiling);
-            const rail = new THREE.Mesh(new THREE.BoxGeometry(BOX.width-0.4,0.22,0.32), new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.85, roughness: 0.2 })); rail.position.set(0,h-0.14,0); scene.add(rail);
-            const lw = new THREE.Mesh(new THREE.PlaneGeometry(BOX.depth,h), sideMat); lw.rotation.y = Math.PI/2; lw.position.set(-hw,h/2,0); scene.add(lw);
-            const rw = new THREE.Mesh(new THREE.PlaneGeometry(BOX.depth,h), sideMat); rw.rotation.y = -Math.PI/2; rw.position.set(hw,h/2,0); scene.add(rw);
-            const ledMat = new THREE.MeshBasicMaterial({ color: 0x00d2ff }); const ledGeo = new THREE.CylinderGeometry(0.06,0.06,h-0.2,8);
-            [[-hw+0.08,-hd+0.08],[hw-0.08,-hd+0.08]].forEach(([lx,lz]) => { const l = new THREE.Mesh(ledGeo, ledMat); l.position.set(lx,h/2,lz); scene.add(l); });
 
-            // Left Prize Drop Chute
-            const cg = new THREE.Group(); cg.position.set(BOX.chuteX, 1.3, 0.15);
-            const div = new THREE.Mesh(new THREE.BoxGeometry(0.14,2.7,BOX.depth-0.2), new THREE.MeshPhysicalMaterial({ color:0x38bdf8, transparent:true, opacity:0.24, roughness:0.08, side:THREE.DoubleSide }));
-            div.position.set(0.95, 0, -0.15); cg.add(div);
-            const rim = new THREE.Mesh(new THREE.TorusGeometry(0.88,0.065,10,28), new THREE.MeshBasicMaterial({ color: 0xfbbf24 })); rim.rotation.x = Math.PI/2; rim.position.set(0,1.35,0); cg.add(rim);
-            const pit = new THREE.Mesh(new THREE.CircleGeometry(0.84,24), new THREE.MeshBasicMaterial({ color: 0x020617 })); pit.rotation.x = -Math.PI/2; pit.position.set(0,-1.26,0); cg.add(pit);
+            const backWall = new THREE.Mesh(new THREE.PlaneGeometry(BOX.width, h), backMat); backWall.position.set(0, h / 2, -hd); scene.add(backWall);
+            const floor = new THREE.Mesh(new THREE.PlaneGeometry(BOX.width, BOX.depth), floorMat); floor.rotation.x = -Math.PI / 2; scene.add(floor);
+            const gridMat = new THREE.LineBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.32 });
+            for (let x = -hw; x <= hw + 0.01; x += 1.15) scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(x, 0.015, -hd), new THREE.Vector3(x, 0.015, hd)]), gridMat));
+            const ceiling = new THREE.Mesh(new THREE.PlaneGeometry(BOX.width, BOX.depth), ceilMat); ceiling.rotation.x = Math.PI / 2; ceiling.position.set(0, h, 0); scene.add(ceiling);
+
+            // Upgraded Dual Overhead Gantry Rails
+            const railMat = new THREE.MeshStandardMaterial({ color: 0xcbd5e1, metalness: 0.85, roughness: 0.2 });
+            [-0.22, 0.22].forEach(rz => {
+                const r = new THREE.Mesh(new THREE.BoxGeometry(BOX.width - 0.3, 0.16, 0.12), railMat);
+                r.position.set(0, h - 0.16, rz); scene.add(r);
+            });
+
+            const lw = new THREE.Mesh(new THREE.PlaneGeometry(BOX.depth, h), sideMat); lw.rotation.y = Math.PI / 2; lw.position.set(-hw, h / 2, 0); scene.add(lw);
+            const rw = new THREE.Mesh(new THREE.PlaneGeometry(BOX.depth, h), sideMat); rw.rotation.y = -Math.PI / 2; rw.position.set(hw, h / 2, 0); scene.add(rw);
+            const ledMat = new THREE.MeshBasicMaterial({ color: 0x00d2ff }); const ledGeo = new THREE.CylinderGeometry(0.06, 0.06, h - 0.2, 8);
+            [[-hw + 0.08, -hd + 0.08], [hw - 0.08, -hd + 0.08]].forEach(([lx, lz]) => { const l = new THREE.Mesh(ledGeo, ledMat); l.position.set(lx, h / 2, lz); scene.add(l); });
+
+            // ★ TALL HIGH-BARRIER LEFT PRIZE DROP CHUTE TOWER (y = 0 ~ 4.6, Prevents any capsule spilling!)
+            const chuteH = BOX.chuteTopY; // 4.6 units tall!
+            const cg = new THREE.Group();
+            cg.position.set(BOX.chuteX, 0, 0);
+
+            // Tall transparent acrylic divider shield separating prize mound from chute
+            const acrylicMat = new THREE.MeshPhysicalMaterial({ color: 0x7dd3fc, transparent: true, opacity: 0.22, roughness: 0.06, metalness: 0.12, clearcoat: 1.0, side: THREE.DoubleSide });
+            const divider = new THREE.Mesh(new THREE.BoxGeometry(0.14, chuteH, BOX.depth - 0.15), acrylicMat);
+            divider.position.set(1.05, chuteH / 2, 0); cg.add(divider);
+
+            // Front clear glass panel of the drop chute tower
+            const frontShield = new THREE.Mesh(new THREE.PlaneGeometry(2.05, chuteH), new THREE.MeshPhysicalMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.14, roughness: 0.05, side: THREE.DoubleSide }));
+            frontShield.position.set(0, chuteH / 2, hd - 0.08); cg.add(frontShield);
+
+            // Glowing Gold Top Rail & Corner Pillars framing the tall chute
+            const pillarMat = new THREE.MeshStandardMaterial({ color: 0xfbbf24, metalness: 0.75, roughness: 0.2 });
+            const topBar = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.14, BOX.depth - 0.1), pillarMat);
+            topBar.position.set(1.05, chuteH, 0); cg.add(topBar);
+            const frontPillar = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.055, chuteH, 10), pillarMat);
+            frontPillar.position.set(1.05, chuteH / 2, hd - 0.12); cg.add(frontPillar);
+
+            // Internal Clear Cylindrical Drop Tube visible inside the left tower!
+            const shaftTube = new THREE.Mesh(new THREE.CylinderGeometry(0.86, 0.86, chuteH - 0.25, 24, 1, true), new THREE.MeshPhysicalMaterial({ color: 0xbae6fd, transparent: true, opacity: 0.16, roughness: 0.08, side: THREE.DoubleSide }));
+            shaftTube.position.set(0, chuteH / 2 - 0.1, 0); cg.add(shaftTube);
+
+            // Glowing Sensor Funnel Ring at Top of Chute (y = 4.6) — Flashes bright green/white when capsule drops in!
+            chuteRimMesh = new THREE.Mesh(new THREE.TorusGeometry(0.9, 0.085, 12, 30), new THREE.MeshBasicMaterial({ color: 0xfbbf24 }));
+            chuteRimMesh.rotation.x = Math.PI / 2; chuteRimMesh.position.set(0, chuteH, 0); cg.add(chuteRimMesh);
+
+            // Animated Downward Chevron Guide Lights inside Chute Tower (▼ ▼ ▼)
+            chuteChevrons = [];
+            [3.6, 2.5, 1.4].forEach((cy, idx) => {
+                const chev = new THREE.Mesh(new THREE.ConeGeometry(0.22, 0.3, 3), new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.55 }));
+                chev.rotation.x = Math.PI; // Point down ▼
+                chev.position.set(0, cy, hd - 0.25);
+                chev.userData.phase = idx * 1.1;
+                cg.add(chev); chuteChevrons.push(chev);
+            });
+
+            // Dark Drop Pit Floor leading to the internal roller pipe
+            const pit = new THREE.Mesh(new THREE.CircleGeometry(0.86, 24), new THREE.MeshBasicMaterial({ color: 0x020617 }));
+            pit.rotation.x = -Math.PI / 2; pit.position.set(0, 0.03, 0); cg.add(pit);
             scene.add(cg);
 
             interiorRefs = { ...interiorRefs, backMat, sideMat, floorMat, ceilMat, gridMat, ledMat };
-            const pPos = new Float32Array(36*3);
-            for (let i=0;i<36;i++) { pPos[i*3]=(Math.random()-0.5)*(BOX.width-0.8); pPos[i*3+1]=1+Math.random()*(h-2); pPos[i*3+2]=(Math.random()-0.5)*(BOX.depth-0.6); }
-            const pGeo = new THREE.BufferGeometry(); pGeo.setAttribute('position', new THREE.BufferAttribute(pPos,3));
-            bokehParticles = new THREE.Points(pGeo, new THREE.PointsMaterial({ color:0x7dd3fc, size:0.12, transparent:true, opacity:0.6 })); scene.add(bokehParticles);
+            const pPos = new Float32Array(36 * 3);
+            for (let i = 0; i < 36; i++) { pPos[i * 3] = (Math.random() - 0.5) * (BOX.width - 0.8); pPos[i * 3 + 1] = 1 + Math.random() * (h - 2); pPos[i * 3 + 2] = (Math.random() - 0.5) * (BOX.depth - 0.6); }
+            const pGeo = new THREE.BufferGeometry(); pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+            bokehParticles = new THREE.Points(pGeo, new THREE.PointsMaterial({ color: 0x7dd3fc, size: 0.12, transparent: true, opacity: 0.6 })); scene.add(bokehParticles);
 
+            // Static Physics Walls — TALL Chute Divider (top at y = 5.2) prevents capsules from EVER spilling in!
             const t = 0.4;
-            [[hw+t,t,hd+t,0,-t,0],[t,h/2+t,hd+t,-hw-t,h/2,0],[t,h/2+t,hd+t,hw+t,h/2,0],[hw+t,h/2+t,t,0,h/2,-hd-t],[hw+t,h/2+t,t,0,h/2,hd+t],[0.12,1.45,hd,-2.65,1.4,0]]
-                .forEach(([hx,hy,hz,x,y,z]) => { const b = new CANNON.Body({ mass:0, material:wallPhysMat, shape:new CANNON.Box(new CANNON.Vec3(hx,hy,hz)) }); b.position.set(x,y,z); world.addBody(b); });
+            [
+                [hw + t, t, hd + t, 0, -t, 0],
+                [t, h / 2 + t, hd + t, -hw - t, h / 2, 0],
+                [t, h / 2 + t, hd + t, hw + t, h / 2, 0],
+                [hw + t, h / 2 + t, t, 0, h / 2, -hd - t],
+                [hw + t, h / 2 + t, t, 0, h / 2, hd + t],
+                [0.14, 2.65, hd + 0.1, -2.50, 2.55, 0] // ★ High physical barrier at x = -2.50 (top at y = 5.2)!
+            ].forEach(([hx, hy, hz, x, y, z]) => {
+                const b = new CANNON.Body({ mass: 0, material: wallPhysMat, shape: new CANNON.Box(new CANNON.Vec3(hx, hy, hz)) });
+                b.position.set(x, y, z); world.addBody(b);
+            });
         }
 
-        // ★ LONG 24-UNIT SLOPING EXIT TUNNEL FOR EXCITING CHASE-CAM CAPSULE ROLL (~2.8s!)
+        /**
+         * ★ REALISTIC INTERNAL CLEAR-ACRYLIC DISPENSER TUBE CHAMBER (Y = -42)
+         * Side-3/4 Tracking Camera watches the capsule drop from the vertical pipe,
+         * bounce onto chrome rails, roll visibly INSIDE the clear glass tube,
+         * push open the hinged acrylic exit flap, and enter the bright Pickup Light Box!
+         */
         function buildLongExitTunnel() {
-            tunnelGroup = new THREE.Group(); tunnelGroup.position.set(0, -40, 0); scene.add(tunnelGroup);
-            const len = 24, slope = 0.14;
-            // Sloping acrylic floor track + side neon rails
-            const track = new THREE.Mesh(new THREE.PlaneGeometry(3.8, len), new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.25, metalness: 0.65 }));
-            track.rotation.x = -Math.PI/2 + slope; track.position.set(0, -1.55 - (len/2)*slope, -len/2 + 1);
-            tunnelGroup.add(track);
+            tunnelGroup = new THREE.Group();
+            tunnelGroup.position.set(0, -42, 0);
+            scene.add(tunnelGroup);
 
-            const tube = new THREE.Mesh(new THREE.CylinderGeometry(2.1, 2.2, len, 24, 1, true), new THREE.MeshStandardMaterial({ color: 0x0b1536, roughness: 0.3, metalness: 0.5, side: THREE.BackSide }));
-            tube.rotation.x = Math.PI/2 - slope; tube.position.set(0, -0.3 - (len/2)*slope, -len/2 + 1);
-            tunnelGroup.add(tube);
+            // Bright Showcase Lighting inside the machine's delivery chamber
+            const chLight1 = new THREE.PointLight(0x38bdf8, 2.2, 26); chLight1.position.set(-4, 4, 5); tunnelGroup.add(chLight1);
+            const chLight2 = new THREE.PointLight(0xffffff, 2.0, 26); chLight2.position.set(0, 3, 7); tunnelGroup.add(chLight2);
+            const chLight3 = new THREE.PointLight(0xfef08a, 3.6, 22); chLight3.position.set(6.5, -0.5, 2.5); tunnelGroup.add(chLight3);
 
-            const ringMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8 });
-            const goldRailMat = new THREE.MeshBasicMaterial({ color: 0xfbbf24 });
-            for (let z = 0; z >= -len + 2; z -= 2.4) {
-                const r = new THREE.Mesh(new THREE.TorusGeometry(2.02, 0.055, 8, 28), (Math.round(z) % 2 === 0 ? ringMat : goldRailMat));
-                r.position.set(0, -0.3 + z * slope, z);
-                tunnelGroup.add(r);
+            // Machine Internal Back Wall (sleek dark metallic panel with glowing neon lines)
+            const wall = new THREE.Mesh(new THREE.PlaneGeometry(24, 12), new THREE.MeshStandardMaterial({ color: 0x0d1736, roughness: 0.4, metalness: 0.45 }));
+            wall.position.set(0, 0, -2.2); tunnelGroup.add(wall);
+
+            const stripeMat = new THREE.MeshBasicMaterial({ color: 0x1e40af, transparent: true, opacity: 0.45 });
+            for (let sx = -9; sx <= 9; sx += 2.2) {
+                const bar = new THREE.Mesh(new THREE.PlaneGeometry(0.12, 11), stripeMat);
+                bar.position.set(sx, 0, -2.15); bar.rotation.z = -0.25; tunnelGroup.add(bar);
             }
 
-            // Radiant Golden Light Exit Portal at far end (z = -22.5)
-            const portal = new THREE.Mesh(new THREE.CircleGeometry(2.2, 32), new THREE.MeshBasicMaterial({ color: 0xfef08a }));
-            portal.position.set(0, -0.3 - 22.5 * slope, -22.5); tunnelGroup.add(portal);
-            const exitLight = new THREE.PointLight(0xfef08a, 5.0, 26); exitLight.position.set(0, -0.2 - 20 * slope, -20); tunnelGroup.add(exitLight);
+            // 1) Left Vertical Acrylic Entry Pipe (where the capsule drops in from the chute above!)
+            const glassTubeMat = new THREE.MeshPhysicalMaterial({
+                color: 0xe0f2fe, transparent: true, opacity: 0.25, roughness: 0.05, metalness: 0.1, clearcoat: 1.0, side: THREE.DoubleSide
+            });
+            const entryPipe = new THREE.Mesh(new THREE.CylinderGeometry(1.15, 1.15, 4.2, 24, 1, true), glassTubeMat);
+            entryPipe.position.set(-5.6, 3.4, 0); tunnelGroup.add(entryPipe);
 
-            // Rolling capsule + attached follow light so capsule gleams brightly as camera chases it!
+            // 2) Main Sloped Clear Acrylic Roller Tube (Left x=-5.8 -> Right x=+5.4, angle -13deg)
+            const trackLen = 12.2, slopeAngle = -0.22; // Slopes downward left-to-right!
+            const tubePivot = new THREE.Group();
+            tubePivot.position.set(-0.2, 0.15, 0);
+            tubePivot.rotation.z = slopeAngle;
+            tunnelGroup.add(tubePivot);
+
+            // Outer transparent glass cylinder housing (you clearly see the ball rolling INSIDE!)
+            const mainGlassTube = new THREE.Mesh(new THREE.CylinderGeometry(1.22, 1.22, trackLen, 28, 1, true), glassTubeMat);
+            mainGlassTube.rotation.z = Math.PI / 2;
+            tubePivot.add(mainGlassTube);
+
+            // Dual Chrome Rolling Rails inside the bottom of the glass tube
+            const chromeMat = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, metalness: 0.92, roughness: 0.12 });
+            [-0.42, 0.42].forEach(rz => {
+                const rail = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, trackLen + 0.4, 10), chromeMat);
+                rail.rotation.z = Math.PI / 2; rail.position.set(0, -0.78, rz);
+                tubePivot.add(rail);
+            });
+
+            // Glowing Cyan/Gold Flange Clamp Rings along the Clear Pipe (Gives huge sense of rolling speed!)
+            const clampCyan = new THREE.MeshStandardMaterial({ color: 0x0ea5e9, emissive: 0x0284c7, emissiveIntensity: 0.6, metalness: 0.7, roughness: 0.25 });
+            const clampGold = new THREE.MeshStandardMaterial({ color: 0xfbbf24, emissive: 0xb45309, emissiveIntensity: 0.5, metalness: 0.8, roughness: 0.2 });
+            for (let rx = -5.4; rx <= 5.4; rx += 1.8) {
+                const ring = new THREE.Mesh(new THREE.TorusGeometry(1.26, 0.075, 10, 28), (Math.round(rx) % 2 === 0 ? clampGold : clampCyan));
+                ring.rotation.y = Math.PI / 2; ring.position.set(rx, 0, 0);
+                tubePivot.add(ring);
+            }
+
+            // 3) Hinged Transparent Acrylic Exit Flap Door at the Right Exit of the Tube!
+            tunnelFlapPivot = new THREE.Group();
+            tunnelFlapPivot.position.set(trackLen / 2, 1.15, 0);
+            const flapMesh = new THREE.Mesh(
+                new THREE.BoxGeometry(0.12, 2.25, 2.1),
+                new THREE.MeshPhysicalMaterial({ color: 0x7dd3fc, transparent: true, opacity: 0.42, roughness: 0.08, clearcoat: 1.0 })
+            );
+            flapMesh.position.set(0, -1.12, 0);
+            const flapRim = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.12, 2.15), new THREE.MeshBasicMaterial({ color: 0xfbbf24 }));
+            flapRim.position.set(0, -2.22, 0);
+            tunnelFlapPivot.add(flapMesh); tunnelFlapPivot.add(flapRim);
+            tubePivot.add(tunnelFlapPivot);
+
+            // 4) Glowing Golden Pickup Light Box at the Right End (x = +6.8)
+            const pickupBox = new THREE.Mesh(new THREE.BoxGeometry(2.6, 3.0, 2.8), new THREE.MeshBasicMaterial({ color: 0xfef08a, transparent: true, opacity: 0.85 }));
+            pickupBox.position.set(7.1, -1.35, 0); tunnelGroup.add(pickupBox);
+
+            // 5) Two-Tone Realistic Rolling Gachapon Capsule inside the Clear Tube!
             tunnelBallMesh = new THREE.Group();
-            const outer = new THREE.Mesh(new THREE.SphereGeometry(0.68, 24, 18), new THREE.MeshPhysicalMaterial({ color: 0xfbbf24, roughness: 0.1, metalness: 0.45, clearcoat: 1.0 }));
-            const band = new THREE.Mesh(new THREE.TorusGeometry(0.69, 0.075, 10, 24), new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.85, roughness: 0.18 }));
-            tunnelLight = new THREE.PointLight(0xffffff, 2.2, 8); tunnelLight.position.set(0, 1.4, 1.5);
-            tunnelBallMesh.add(outer); tunnelBallMesh.add(band); tunnelBallMesh.add(tunnelLight);
-            tunnelBallMesh.userData.outerMat = outer.material;
+            const r = 0.66;
+            const lowerMat = new THREE.MeshPhysicalMaterial({ color: 0xfbbf24, roughness: 0.12, metalness: 0.4, clearcoat: 1.0 });
+            const upperGlassMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, transparent: true, opacity: 0.42, roughness: 0.05, clearcoat: 1.0 });
+            const lowerHemi = new THREE.Mesh(new THREE.SphereGeometry(r, 24, 14, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), lowerMat);
+            const upperHemi = new THREE.Mesh(new THREE.SphereGeometry(r, 24, 14, 0, Math.PI * 2, 0, Math.PI / 2), upperGlassMat);
+            const seamBand = new THREE.Mesh(new THREE.TorusGeometry(r * 1.01, 0.065, 10, 26), chromeMat);
+            seamBand.rotation.x = Math.PI / 2;
+            const innerGem = new THREE.Mesh(new THREE.OctahedronGeometry(0.32), new THREE.MeshBasicMaterial({ color: 0xfef08a }));
+            tunnelBallMesh.add(lowerHemi, upperHemi, seamBand, innerGem);
+            tunnelBallMesh.userData.lowerMat = lowerMat;
             tunnelGroup.add(tunnelBallMesh);
         }
 
@@ -1854,23 +1974,37 @@
             const accentMat = new THREE.MeshStandardMaterial({ color: 0xf43f5e, roughness: 0.3, metalness: 0.45 });
             const silverMat = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, roughness: 0.18, metalness: 0.9 });
             const cableMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.28, metalness: 0.65 });
-            clawCarriageMesh = new THREE.Mesh(new THREE.BoxGeometry(0.74,0.3,0.48), accentMat); clawCarriageMesh.position.set(clawPos.x, BOX.height-0.16, 0); scene.add(clawCarriageMesh);
-            cableSegments = []; const sg = new THREE.CylinderGeometry(0.068,0.068,1,10);
-            for (let i=0;i<CABLE_SEG_COUNT;i++) { const s = new THREE.Mesh(sg, cableMat); scene.add(s); cableSegments.push(s); }
+
+            clawCarriageMesh = new THREE.Mesh(new THREE.BoxGeometry(0.78, 0.32, 0.54), accentMat);
+            clawCarriageMesh.position.set(clawPos.x, BOX.height - 0.16, 0); scene.add(clawCarriageMesh);
+
+            cableSegments = []; const sg = new THREE.CylinderGeometry(0.068, 0.068, 1, 10);
+            for (let i = 0; i < CABLE_SEG_COUNT; i++) { const s = new THREE.Mesh(sg, cableMat); scene.add(s); cableSegments.push(s); }
+
             clawGroup = new THREE.Group(); scene.add(clawGroup);
-            clawGroup.add(new THREE.Mesh(new THREE.CylinderGeometry(0.38,0.34,0.86,20), headMat));
-            const tc = new THREE.Mesh(new THREE.CylinderGeometry(0.24,0.34,0.22,16), accentMat); tc.position.y = 0.52; clawGroup.add(tc);
-            const br = new THREE.Mesh(new THREE.TorusGeometry(0.39,0.065,10,24), new THREE.MeshBasicMaterial({ color: 0xfbbf24 })); br.rotation.x = Math.PI/2; br.position.y = -0.44; clawGroup.add(br);
+            clawGroup.add(new THREE.Mesh(new THREE.CylinderGeometry(0.38, 0.34, 0.86, 20), headMat));
+            const tc = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.34, 0.22, 16), accentMat); tc.position.y = 0.52; clawGroup.add(tc);
+            const br = new THREE.Mesh(new THREE.TorusGeometry(0.39, 0.065, 10, 24), new THREE.MeshBasicMaterial({ color: 0xfbbf24 })); br.rotation.x = Math.PI / 2; br.position.y = -0.44; clawGroup.add(br);
+
+            // Subtle Targeting Spotlight Cone under Claw Head
+            clawSpotCone = new THREE.Mesh(
+                new THREE.ConeGeometry(1.15, 5.2, 20, 1, true),
+                new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.075, side: THREE.DoubleSide, depthWrite: false })
+            );
+            clawSpotCone.position.y = -3.1;
+            clawGroup.add(clawSpotCone);
+
             clawProngs = [];
-            for (let i=0;i<3;i++) {
-                const angle = (i*Math.PI*2)/3 + Math.PI/6, root = new THREE.Group(); root.rotation.y = angle; clawGroup.add(root);
-                const pivot = new THREE.Group(); pivot.position.set(0.26,-0.48,0); root.add(pivot);
-                const up = new THREE.Mesh(new THREE.BoxGeometry(0.1,0.82,0.12), silverMat); up.position.set(0.2,-0.35,0); up.rotation.z = 0.52; pivot.add(up);
-                const lo = new THREE.Mesh(new THREE.BoxGeometry(0.095,0.78,0.12), silverMat); lo.position.set(0.24,-0.98,0); lo.rotation.z = -0.46; pivot.add(lo);
-                const tip = new THREE.Mesh(new THREE.SphereGeometry(0.085,10,10), accentMat); tip.position.set(0.08,-1.32,0); pivot.add(tip);
+            for (let i = 0; i < 3; i++) {
+                const angle = (i * Math.PI * 2) / 3 + Math.PI / 6, root = new THREE.Group(); root.rotation.y = angle; clawGroup.add(root);
+                const pivot = new THREE.Group(); pivot.position.set(0.26, -0.48, 0); root.add(pivot);
+                const up = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.82, 0.12), silverMat); up.position.set(0.2, -0.35, 0); up.rotation.z = 0.52; pivot.add(up);
+                const lo = new THREE.Mesh(new THREE.BoxGeometry(0.095, 0.78, 0.12), silverMat); lo.position.set(0.24, -0.98, 0); lo.rotation.z = -0.46; pivot.add(lo);
+                const tip = new THREE.Mesh(new THREE.SphereGeometry(0.085, 10, 10), accentMat); tip.position.set(0.08, -1.32, 0); pivot.add(tip);
                 clawProngs.push({ pivot, angle });
             }
-            aimBeamMesh = new THREE.Mesh(new THREE.PlaneGeometry(0.12,BOX.height), new THREE.MeshBasicMaterial({ color:0x38bdf8, transparent:true, opacity:0.16, depthWrite:false })); scene.add(aimBeamMesh);
+            aimBeamMesh = new THREE.Mesh(new THREE.PlaneGeometry(0.1, BOX.height), new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.14, depthWrite: false }));
+            scene.add(aimBeamMesh);
         }
 
         function spawnHybridCapsules(totalCount) {
@@ -1884,45 +2018,61 @@
             const activeCount = Math.min(total, 36), bedCount = Math.max(0, total - activeCount);
             const bedHeight = bedCount > 0 ? Math.min(2.15, 0.55 + (bedCount / 360) * 1.65) : 0;
 
+            // 1) Dense Bottom Bed strictly inside x ∈ [-1.95, +4.10] (NEVER spills into left chute!)
             if (bedCount > 0) {
                 const capR = 0.42;
-                bedInstMesh = new THREE.InstancedMesh(new THREE.SphereGeometry(capR,12,10), new THREE.MeshStandardMaterial({ roughness:0.18, metalness:0.35 }), bedCount);
-                bedRingInstMesh = new THREE.InstancedMesh(new THREE.TorusGeometry(capR*1.01,0.04,6,14), new THREE.MeshBasicMaterial({ color:0xffffff }), bedCount);
+                bedInstMesh = new THREE.InstancedMesh(new THREE.SphereGeometry(capR, 12, 10), new THREE.MeshStandardMaterial({ roughness: 0.18, metalness: 0.35 }), bedCount);
+                bedRingInstMesh = new THREE.InstancedMesh(new THREE.TorusGeometry(capR * 1.01, 0.04, 6, 14), new THREE.MeshBasicMaterial({ color: 0xffffff }), bedCount);
                 const dummy = new THREE.Object3D(), col = new THREE.Color();
-                for (let i=0;i<bedCount;i++) {
-                    dummy.position.set(-2.1+Math.random()*6.2, capR+Math.random()*Math.max(0.2,bedHeight-capR*0.6), (Math.random()-0.5)*2.0);
-                    dummy.rotation.set(Math.random()*3.14, Math.random()*3.14, Math.random()*3.14); dummy.updateMatrix();
+                for (let i = 0; i < bedCount; i++) {
+                    dummy.position.set(-1.95 + Math.random() * 6.05, capR + Math.random() * Math.max(0.2, bedHeight - capR * 0.6), (Math.random() - 0.5) * 2.0);
+                    dummy.rotation.set(Math.random() * 3.14, Math.random() * 3.14, Math.random() * 3.14); dummy.updateMatrix();
                     bedInstMesh.setMatrixAt(i, dummy.matrix); bedRingInstMesh.setMatrixAt(i, dummy.matrix);
-                    col.setHex(TIER_COLORS[Math.min(pickWeightedPrizeIndex(), TIER_COLORS.length-1)].hex); bedInstMesh.setColorAt(i, col);
+                    col.setHex(TIER_COLORS[Math.min(pickWeightedPrizeIndex(), TIER_COLORS.length - 1)].hex); bedInstMesh.setColorAt(i, col);
                 }
                 bedInstMesh.instanceMatrix.needsUpdate = true; bedInstMesh.instanceColor.needsUpdate = true; bedRingInstMesh.instanceMatrix.needsUpdate = true;
                 scene.add(bedInstMesh); scene.add(bedRingInstMesh);
-                bedFloorBody = new CANNON.Body({ mass:0, material:wallPhysMat, shape:new CANNON.Box(new CANNON.Vec3(3.6, bedHeight/2, 1.4)) });
-                bedFloorBody.position.set(1.05, bedHeight/2, 0); world.addBody(bedFloorBody);
+                bedFloorBody = new CANNON.Body({ mass: 0, material: wallPhysMat, shape: new CANNON.Box(new CANNON.Vec3(3.5, bedHeight / 2, 1.4)) });
+                bedFloorBody.position.set(1.15, bedHeight / 2, 0); world.addBody(bedFloorBody);
             }
 
-            const radius = 0.58, ringMat = new THREE.MeshStandardMaterial({ color:0xffffff, roughness:0.2, metalness:0.85 });
-            for (let i=0;i<activeCount;i++) {
-                let prizeIdx = (i<2) ? 0 : (i<5 ? Math.min(1, CONFIG.prizes.length-1) : pickWeightedPrizeIndex());
-                prizeIdx = Math.min(prizeIdx, CONFIG.prizes.length-1);
-                const tc = TIER_COLORS[Math.min(prizeIdx, TIER_COLORS.length-1)];
+            // 2) Top Interactive Two-Tone Gachapon Capsules strictly inside x ∈ [-1.80, +3.90] (Zero spill into chute!)
+            const radius = 0.56, ringMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.18, metalness: 0.88 });
+            const clearDomeMat = new THREE.MeshPhysicalMaterial({ color: 0xf0f9ff, transparent: true, opacity: 0.38, roughness: 0.05, clearcoat: 1.0 });
+            for (let i = 0; i < activeCount; i++) {
+                let prizeIdx = (i < 2) ? 0 : (i < 5 ? Math.min(1, CONFIG.prizes.length - 1) : pickWeightedPrizeIndex());
+                prizeIdx = Math.min(prizeIdx, CONFIG.prizes.length - 1);
+                const tc = TIER_COLORS[Math.min(prizeIdx, TIER_COLORS.length - 1)];
+
                 const group = new THREE.Group();
-                group.add(new THREE.Mesh(new THREE.SphereGeometry(radius,18,14), new THREE.MeshPhysicalMaterial({ color:tc.hex, emissive:tc.emissive, emissiveIntensity:prizeIdx===0?0.45:0.18, roughness:0.12, metalness:prizeIdx===0?0.65:0.25, clearcoat:1, transparent:true, opacity:0.86 })));
-                const band = new THREE.Mesh(new THREE.TorusGeometry(radius*1.01,0.055,8,22), ringMat); band.rotation.x = Math.PI/2; group.add(band);
-                if (prizeIdx <= 1) group.add(new THREE.Mesh(new THREE.OctahedronGeometry(radius*0.44), new THREE.MeshBasicMaterial({ color: prizeIdx===0?0xfef08a:0xe9d5ff })));
-                const sx = -2.0 + (i%7)*0.98 + (Math.random()-0.5)*0.25, sy = bedHeight + 0.75 + Math.floor(i/7)*1.05, sz = (Math.random()-0.5)*1.1;
-                group.position.set(sx,sy,sz); scene.add(group);
-                const body = new CANNON.Body({ mass:1.1, material:capPhysMat, shape:new CANNON.Sphere(radius), linearDamping:0.38, angularDamping:0.42 });
-                body.position.set(sx,sy,sz); world.addBody(body);
-                capsules.push({ mesh:group, body, radius, prizeIdx, colorHex:tc.hex });
+                const lowerMat = new THREE.MeshPhysicalMaterial({
+                    color: tc.hex, emissive: tc.emissive, emissiveIntensity: prizeIdx === 0 ? 0.5 : 0.2,
+                    roughness: 0.12, metalness: prizeIdx === 0 ? 0.65 : 0.28, clearcoat: 1.0
+                });
+                // Realistic Two-Tone Gachapon: Colored bottom half + Crystal clear top half + Chrome ring + Glowing inner prize core!
+                group.add(new THREE.Mesh(new THREE.SphereGeometry(radius, 18, 12, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), lowerMat));
+                group.add(new THREE.Mesh(new THREE.SphereGeometry(radius, 18, 12, 0, Math.PI * 2, 0, Math.PI / 2), clearDomeMat));
+                const band = new THREE.Mesh(new THREE.TorusGeometry(radius * 1.01, 0.052, 8, 22), ringMat); band.rotation.x = Math.PI / 2; group.add(band);
+                const core = new THREE.Mesh(new THREE.OctahedronGeometry(radius * (prizeIdx <= 1 ? 0.46 : 0.32)), new THREE.MeshBasicMaterial({ color: prizeIdx === 0 ? 0xfef08a : tc.hex }));
+                group.add(core);
+
+                // Safe spawning grid well right of the x=-2.50 tall barrier!
+                const colIdx = i % 6, rowIdx = Math.floor(i / 6);
+                const sx = -1.75 + colIdx * 1.08 + (Math.random() - 0.5) * 0.2;
+                const sy = bedHeight + 0.65 + rowIdx * 0.92;
+                const sz = (Math.random() - 0.5) * 1.0;
+                group.position.set(sx, sy, sz); scene.add(group);
+                const body = new CANNON.Body({ mass: 1.1, material: capPhysMat, shape: new CANNON.Sphere(radius), linearDamping: 0.42, angularDamping: 0.45 });
+                body.position.set(sx, sy, sz); world.addBody(body);
+                capsules.push({ mesh: group, body, radius, prizeIdx, colorHex: tc.hex });
             }
             updateStageHUD();
         }
 
         function pickWeightedPrizeIndex() {
-            const totalW = CONFIG.prizes.reduce((s,p) => s + Math.max(1, Number(p.weight)||1), 0);
+            const totalW = CONFIG.prizes.reduce((s, p) => s + Math.max(1, Number(p.weight) || 1), 0);
             let r = Math.random() * totalW;
-            for (let i=0;i<CONFIG.prizes.length;i++) { r -= Math.max(1, Number(CONFIG.prizes[i].weight)||1); if (r <= 0) return i; }
+            for (let i = 0; i < CONFIG.prizes.length; i++) { r -= Math.max(1, Number(CONFIG.prizes[i].weight) || 1); if (r <= 0) return i; }
             return CONFIG.prizes.length - 1;
         }
         function resetTurnTimer() { STATE.turnTimeLeft = 30.0; STATE.turnTimerActive = STATE.playsLeft > 0; updateTimerUI(); }
@@ -1942,7 +2092,7 @@
             const vx = (clawPos.x - clawPrevX) / safeDt, ax = (vx - clawVelX) / safeDt;
             clawPrevX = clawPos.x; clawVelX = vx;
             const pivotY = BOX.height - 0.16, dropDist = Math.max(1.0, pivotY - clawPos.y);
-            const stiff = 20 / Math.max(0.9, Math.sqrt(dropDist * 0.55)), damp = (STATE.phase==='DROPPING'||STATE.phase==='LIFTING') ? 4.4 : 2.15;
+            const stiff = 20 / Math.max(0.9, Math.sqrt(dropDist * 0.55)), damp = (STATE.phase === 'DROPPING' || STATE.phase === 'LIFTING') ? 4.4 : 2.15;
             const imp = Math.max(-34, Math.min(34, ax)) * 0.048, drag = -vx * 0.065;
             clawSwayVel += (-stiff * (clawSwayAngle - drag) - damp * clawSwayVel - imp) * safeDt;
             clawSwayAngle = Math.max(-0.34, Math.min(0.34, clawSwayAngle + clawSwayVel * safeDt));
@@ -1950,51 +2100,100 @@
             prongJiggleAngle = Math.max(-0.24, Math.min(0.24, prongJiggleAngle + prongJiggleVel * safeDt));
 
             clawCarriageMesh.position.set(clawPos.x, pivotY, 0);
-            const headX = clawPos.x + Math.sin(clawSwayAngle)*dropDist, headY = pivotY - Math.cos(clawSwayAngle)*dropDist;
+            const headX = clawPos.x + Math.sin(clawSwayAngle) * dropDist, headY = pivotY - Math.cos(clawSwayAngle) * dropDist;
             clawGroup.position.set(headX, headY, 0); clawGroup.rotation.z = clawSwayAngle * 1.25;
 
-            const p0x = clawPos.x, p0y = pivotY-0.1, p2x = headX, p2y = headY+0.52, p1x = (p0x+p2x)*0.5 - clawSwayVel*0.14 - vx*0.05, p1y = (p0y+p2y)*0.5;
-            for (let i=0;i<CABLE_SEG_COUNT;i++) {
-                const tA = i/CABLE_SEG_COUNT, tB = (i+1)/CABLE_SEG_COUNT;
-                const ax2 = (1-tA)**2*p0x+2*(1-tA)*tA*p1x+tA**2*p2x, ay2 = (1-tA)**2*p0y+2*(1-tA)*tA*p1y+tA**2*p2y;
-                const bx2 = (1-tB)**2*p0x+2*(1-tB)*tB*p1x+tB**2*p2x, by2 = (1-tB)**2*p0y+2*(1-tB)*tB*p1y+tB**2*p2y;
-                const s = cableSegments[i]; s.position.set((ax2+bx2)*0.5,(ay2+by2)*0.5,0);
-                s.scale.set(1, Math.max(0.05, Math.hypot(bx2-ax2, by2-ay2))*1.08, 1); s.rotation.z = Math.atan2(by2-ay2, bx2-ax2) - Math.PI/2;
+            const p0x = clawPos.x, p0y = pivotY - 0.1, p2x = headX, p2y = headY + 0.52, p1x = (p0x + p2x) * 0.5 - clawSwayVel * 0.14 - vx * 0.05, p1y = (p0y + p2y) * 0.5;
+            for (let i = 0; i < CABLE_SEG_COUNT; i++) {
+                const tA = i / CABLE_SEG_COUNT, tB = (i + 1) / CABLE_SEG_COUNT;
+                const ax2 = (1 - tA) ** 2 * p0x + 2 * (1 - tA) * tA * p1x + tA ** 2 * p2x, ay2 = (1 - tA) ** 2 * p0y + 2 * (1 - tA) * tA * p1y + tA ** 2 * p2y;
+                const bx2 = (1 - tB) ** 2 * p0x + 2 * (1 - tB) * tB * p1x + tB ** 2 * p2x, by2 = (1 - tB) ** 2 * p0y + 2 * (1 - tB) * tB * p1y + tB ** 2 * p2y;
+                const s = cableSegments[i]; s.position.set((ax2 + bx2) * 0.5, (ay2 + by2) * 0.5, 0);
+                s.scale.set(1, Math.max(0.05, Math.hypot(bx2 - ax2, by2 - ay2)) * 1.08, 1); s.rotation.z = Math.atan2(by2 - ay2, bx2 - ax2) - Math.PI / 2;
             }
-            clawOpenAngle += (targetClawOpenAngle - clawOpenAngle)*0.18;
-            const jw = (STATE.phase==='CLOSING'||STATE.grabbedCapsule) ? 0.18 : 1.0;
-            clawProngs.forEach(({pivot, angle}) => { pivot.rotation.z = clawOpenAngle + prongJiggleAngle * Math.cos(angle) * jw; });
-            aimBeamMesh.position.set(headX, BOX.height/2, -0.1); aimBeamMesh.visible = (STATE.phase === 'IDLE');
+            clawOpenAngle += (targetClawOpenAngle - clawOpenAngle) * 0.18;
+            const jw = (STATE.phase === 'CLOSING' || STATE.grabbedCapsule) ? 0.18 : 1.0;
+            clawProngs.forEach(({ pivot, angle }) => { pivot.rotation.z = clawOpenAngle + prongJiggleAngle * Math.cos(angle) * jw; });
+            aimBeamMesh.position.set(headX, BOX.height / 2, -0.1); aimBeamMesh.visible = (STATE.phase === 'IDLE');
+            if (clawSpotCone) clawSpotCone.visible = (STATE.phase === 'IDLE' || STATE.phase === 'POWER_GAUGE');
+
+            // Animate downward chute chevron lights (▼ ▼ ▼)
+            const nowSec = performance.now() * 0.004;
+            chuteChevrons.forEach(c => { c.material.opacity = 0.25 + 0.65 * Math.max(0, Math.sin(nowSec - c.userData.phase)); });
         }
 
-        // ★ SMOOTH CHASE-CAM FOLLOWING THE ROLLING CAPSULE!
+        /**
+         * ★ SIDE-3/4 CLEAR-TUBE ROLLING TRACK ANIMATION!
+         * Stage 1 (0.00~0.22): Drops from vertical left entry pipe & bounces twice on chrome rails!
+         * Stage 2 (0.22~0.82): Rolls left-to-right visibly INSIDE the clear glass tube & neon rings!
+         * Stage 3 (0.82~1.00): Pushes open the hinged acrylic exit flap into the Golden Pickup Box!
+         */
+        let lastTubeBounceStage = 0;
         function updateChuteCameraRoll(dt) {
             if (!tunnelBallMesh || !camera) return;
-            const p = Math.min(1, STATE.chuteRollProgress), slope = 0.14;
-            const ballZ = 0.6 - p * 22.0;
-            const bounce = Math.abs(Math.sin(p * Math.PI * 5.0)) * 0.28 * (1 - p * 0.7);
-            const ballY = -40 - 0.85 + ballZ * slope + bounce;
-            const ballX = Math.sin(p * Math.PI * 3.0) * 0.35 * (1 - p);
-            tunnelBallMesh.position.set(ballX, ballY, ballZ);
-            tunnelBallMesh.rotation.x -= dt * 11.0;
-            tunnelBallMesh.rotation.z += dt * 2.8;
+            const p = Math.min(1, STATE.chuteRollProgress);
+            const slope = -0.22; // matches tubePivot.rotation.z
+            let bx = -5.6, by = 3.5;
 
-            // Chase camera right behind & slightly above the rolling ball so you clearly watch it roll into the light!
-            camera.position.set(ballX * 0.45, ballY + 1.15, ballZ + 4.3);
-            camera.lookAt(ballX * 0.6, ballY - 0.2, ballZ - 4.5);
+            if (p < 0.22) {
+                // Stage 1: Drop vertically from entry pipe & 2 realistic damped bounces onto the sloped rail!
+                const t = p / 0.22;
+                const railY = 0.15 + (-5.6 + 0.2) * Math.tan(slope) - 0.1; // ~ +1.25
+                if (t < 0.52) {
+                    const u = t / 0.52;
+                    by = 4.4 - (4.4 - railY) * (u * u);
+                    bx = -5.6;
+                } else if (t < 0.78) {
+                    if (lastTubeBounceStage < 1) { lastTubeBounceStage = 1; SoundFX.mono('D5', '32n'); }
+                    const u = (t - 0.52) / 0.26;
+                    bx = -5.6 + u * 0.7;
+                    by = railY + Math.sin(u * Math.PI) * 0.62 - u * 0.14;
+                } else {
+                    if (lastTubeBounceStage < 2) { lastTubeBounceStage = 2; SoundFX.mono('E5', '32n'); }
+                    const u = (t - 0.78) / 0.22;
+                    bx = -4.9 + u * 0.5;
+                    by = (railY - 0.14) + Math.sin(u * Math.PI) * 0.24 - u * 0.11;
+                }
+                tunnelBallMesh.rotation.z -= dt * 4.5;
+                if (tunnelFlapPivot) tunnelFlapPivot.rotation.z = 0;
+            } else {
+                // Stage 2 & 3: Smooth accelerating roll down the clear acrylic tube!
+                const u = (p - 0.22) / 0.78;
+                const eased = u * u * 0.35 + u * 0.65;
+                bx = -4.4 + eased * 11.4; // -4.4 -> +7.0
+                const trackBaseY = 0.15 + (bx + 0.2) * Math.tan(slope) - 0.1;
+                const microBump = Math.abs(Math.sin(bx * 2.2)) * 0.04;
+                by = trackBaseY + microBump;
+                tunnelBallMesh.rotation.z -= dt * (9.5 + u * 7.5); // Exact visible clockwise rolling spin!
+                tunnelBallMesh.rotation.x += dt * 1.4;
+
+                // Push hinged acrylic exit flap open as capsule passes x = +4.9!
+                if (tunnelFlapPivot) {
+                    const push = Math.max(0, Math.min(1, (bx - 4.7) / 1.3));
+                    tunnelFlapPivot.rotation.z = push * 1.28;
+                }
+            }
+
+            tunnelBallMesh.position.set(bx, by, 0);
+
+            // Side-3/4 Tracking Camera smoothly follows the capsule left-to-right INSIDE the clear tube!
+            const camX = Math.max(-3.6, Math.min(4.2, bx * 0.68));
+            const camY = -42 + by * 0.45 + 1.05;
+            camera.position.set(camX, camY, 8.6);
+            camera.lookAt(bx * 0.85, -42 + by * 0.88, 0);
 
             const flash = document.getElementById('chute-flash');
-            flash.style.opacity = p > 0.82 ? String(Math.min(1, (p - 0.82) / 0.18)) : '0';
+            flash.style.opacity = p > 0.86 ? String(Math.min(1, (p - 0.86) / 0.14)) : '0';
         }
 
         function handleClawAction() {
             if (STATE.phase === 'POWER_GAUGE') {
                 const p = STATE.gaugePos; let tier = 'NORMAL', bonus = 0;
-                if (p>=41 && p<=59) { tier='SUPER'; bonus=25; } else if (p>=24 && p<=76) { tier='GOOD'; bonus=12; }
+                if (p >= 41 && p <= 59) { tier = 'SUPER'; bonus = 25; } else if (p >= 24 && p <= 76) { tier = 'GOOD'; bonus = 12; }
                 STATE.gaugeBonus = bonus; SoundFX.gaugeHit(tier);
                 document.getElementById('power-gauge-overlay').classList.add('hidden'); document.getElementById('power-gauge-overlay').classList.remove('flex');
                 document.getElementById('btn-green-grab').classList.remove('gauge-active');
-                showToast(tier==='SUPER'?'🔥 SUPER ZONE! 확률 +25% UP!!':(tier==='GOOD'?'✨ GOOD ZONE! 확률 +12% UP!':'기본 확률로 집게 하강!'), tier==='SUPER'?'super':'info');
+                showToast(tier === 'SUPER' ? '🔥 SUPER ZONE! 확률 +25% UP!!' : (tier === 'GOOD' ? '✨ GOOD ZONE! 확률 +12% UP!' : '기본 확률로 집게 하강!'), tier === 'SUPER' ? 'super' : 'info');
                 STATE.playsLeft = Math.max(0, STATE.playsLeft - 1); STATE.turnTimerActive = false; updateStageHUD(); SoundFX.drop();
                 STATE.phase = 'DROPPING'; STATE.grabbedCapsule = null; STATE.willSlip = false; STATE.slipTriggered = false; targetClawOpenAngle = 0.72;
                 ServerSync.broadcastFastClaw(); ServerSync.broadcastState();
@@ -2016,16 +2215,17 @@
 
             if (STATE.phase === 'CHUTE_ROLL') {
                 if (APP.isHost) {
-                    STATE.chuteRollProgress += dt * 0.36; // ★ Longer ~2.8s dramatic chase-cam tunnel roll!
+                    STATE.chuteRollProgress += dt * 0.34; // ~2.95s smooth clear-tube rolling sequence!
                     ServerSync.broadcastFastClaw();
                     if (STATE.chuteRollProgress >= 1.0) {
                         document.getElementById('chute-cam-banner').classList.add('hidden');
                         document.getElementById('chute-flash').style.opacity = '0';
+                        if (chuteRimMesh) chuteRimMesh.material.color.setHex(0xfbbf24);
                         const c = document.getElementById('canvas-container');
                         updateFixedCamera(c.clientWidth, c.clientHeight);
                         const prize = CONFIG.prizes[STATE.grabbedPrizeIdx] || CONFIG.prizes[0];
                         triggerWinFlow(prize, '캡슐뽑기');
-                        return; // ★ BUG FIXED: Return immediately so updateChuteCameraRoll does NOT overwrite the restored camera!
+                        return;
                     }
                 }
                 updateChuteCameraRoll(dt);
@@ -2063,10 +2263,11 @@
                 else if (STATE.redSweepHeld) {
                     clawPos.x += STATE.sweepDirection * 3.9 * dt;
                     if (clawPos.x >= BOX.clawMaxX) { clawPos.x = BOX.clawMaxX; STATE.sweepDirection = -1; }
-                    else if (clawPos.x <= -2.1) { clawPos.x = -2.1; STATE.sweepDirection = 1; }
+                    else if (clawPos.x <= -1.9) { clawPos.x = -1.9; STATE.sweepDirection = 1; }
                     activeMotion = true;
                 }
-                clawPos.x = Math.max(-2.2, Math.min(BOX.clawMaxX, clawPos.x));
+                // Keep manual aiming cleanly over the capsule zone right of the tall chute barrier
+                clawPos.x = Math.max(-1.95, Math.min(BOX.clawMaxX, clawPos.x));
                 if (activeMotion) SoundFX.tick();
                 targetClawOpenAngle = 0.52;
             } else if (STATE.phase === 'POWER_GAUGE') {
@@ -2086,40 +2287,68 @@
                 clawPos.y += 4.0 * dt; activeMotion = true;
                 if (STATE.grabbedCapsule && STATE.willSlip && !STATE.slipTriggered && clawPos.y >= STATE.slipY) {
                     STATE.slipTriggered = true; const cap = STATE.grabbedCapsule; cap.body.collisionResponse = true;
-                    cap.body.velocity.set((Math.random()-0.5)*1.8, -1.6, 0); STATE.grabbedCapsule = null;
+                    cap.body.velocity.set((Math.random() - 0.5) * 1.8, -1.6, 0); STATE.grabbedCapsule = null;
                     SoundFX.fail(); showToast('앗! 캡슐이 아쉽게 미끄러졌어요! 💦', 'warn');
                 }
                 holdGrabbedCapsule();
                 if (clawPos.y >= BOX.clawTopY) {
                     clawPos.y = BOX.clawTopY;
-                    if (STATE.grabbedCapsule) { STATE.phase = 'MOVING_TO_CHUTE'; showToast('🎁 좌측 배출구로 이동 중!!', 'super'); }
+                    if (STATE.grabbedCapsule) { STATE.phase = 'MOVING_TO_CHUTE'; showToast('🎁 좌측 배출구 타워로 이동 중!!', 'super'); }
                     else { SoundFX.setTension(false); STATE.phase = 'IDLE'; SheetAPI.logResult(STATE.currentPlayer, null, '-', '캡슐뽑기'); if (STATE.playsLeft > 0) resetTurnTimer(); ServerSync.broadcastState(); }
                     updateStageHUD();
                 }
             } else if (STATE.phase === 'MOVING_TO_CHUTE') {
-                clawPos.x -= 4.2 * dt; activeMotion = true; holdGrabbedCapsule();
+                clawPos.x -= 4.1 * dt; activeMotion = true; holdGrabbedCapsule();
                 if (clawPos.x <= BOX.chuteX) {
-                    clawPos.x = BOX.chuteX; STATE.phase = 'RELEASING_CHUTE'; STATE.phaseTimer = 0.7; targetClawOpenAngle = 0.78;
+                    clawPos.x = BOX.chuteX; STATE.phase = 'RELEASING_CHUTE'; STATE.phaseTimer = 0.14; targetClawOpenAngle = 0.84;
                     if (STATE.grabbedCapsule) {
                         STATE.grabbedPrizeIdx = STATE.grabbedCapsule.prizeIdx;
-                        tunnelBallMesh.userData.outerMat.color.setHex(STATE.grabbedCapsule.colorHex);
-                        STATE.grabbedCapsule.body.collisionResponse = false; STATE.grabbedCapsule.body.velocity.set(0,-6.5,0);
+                        tunnelBallMesh.userData.lowerMat.color.setHex(STATE.grabbedCapsule.colorHex);
+                        STATE.grabbedCapsule.body.collisionResponse = false;
+                        // Initialize realistic funnel drop physics!
+                        chuteDropState = { vx: (Math.random() - 0.5) * 1.4, vy: -0.5, rx: 3.5, rz: (Math.random() - 0.5) * 5.0, passedRing: false, bounceCount: 0 };
                     }
                     SoundFX.drop();
                 }
             } else if (STATE.phase === 'RELEASING_CHUTE') {
-                STATE.phaseTimer -= dt; activeMotion = true;
-                if (STATE.grabbedCapsule) STATE.grabbedCapsule.body.position.y -= 9.5 * dt;
-                if (STATE.phaseTimer <= 0) {
-                    if (STATE.grabbedCapsule) {
-                        const wc = STATE.grabbedCapsule; STATE.grabbedCapsule = null;
-                        const idx = capsules.indexOf(wc); if (idx !== -1) capsules.splice(idx, 1);
-                        scene.remove(wc.mesh); world.removeBody(wc.body);
+                activeMotion = true;
+                if (STATE.phaseTimer > 0) { STATE.phaseTimer -= dt; }
+                const cap = STATE.grabbedCapsule;
+                if (cap && STATE.phaseTimer <= 0) {
+                    // ★ Real Gravity + Funnel Rim Bounce Physics right down into the tall chute shaft!
+                    chuteDropState.vy -= 26.0 * dt;
+                    cap.body.position.x += chuteDropState.vx * dt;
+                    cap.body.position.y += chuteDropState.vy * dt;
+                    cap.body.position.z *= (1 - Math.min(1, dt * 5));
+                    cap.body.angularVelocity.set(chuteDropState.rx, 1.5, chuteDropState.rz);
+
+                    // Funnel walls gently guide & bounce the capsule right into the center of the clear shaft!
+                    const dx = cap.body.position.x - BOX.chuteX;
+                    const maxOffset = cap.body.position.y > BOX.chuteTopY ? 0.42 : 0.24;
+                    if (Math.abs(dx) > maxOffset) {
+                        cap.body.position.x = BOX.chuteX + Math.sign(dx) * maxOffset;
+                        chuteDropState.vx = -chuteDropState.vx * 0.55 - Math.sign(dx) * 0.6;
+                        if (chuteDropState.bounceCount < 2) { chuteDropState.bounceCount++; SoundFX.mono('B4', '32n'); }
                     }
-                    SoundFX.setTension(false); SoundFX.chuteRoll();
-                    STATE.phase = 'CHUTE_ROLL'; STATE.chuteRollProgress = 0;
-                    document.getElementById('chute-cam-banner').classList.remove('hidden');
-                    ServerSync.broadcastFastClaw(); ServerSync.broadcastState();
+
+                    // Flash glowing chute sensor ring as capsule plops cleanly through y = 4.6!
+                    if (!chuteDropState.passedRing && cap.body.position.y <= BOX.chuteTopY) {
+                        chuteDropState.passedRing = true;
+                        if (chuteRimMesh) chuteRimMesh.material.color.setHex(0x4ade80);
+                        SoundFX.mono('G5', '16n'); SoundFX.mono('C6', '8n', 0.07);
+                        showToast('✨ 골인!! 배출 파이프로 쏙 들어갔습니다!', 'super');
+                    }
+
+                    // Once capsule falls visibly down the clear left chute shaft to y <= 0.65 -> Switch to Clear Pipe Track!
+                    if (cap.body.position.y <= 0.65) {
+                        const idx = capsules.indexOf(cap); if (idx !== -1) capsules.splice(idx, 1);
+                        scene.remove(cap.mesh); world.removeBody(cap.body);
+                        STATE.grabbedCapsule = null;
+                        SoundFX.setTension(false); SoundFX.chuteRoll();
+                        STATE.phase = 'CHUTE_ROLL'; STATE.chuteRollProgress = 0; lastTubeBounceStage = 0;
+                        document.getElementById('chute-cam-banner').classList.remove('hidden');
+                        ServerSync.broadcastFastClaw(); ServerSync.broadcastState();
+                    }
                 }
             }
             if (activeMotion) ServerSync.broadcastFastClaw();
@@ -2135,23 +2364,23 @@
                 }
             }
             if (bestCap && bestOv >= (gs.overlapThreshold || 55) / 100) {
-                STATE.grabbedCapsule = bestCap; bestCap.body.velocity.set(0,0,0); bestCap.body.collisionResponse = false;
+                STATE.grabbedCapsule = bestCap; bestCap.body.velocity.set(0, 0, 0); bestCap.body.collisionResponse = false;
                 if (Math.random() * 100 >= Math.min(100, (gs.winRate ?? 65) + STATE.gaugeBonus)) {
                     STATE.willSlip = true; STATE.slipY = Math.min(BOX.clawTopY - 0.8, clawPos.y + 1.5 + Math.random() * 2.0);
                 }
             } else {
-                if (bestCap && bestOv > 0.12) showToast(`조준 빗나감! (겹침 ${Math.round(bestOv*100)}% / 기준 ${gs.overlapThreshold}%)`, 'warn');
+                if (bestCap && bestOv > 0.12) showToast(`조준 빗나감! (겹침 ${Math.round(bestOv * 100)}% / 기준 ${gs.overlapThreshold}%)`, 'warn');
                 for (const cap of capsules) {
                     const dx = cap.body.position.x - grabX;
-                    if (Math.abs(dx) < 1.25 && Math.abs(cap.body.position.y - grabY) < 1.2) cap.body.applyImpulse(new CANNON.Vec3((dx>=0?1:-1)*2.4, 0.9, 0), cap.body.position);
+                    if (Math.abs(dx) < 1.25 && Math.abs(cap.body.position.y - grabY) < 1.2) cap.body.applyImpulse(new CANNON.Vec3((dx >= 0 ? 1 : -1) * 2.4, 0.9, 0), cap.body.position);
                 }
             }
         }
         function holdGrabbedCapsule() {
             const c = STATE.grabbedCapsule; if (!c) return;
-            c.body.position.x += (getClawHeadWorldX() - c.body.position.x)*0.28;
-            c.body.position.y += ((clawPos.y - 1.0) - c.body.position.y)*0.28;
-            c.body.velocity.set(0,0,0);
+            c.body.position.x += (getClawHeadWorldX() - c.body.position.x) * 0.28;
+            c.body.position.y += ((clawPos.y - 1.0) - c.body.position.y) * 0.28;
+            c.body.velocity.set(0, 0, 0);
         }
 
         // -----------------------------
