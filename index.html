@@ -45,14 +45,18 @@
             box-shadow: 0 40px 100px rgba(0,0,0,0.82), inset 0 2px 14px rgba(255,255,255,0.5), inset 0 -6px 18px rgba(0,0,0,0.28);
             transition: background 0.35s ease, border-color 0.35s ease;
         }
-        .kiosk-shell.theme-frame-ocean_wave { background: radial-gradient(circle at 20% 0%, #67e8f9 0%, #0ea5e9 42%, #0369a1 100%); border: 5px solid #bae6fd; }
-        .kiosk-shell.theme-frame-sky_pastel { background: linear-gradient(160deg, #93c5fd 0%, #fbcfe8 50%, #fde68a 100%); border: 5px solid #ffffff; }
-        .kiosk-shell.theme-frame-sky_pastel #kiosk-main-title,
-        .kiosk-shell.theme-frame-sky_pastel #kiosk-footer-brand { color: #1e293b; text-shadow: none; }
-        .kiosk-shell.theme-frame-park_fresh { background: linear-gradient(165deg, #6ee7b7 0%, #34d399 45%, #fef08a 100%); border: 5px solid #ecfdf5; }
-        .kiosk-shell.theme-frame-park_fresh #kiosk-main-title,
-        .kiosk-shell.theme-frame-park_fresh #kiosk-footer-brand { color: #064e3b; text-shadow: none; }
-        .kiosk-shell.theme-frame-midnight_luxe { background: radial-gradient(circle at 50% 0%, #312e81 0%, #1e1b4b 52%, #0f172a 100%); border: 5px solid #fbbf24; }
+        /* 행사 맞춤 커스텀 2색 + 6종 패턴 프레임 */
+        .kiosk-shell {
+            --fc1: #0ea5e9; --fc2: #0369a1;
+            background: linear-gradient(160deg, var(--fc1) 0%, var(--fc2) 100%);
+            border: 5px solid rgba(255,255,255,0.72);
+        }
+        .kiosk-shell.pat-smooth   { background: radial-gradient(circle at 20% 0%, rgba(255,255,255,0.35), transparent 50%), linear-gradient(160deg, var(--fc1) 0%, var(--fc2) 100%); }
+        .kiosk-shell.pat-stripe   { background: repeating-linear-gradient(-45deg, rgba(255,255,255,0.16) 0 22px, transparent 22px 44px), linear-gradient(160deg, var(--fc1), var(--fc2)); }
+        .kiosk-shell.pat-sunburst { background: repeating-conic-gradient(from 10deg at 50% 48%, rgba(255,255,255,0.18) 0 18deg, transparent 18deg 36deg), linear-gradient(160deg, var(--fc1), var(--fc2)); }
+        .kiosk-shell.pat-dots     { background: radial-gradient(rgba(255,255,255,0.28) 3px, transparent 3.5px) 0 0 / 26px 26px, linear-gradient(160deg, var(--fc1), var(--fc2)); }
+        .kiosk-shell.pat-checker  { background: conic-gradient(rgba(255,255,255,0.12) 90deg, transparent 90deg 180deg, rgba(255,255,255,0.12) 180deg 270deg, transparent 270deg) 0 0 / 34px 34px, linear-gradient(160deg, var(--fc1), var(--fc2)); }
+        .kiosk-shell.pat-diamond  { background: repeating-linear-gradient(45deg, rgba(255,255,255,0.12) 0 2px, transparent 2px 24px), repeating-linear-gradient(-45deg, rgba(255,255,255,0.12) 0 2px, transparent 2px 24px), linear-gradient(160deg, var(--fc1), var(--fc2)); }
 
         .screen-bezel { position: relative; flex: 1; min-height: 0; margin: 10px 0 14px 0; border-radius: 26px; overflow: hidden; border: 5px solid rgba(255,255,255,0.65); box-shadow: inset 0 10px 30px rgba(0,0,0,0.42), 0 12px 28px rgba(0,0,0,0.32); background: #0c4a6e; }
 
@@ -544,11 +548,17 @@
                             <div class="bg-amber-50 p-3 rounded-xl border border-amber-200 space-y-2">
                                 <div class="font-black text-xs text-amber-900">🎨 패턴 프레임 & 3D 테마 (<span class="asrv-badge">1서버</span>)</div>
                                 <select id="admin-frame-theme" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold bg-white">
-                                    <option value="ocean_wave">프레임: 🌊 아쿠아 웨이브 (기본)</option>
-                                    <option value="sky_pastel">프레임: ☁️ 파스텔 스카이</option>
-                                    <option value="park_fresh">프레임: 🌳 공원 프레시 민트</option>
-                                    <option value="midnight_luxe">프레임: 🌌 미드나잇 골드</option>
+                                    <option value="pat-sunburst">패턴: ☀️ 팝 선버스트 (행사 인기)</option>
+                                    <option value="pat-stripe">패턴: 🎪 페스티벌 스트라이프</option>
+                                    <option value="pat-dots">패턴: ✨ 파티 도트</option>
+                                    <option value="pat-checker">패턴: 🏁 모던 체크</option>
+                                    <option value="pat-diamond">패턴: 💎 럭셔리 다이아</option>
+                                    <option value="pat-smooth">패턴: 🌊 심플 그라데이션</option>
                                 </select>
+                                <div class="grid grid-cols-2 gap-1.5">
+                                    <label class="flex items-center justify-between bg-white px-2 py-1 rounded-lg border text-[10px] font-bold"><span>메인색</span><input id="admin-frame-c1" type="color" value="#38bdf8" class="w-6 h-5 border-0 bg-transparent cursor-pointer"></label>
+                                    <label class="flex items-center justify-between bg-white px-2 py-1 rounded-lg border text-[10px] font-bold"><span>포인트색</span><input id="admin-frame-c2" type="color" value="#0369a1" class="w-6 h-5 border-0 bg-transparent cursor-pointer"></label>
+                                </div>
                                 <select id="admin-interior-theme" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold bg-white">
                                     <option value="underwater">3D 공간: 🌊 물속 아쿠아리움 (기본)</option>
                                     <option value="sky">3D 공간: ☁️ 몽글몽글 하늘</option>
@@ -1555,21 +1565,21 @@
         // =====================================================================
         // 5. TALL RECTANGULAR 3D DIORAMA CLAW MACHINE (물속 / 하늘 / 공원 / 갤럭시)
         // =====================================================================
-        const BOX = { width: 8.6, height: 11.4, depth: 5.8, clawMinX: -3.25, clawMaxX: 3.4, clawMinZ: -2.15, clawMaxZ: 2.15, chuteX: -3.15, chuteZ: 1.65, chuteTopY: 4.8, clawTopY: 9.6, clawBottomY: 1.85 };
+        const BOX = { width: 8.8, height: 11.6, depth: 5.6, clawMinX: -3.3, clawMaxX: 3.45, clawMinZ: -2.05, clawMaxZ: 2.05, chuteX: -3.15, chuteZ: 1.55, chuteTopY: 6.2, clawTopY: 9.8, clawBottomY: 1.85 };
         let scene, camera, renderer, world, clock, capPhysMat, wallPhysMat;
-        let capsules = [], bedInstMesh = null, bedRingInstMesh = null, bedFloorBody = null, airParticles = null, interiorRefs = {}, themePropsGroup = null;
+        let capsules = [], bedLowerMesh = null, bedUpperMesh = null, bedCapsData = [], bedFloorBody = null, airParticles = null, interiorRefs = {}, themePropsGroup = null;
         let gantryBeamMesh, clawCarriageMesh, clawGroup, aimBeamMesh, targetRingMesh, cableSegments = [], clawProngs = [];
         let chuteRimMesh = null, chuteChevrons = [], tunnelGroup = null, tunnelBallMesh = null, tunnelFlapPivot = null;
         let chuteDropState = { vx: 0, vy: 0, vz: 0, rx: 0, rz: 0, passedRing: false, bounceCount: 0 };
-        const CABLE_SEG_COUNT = 8, clawPos = { x: 0.8, y: BOX.clawTopY, z: 0.0 };
-        let clawPrevX = 0.8, clawPrevZ = 0.0, clawVelX = 0, clawVelZ = 0, swayX = 0, swayVelX = 0, swayZ = 0, swayVelZ = 0, prongJig = 0, prongJigVel = 0, clawOpenAngle = 0.52, targetClawOpenAngle = 0.52;
+        const CABLE_SEG_COUNT = 8, clawPos = { x: 0.9, y: BOX.clawTopY, z: 0.0 };
+        let clawPrevX = 0.9, clawPrevZ = 0.0, clawVelX = 0, clawVelZ = 0, swayX = 0, swayVelX = 0, swayZ = 0, swayVelZ = 0, prongJig = 0, prongJigVel = 0, clawOpenAngle = 0.52, targetClawOpenAngle = 0.52;
         let currentBedHeight = 0;
+        const _bedDummy = new THREE.Object3D();
 
         function pickPrizeForCapsuleType(isSpecial) {
-            const all = getActivePrizes();
-            const avail = all.filter(p => p.stock === undefined || p.stock > 0);
-            const list = avail.length > 0 ? avail : all;
-            const len = list.length; if (len <= 1) { if (list[0]?.stock > 0) list[0].stock--; return list[0]; }
+            const all = getActivePrizes(), avail = all.filter(p => p.stock === undefined || p.stock > 0);
+            const list = avail.length > 0 ? avail : all, len = list.length;
+            if (len <= 1) { if (list[0]?.stock > 0) list[0].stock--; return list[0]; }
             const r = Math.random() * 100; let idx = len - 1;
             if (isSpecial) { if (r<24) idx=0; else if (r<56) idx=1; else if (r<82) idx=2; else if (r<93) idx=3; else idx=4; }
             else { if (r<3) idx=0; else if (r<12) idx=1; else if (r<36) idx=2; else if (r<68) idx=3; else idx=4; }
@@ -1578,18 +1588,25 @@
             return chosen;
         }
 
+        // ★ 바닥 더미 300개 + 상단 물리 캡슐 전부 공중으로 팡! 튀어 오르는 리얼 에어블로우!
         function triggerAirShake() {
             if (!APP.isHost || APP.activeGame !== 'claw' || STATE.phase !== 'IDLE') return;
             if (STATE.playsLeft <= 0) { showToast('먼저 QR 사번 인증으로 플레이를 시작하세요! 📱', 'warn'); return; }
             if (STATE.airShakeUsed) { showToast('💨 판 띄우기 찬스는 한 게임당 1회만 가능합니다!', 'warn'); return; }
-            STATE.airShakeUsed = true; STATE.bedWaveTimer = 1.05; SoundFX.airShake();
+            STATE.airShakeUsed = true; STATE.bedWaveTimer = 2.1; SoundFX.airShake();
             const shell = document.getElementById('kiosk-shell'); shell.classList.remove('shake-anim'); void shell.offsetWidth; shell.classList.add('shake-anim');
             capsules.forEach(c => {
                 const vy = c.isSpecial ? (19.5 + Math.random()*3.0) : (13.5 + Math.random()*5.0);
-                c.body.velocity.set((Math.random()-0.5)*6.5, vy, (Math.random()-0.5)*5.5);
+                c.body.velocity.set((Math.random()-0.5)*6.5, vy, (Math.random()-0.5)*5.0);
                 c.body.angularVelocity.set((Math.random()-0.5)*14, (Math.random()-0.5)*14, (Math.random()-0.5)*14);
             });
-            updateAirShakeBtn(); showToast('💨 강력 에어블로우 발동!! 캡슐이 공중으로 솟구칩니다!!', 'super'); ServerSync.broadcastState();
+            // ★ 바닥에 깔린 모든 더미 캡슐도 개별 속도로 점프 & 회전!
+            bedCapsData.forEach(b => {
+                b.vy = 7.5 + Math.random() * 9.5;
+                b.vrx = (Math.random() - 0.5) * 10;
+                b.vry = (Math.random() - 0.5) * 10;
+            });
+            updateAirShakeBtn(); showToast('💨 강력 에어블로우 발동!! 전체 캡슐이 공중으로 솟구칩니다!!', 'super'); ServerSync.broadcastState();
         }
         function updateAirShakeBtn() {
             const b = document.getElementById('btn-air-shake'); if (!b) return;
@@ -1598,23 +1615,24 @@
 
         function init3D() {
             const c = document.getElementById('canvas-container'); clock = new THREE.Clock();
-            scene = new THREE.Scene(); scene.background = new THREE.Color(0x064e78); scene.fog = new THREE.FogExp2(0x064e78, 0.008);
-            camera = new THREE.PerspectiveCamera(42, Math.max(1,c.clientWidth)/Math.max(1,c.clientHeight), 0.1, 110);
+            scene = new THREE.Scene(); scene.background = new THREE.Color(0x064e78); scene.fog = new THREE.FogExp2(0x064e78, 0.007);
+            // ★ 삐뚤어짐 없는 스튜디오 망원 화각(34°) 적용!
+            camera = new THREE.PerspectiveCamera(34, Math.max(1,c.clientWidth)/Math.max(1,c.clientHeight), 0.1, 110);
             updateFixedCamera(c.clientWidth||600, c.clientHeight||850);
             renderer = new THREE.WebGLRenderer({ antialias: true }); renderer.setSize(c.clientWidth||600, c.clientHeight||850);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.8));
             renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-            renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.2;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.18;
             c.appendChild(renderer.domElement);
 
-            scene.add(new THREE.HemisphereLight(0xe0f2fe, 0x0b1224, 0.95));
-            const dl = new THREE.DirectionalLight(0xffffff, 1.45); dl.position.set(4.5, 15, 9.5);
+            scene.add(new THREE.HemisphereLight(0xf0f9ff, 0x0b1630, 0.92));
+            const dl = new THREE.DirectionalLight(0xffffff, 1.45); dl.position.set(4.5, 16, 10);
             dl.castShadow = true; dl.shadow.mapSize.set(1024, 1024);
-            dl.shadow.camera.near = 2; dl.shadow.camera.far = 32;
-            dl.shadow.camera.left = -6; dl.shadow.camera.right = 6; dl.shadow.camera.top = 12; dl.shadow.camera.bottom = -2;
+            dl.shadow.camera.near = 2; dl.shadow.camera.far = 34;
+            dl.shadow.camera.left = -6; dl.shadow.camera.right = 6; dl.shadow.camera.top = 13; dl.shadow.camera.bottom = -2;
             scene.add(dl);
-            const cf = new THREE.PointLight(0x7dd3fc, 0.9, 28); cf.position.set(-4, 8, 7); scene.add(cf);
-            const rp = new THREE.PointLight(0xfde047, 0.75, 24); rp.position.set(5, 5, 5); scene.add(rp); interiorRefs.rimLight = rp;
+            const cf = new THREE.PointLight(0x7dd3fc, 0.85, 28); cf.position.set(-4, 8, 7); scene.add(cf);
+            const rp = new THREE.PointLight(0xfde047, 0.72, 24); rp.position.set(5, 5, 5); scene.add(rp); interiorRefs.rimLight = rp;
 
             world = new CANNON.World(); world.gravity.set(0, -22, 0); world.broadphase = new CANNON.NaiveBroadphase(); world.solver.iterations = 12;
             capPhysMat = new CANNON.Material('capsule'); wallPhysMat = new CANNON.Material('wall');
@@ -1627,13 +1645,14 @@
             animate();
         }
 
+        // ★ 좌우 벽이 삐뚤어지지 않고 반듯하면서 깊이감이 선명한 건축적 3/4 구도!
         function updateFixedCamera(w, h) {
             if (!camera) return;
             const aspect = Math.max(0.45, (w||600)/Math.max(1,h||850));
             camera.aspect = aspect;
-            const zDist = Math.max(15.6, 12.2 / aspect);
-            camera.position.set(0, 8.2, zDist);
-            camera.lookAt(0, 4.9, 0.0);
+            const zDist = Math.max(20.2, 15.8 / aspect);
+            camera.position.set(0, 6.7, zDist);
+            camera.lookAt(0, 5.55, 0.0);
             camera.updateProjectionMatrix();
         }
 
@@ -1643,39 +1662,29 @@
             const g = ctx.createLinearGradient(0, 0, 0, 768);
             g.addColorStop(0, th.top); g.addColorStop(0.55, th.mid); g.addColorStop(1, th.bot);
             ctx.fillStyle = g; ctx.fillRect(0, 0, 512, 768);
-
             if (key === 'underwater') {
                 for (let i = 0; i < 6; i++) {
-                    const bg = ctx.createLinearGradient(80 + i*75, 0, 30 + i*85, 620);
+                    const bg = ctx.createLinearGradient(80+i*75, 0, 30+i*85, 620);
                     bg.addColorStop(0, 'rgba(224,242,254,0.28)'); bg.addColorStop(1, 'rgba(224,242,254,0)');
-                    ctx.fillStyle = bg; ctx.beginPath();
-                    ctx.moveTo(60+i*75, 0); ctx.lineTo(115+i*75, 0); ctx.lineTo(65+i*90, 660); ctx.lineTo(-10+i*90, 660); ctx.fill();
+                    ctx.fillStyle = bg; ctx.beginPath(); ctx.moveTo(60+i*75,0); ctx.lineTo(115+i*75,0); ctx.lineTo(65+i*90,660); ctx.lineTo(-10+i*90,660); ctx.fill();
                 }
-                for (let i = 0; i < 28; i++) {
-                    ctx.fillStyle = `rgba(255,255,255,${0.08 + Math.random()*0.16})`;
-                    ctx.beginPath(); ctx.arc(Math.random()*512, Math.random()*720, 4+Math.random()*16, 0, Math.PI*2); ctx.fill();
-                }
+                for (let i=0;i<26;i++) { ctx.fillStyle = `rgba(255,255,255,${0.08+Math.random()*0.15})`; ctx.beginPath(); ctx.arc(Math.random()*512, Math.random()*720, 4+Math.random()*16, 0, Math.PI*2); ctx.fill(); }
             } else if (key === 'sky') {
-                const sun = ctx.createRadialGradient(380, 140, 15, 380, 140, 220);
-                sun.addColorStop(0, 'rgba(255,251,235,0.85)'); sun.addColorStop(1, 'rgba(255,251,235,0)');
-                ctx.fillStyle = sun; ctx.fillRect(0, 0, 512, 500);
-                ctx.fillStyle = 'rgba(255,255,255,0.45)';
-                [[110,220,55],[160,210,65],[210,225,48],[340,360,60],[400,350,70],[455,365,50]].forEach(([x,y,r]) => { ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill(); });
+                const sun = ctx.createRadialGradient(380,140,15,380,140,220); sun.addColorStop(0,'rgba(255,251,235,0.85)'); sun.addColorStop(1,'rgba(255,251,235,0)');
+                ctx.fillStyle = sun; ctx.fillRect(0,0,512,500);
+                ctx.fillStyle = 'rgba(255,255,255,0.45)'; [[110,220,55],[160,210,65],[210,225,48],[340,360,60],[400,350,70],[455,365,50]].forEach(([x,y,r])=>{ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();});
             } else if (key === 'park') {
-                const sun = ctx.createRadialGradient(110, 110, 10, 110, 110, 210);
-                sun.addColorStop(0, 'rgba(254,249,195,0.8)'); sun.addColorStop(1, 'rgba(254,249,195,0)');
-                ctx.fillStyle = sun; ctx.fillRect(0, 0, 512, 420);
-                ctx.fillStyle = 'rgba(74,222,128,0.55)'; ctx.beginPath(); ctx.ellipse(150, 740, 290, 210, 0, 0, Math.PI*2); ctx.fill();
-                ctx.fillStyle = 'rgba(34,197,94,0.65)'; ctx.beginPath(); ctx.ellipse(400, 760, 280, 220, 0, 0, Math.PI*2); ctx.fill();
+                const sun = ctx.createRadialGradient(110,110,10,110,110,210); sun.addColorStop(0,'rgba(254,249,195,0.8)'); sun.addColorStop(1,'rgba(254,249,195,0)');
+                ctx.fillStyle = sun; ctx.fillRect(0,0,512,420);
+                ctx.fillStyle = 'rgba(74,222,128,0.55)'; ctx.beginPath(); ctx.ellipse(150,740,290,210,0,0,Math.PI*2); ctx.fill();
+                ctx.fillStyle = 'rgba(34,197,94,0.65)'; ctx.beginPath(); ctx.ellipse(400,760,280,220,0,0,Math.PI*2); ctx.fill();
             } else {
-                const neb = ctx.createRadialGradient(256, 260, 20, 256, 260, 320);
-                neb.addColorStop(0, 'rgba(236,72,153,0.32)'); neb.addColorStop(0.5, 'rgba(56,189,248,0.18)'); neb.addColorStop(1, 'transparent');
+                const neb = ctx.createRadialGradient(256,260,20,256,260,320); neb.addColorStop(0,'rgba(236,72,153,0.34)'); neb.addColorStop(0.5,'rgba(56,189,248,0.2)'); neb.addColorStop(1,'transparent');
                 ctx.fillStyle = neb; ctx.fillRect(0,0,512,768);
-                for (let i = 0; i < 70; i++) { ctx.fillStyle = `rgba(255,255,255,${0.3+Math.random()*0.7})`; ctx.beginPath(); ctx.arc(Math.random()*512, Math.random()*768, 1+Math.random()*2.5, 0, Math.PI*2); ctx.fill(); }
+                for (let i=0;i<70;i++) { ctx.fillStyle = `rgba(255,255,255,${0.3+Math.random()*0.7})`; ctx.beginPath(); ctx.arc(Math.random()*512, Math.random()*768, 1+Math.random()*2.5, 0, Math.PI*2); ctx.fill(); }
             }
-            // 3D 깊이감을 극대화하는 모서리 암부(Ambient Occlusion) 비네팅!
             const vig = ctx.createRadialGradient(256, 360, 140, 256, 384, 460);
-            vig.addColorStop(0, 'rgba(0,0,0,0)'); vig.addColorStop(0.75, 'rgba(0,10,30,0.22)'); vig.addColorStop(1, 'rgba(0,5,20,0.62)');
+            vig.addColorStop(0, 'rgba(0,0,0,0)'); vig.addColorStop(0.75, 'rgba(0,10,30,0.24)'); vig.addColorStop(1, 'rgba(0,5,20,0.65)');
             ctx.fillStyle = vig; ctx.fillRect(0, 0, 512, 768);
             const tex = new THREE.CanvasTexture(cvs); tex.needsUpdate = true; return tex;
         }
@@ -1685,59 +1694,40 @@
             if (themePropsGroup) { scene.remove(themePropsGroup); themePropsGroup = null; }
             themePropsGroup = new THREE.Group(); scene.add(themePropsGroup);
             const hd = BOX.depth / 2;
-
             if (key === 'underwater') {
-                const coralMat1 = new THREE.MeshStandardMaterial({ color: 0xfb7185, roughness: 0.4 }), coralMat2 = new THREE.MeshStandardMaterial({ color: 0x34d399, roughness: 0.45 });
-                [[-3.6,-2.3,1.5,coralMat1],[3.5,-2.2,1.8,coralMat2],[2.6,-2.4,1.2,coralMat1],[-2.2,-2.5,1.3,coralMat2]].forEach(([x,z,h,m]) => {
-                    const c = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.24, h, 10), m); c.position.set(x, h/2, z); themePropsGroup.add(c);
-                });
-                const bubMat = new THREE.MeshPhysicalMaterial({ color: 0xe0f2fe, transparent: true, opacity: 0.48, roughness: 0.05, clearcoat: 1 });
-                for (let i = 0; i < 24; i++) {
-                    const b = new THREE.Mesh(new THREE.SphereGeometry(0.08 + Math.random()*0.16, 12, 10), bubMat);
-                    b.position.set((Math.random()-0.5)*7.6, 1 + Math.random()*9.5, -hd + 0.4 + Math.random()*1.6);
-                    b.userData = { animType: 'rise', speed: 0.6 + Math.random()*0.9, baseX: b.position.x, phase: Math.random()*6.28 };
-                    themePropsGroup.add(b);
-                }
+                const cm1 = new THREE.MeshStandardMaterial({ color: 0xfb7185, roughness: 0.4 }), cm2 = new THREE.MeshStandardMaterial({ color: 0x34d399, roughness: 0.45 });
+                [[-3.6,-2.2,2.2,cm1],[3.6,-2.1,2.6,cm2],[2.6,-2.3,1.8,cm1],[-2.0,-2.4,1.9,cm2]].forEach(([x,z,h,m]) => { const c = new THREE.Mesh(new THREE.CylinderGeometry(0.14,0.26,h,10), m); c.position.set(x,h/2,z); themePropsGroup.add(c); });
+                const bm = new THREE.MeshPhysicalMaterial({ color: 0xe0f2fe, transparent: true, opacity: 0.48, roughness: 0.05, clearcoat: 1 });
+                for (let i=0;i<24;i++) { const b = new THREE.Mesh(new THREE.SphereGeometry(0.08+Math.random()*0.15,12,10), bm); b.position.set((Math.random()-0.5)*7.6, 1+Math.random()*9.8, -hd+0.4+Math.random()*1.6); b.userData = { animType:'rise', speed:0.6+Math.random()*0.9, baseX:b.position.x, phase:Math.random()*6.28 }; themePropsGroup.add(b); }
             } else if (key === 'sky') {
-                const cloudMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.85 });
-                [[-2.5, 7.6, -2.0, 1.0], [2.4, 6.4, -2.2, 0.9], [-0.4, 8.8, -2.3, 0.75]].forEach(([cx,cy,cz,sc]) => {
+                const cm = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.85 });
+                [[-2.5,8.0,-2.0,1.0],[2.4,6.8,-2.1,0.9],[-0.4,9.2,-2.2,0.75]].forEach(([cx,cy,cz,sc]) => {
                     const cl = new THREE.Group(); cl.position.set(cx,cy,cz); cl.scale.setScalar(sc);
-                    [[0,0,0,0.85],[-0.75,-0.15,0,0.62],[0.78,-0.12,0,0.65],[0.15,0.4,0,0.55]].forEach(([x,y,z,r]) => {
-                        const s = new THREE.Mesh(new THREE.SphereGeometry(r, 14, 12), cloudMat); s.position.set(x,y,z); cl.add(s);
-                    });
-                    cl.userData = { animType: 'drift', speed: 0.25 + Math.random()*0.2, baseX: cx, phase: Math.random()*6.28 };
-                    themePropsGroup.add(cl);
+                    [[0,0,0,0.85],[-0.75,-0.15,0,0.62],[0.78,-0.12,0,0.65],[0.15,0.4,0,0.55]].forEach(([x,y,z,r]) => { const s = new THREE.Mesh(new THREE.SphereGeometry(r,14,12), cm); s.position.set(x,y,z); cl.add(s); });
+                    cl.userData = { animType:'drift', speed:0.25+Math.random()*0.2, baseX:cx, phase:Math.random()*6.28 }; themePropsGroup.add(cl);
                 });
             } else if (key === 'park') {
-                const trunkMat = new THREE.MeshStandardMaterial({ color: 0x92400e, roughness: 0.8 }), leafMat = new THREE.MeshStandardMaterial({ color: 0x16a34a, roughness: 0.6 });
-                [[3.4, -2.1, 1.0], [-3.4, -2.2, 0.9]].forEach(([tx, tz, sc]) => {
-                    const tr = new THREE.Group(); tr.position.set(tx, 0, tz); tr.scale.setScalar(sc);
-                    const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.28, 3.2, 10), trunkMat); trunk.position.y = 1.6; tr.add(trunk);
-                    [[0,3.6,0,1.1],[-0.6,3.1,0.2,0.75],[0.6,3.2,-0.1,0.8]].forEach(([x,y,z,r]) => { const l = new THREE.Mesh(new THREE.SphereGeometry(r,14,12), leafMat); l.position.set(x,y,z); tr.add(l); });
+                const tm = new THREE.MeshStandardMaterial({ color: 0x92400e, roughness: 0.8 }), lm = new THREE.MeshStandardMaterial({ color: 0x16a34a, roughness: 0.6 });
+                [[3.4,-2.0,1.05],[-3.4,-2.1,0.95]].forEach(([tx,tz,sc]) => {
+                    const tr = new THREE.Group(); tr.position.set(tx,0,tz); tr.scale.setScalar(sc);
+                    const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.18,0.28,3.6,10), tm); trunk.position.y = 1.8; tr.add(trunk);
+                    [[0,4.0,0,1.15],[-0.6,3.5,0.2,0.8],[0.6,3.6,-0.1,0.85]].forEach(([x,y,z,r]) => { const l = new THREE.Mesh(new THREE.SphereGeometry(r,14,12), lm); l.position.set(x,y,z); tr.add(l); });
                     themePropsGroup.add(tr);
                 });
-                const petalMat = new THREE.MeshBasicMaterial({ color: 0xfbcfe8, side: THREE.DoubleSide });
-                for (let i = 0; i < 24; i++) {
-                    const pt = new THREE.Mesh(new THREE.CircleGeometry(0.11, 6), petalMat);
-                    pt.position.set((Math.random()-0.5)*7.5, 1 + Math.random()*9.5, -hd + 0.5 + Math.random()*2.0);
-                    pt.userData = { animType: 'fall', speed: 0.5 + Math.random()*0.7, baseX: pt.position.x, phase: Math.random()*6.28 };
-                    themePropsGroup.add(pt);
-                }
+                const pm = new THREE.MeshBasicMaterial({ color: 0xfbcfe8, side: THREE.DoubleSide });
+                for (let i=0;i<24;i++) { const pt = new THREE.Mesh(new THREE.CircleGeometry(0.11,6), pm); pt.position.set((Math.random()-0.5)*7.5, 1+Math.random()*9.8, -hd+0.5+Math.random()*2.0); pt.userData = { animType:'fall', speed:0.5+Math.random()*0.7, baseX:pt.position.x, phase:Math.random()*6.28 }; themePropsGroup.add(pt); }
             } else {
-                const starMat = new THREE.MeshBasicMaterial({ color: 0xfef08a });
-                for (let i = 0; i < 28; i++) {
-                    const st = new THREE.Mesh(new THREE.OctahedronGeometry(0.09, 0), starMat);
-                    st.position.set((Math.random()-0.5)*7.8, 1.5 + Math.random()*9.0, -hd + 0.4 + Math.random()*1.8);
-                    st.userData = { animType: 'twinkle', speed: 1.5 + Math.random()*2, phase: Math.random()*6.28 };
-                    themePropsGroup.add(st);
-                }
+                const sm = new THREE.MeshBasicMaterial({ color: 0xfef08a });
+                for (let i=0;i<28;i++) { const st = new THREE.Mesh(new THREE.OctahedronGeometry(0.09,0), sm); st.position.set((Math.random()-0.5)*7.8, 1.5+Math.random()*9.4, -hd+0.4+Math.random()*1.8); st.userData = { animType:'twinkle', speed:1.5+Math.random()*2, phase:Math.random()*6.28 }; themePropsGroup.add(st); }
             }
         }
 
         function applyThemeSettings() {
             const gs = getActiveGameSettings(), shell = document.getElementById('kiosk-shell');
-            shell.classList.remove('theme-frame-ocean_wave','theme-frame-sky_pastel','theme-frame-park_fresh','theme-frame-midnight_luxe');
-            shell.classList.add('theme-frame-' + (gs.frameTheme || 'ocean_wave'));
+            shell.classList.remove('pat-smooth','pat-stripe','pat-sunburst','pat-dots','pat-checker','pat-diamond');
+            shell.classList.add(gs.frameTheme && gs.frameTheme.startsWith('pat-') ? gs.frameTheme : 'pat-sunburst');
+            shell.style.setProperty('--fc1', gs.frameC1 || '#38bdf8');
+            shell.style.setProperty('--fc2', gs.frameC2 || '#0369a1');
             if (!scene || !interiorRefs.backMat) return;
             const key = gs.interiorTheme || 'underwater', th = INTERIOR_THEMES[key] || INTERIOR_THEMES.underwater;
             scene.background.setHex(th.bg); scene.fog.color.setHex(th.bg);
@@ -1752,40 +1742,42 @@
         function buildDeep3DInterior() {
             const hw = BOX.width/2, hd = BOX.depth/2, h = BOX.height;
             const backMat = new THREE.MeshStandardMaterial({ map: createBackWallTexture(getActiveGameSettings().interiorTheme), roughness: 0.65, metalness: 0.05 });
-            const sideMat = new THREE.MeshStandardMaterial({ color: 0x0369a1, roughness: 0.55, metalness: 0.1, transparent: true, opacity: 0.72 });
+            const sideMat = new THREE.MeshStandardMaterial({ color: 0x0369a1, roughness: 0.5, metalness: 0.12 });
             const floorMat = new THREE.MeshStandardMaterial({ color: 0xd6b888, roughness: 0.75, metalness: 0.05 });
             const ceilMat = new THREE.MeshStandardMaterial({ color: 0x7dd3fc, roughness: 0.6 });
 
             const bw = new THREE.Mesh(new THREE.PlaneGeometry(BOX.width,h), backMat); bw.position.set(0,h/2,-hd); bw.receiveShadow = true; scene.add(bw);
             const fl = new THREE.Mesh(new THREE.PlaneGeometry(BOX.width,BOX.depth), floorMat); fl.rotation.x = -Math.PI/2; fl.receiveShadow = true; scene.add(fl);
             const ce = new THREE.Mesh(new THREE.PlaneGeometry(BOX.width,BOX.depth), ceilMat); ce.rotation.x = Math.PI/2; ce.position.set(0,h,0); scene.add(ce);
-            // 3D 박스 깊이감을 즉각 보여주는 4개 내부 입체 메탈 코너 기둥 + 상/하 깊이 프레임!
-            const framePillarMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, metalness: 0.7, roughness: 0.35 });
+
+            // 3D 건축 내부 코너 기둥 + 상/하 깊이감 레일 (실제 3D 박스 안으로 쑥 들어간 깊이감!)
+            const frameMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, metalness: 0.65, roughness: 0.35 });
             [[-hw+0.12,-hd+0.12],[hw-0.12,-hd+0.12],[-hw+0.12,hd-0.12],[hw-0.12,hd-0.12]].forEach(([px,pz]) => {
-                const col = new THREE.Mesh(new THREE.BoxGeometry(0.26, h, 0.26), framePillarMat); col.position.set(px, h/2, pz); scene.add(col);
+                const col = new THREE.Mesh(new THREE.BoxGeometry(0.26,h,0.26), frameMat); col.position.set(px,h/2,pz); scene.add(col);
             });
-            [[-hw+0.12, 0.14],[hw-0.12, 0.14],[-hw+0.12, h-0.14],[hw-0.12, h-0.14]].forEach(([px,py]) => {
-                const beam = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.24, BOX.depth), framePillarMat); beam.position.set(px, py, 0); scene.add(beam);
+            [[-hw+0.12,0.14],[hw-0.12,0.14],[-hw+0.12,h-0.14],[hw-0.12,h-0.14]].forEach(([px,py]) => {
+                const beam = new THREE.Mesh(new THREE.BoxGeometry(0.24,0.24,BOX.depth), frameMat); beam.position.set(px,py,0); scene.add(beam);
             });
 
-            const railMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.8, roughness: 0.2 });
-            [-hw+0.22, hw-0.22].forEach(rx => { const r = new THREE.Mesh(new THREE.BoxGeometry(0.16,0.16,BOX.depth-0.3), railMat); r.position.set(rx,h-0.16,0); scene.add(r); });
-            gantryBeamMesh = new THREE.Mesh(new THREE.BoxGeometry(BOX.width-0.36,0.18,0.24), railMat); gantryBeamMesh.position.set(0,h-0.16,0); scene.add(gantryBeamMesh);
+            const railMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.85, roughness: 0.18 });
+            [-hw+0.28, hw-0.28].forEach(rx => { const r = new THREE.Mesh(new THREE.BoxGeometry(0.14,0.14,BOX.depth-0.3), railMat); r.position.set(rx,h-0.18,0); scene.add(r); });
+            gantryBeamMesh = new THREE.Mesh(new THREE.BoxGeometry(BOX.width-0.44,0.16,0.2), railMat); gantryBeamMesh.position.set(0,h-0.18,0); scene.add(gantryBeamMesh);
 
-            const lw = new THREE.Mesh(new THREE.PlaneGeometry(BOX.depth,h), sideMat); lw.rotation.y = Math.PI/2; lw.position.set(-hw,h/2,0); scene.add(lw);
-            const rw = new THREE.Mesh(new THREE.PlaneGeometry(BOX.depth,h), sideMat); rw.rotation.y = -Math.PI/2; rw.position.set(hw,h/2,0); scene.add(rw);
-            const ledMat = new THREE.MeshBasicMaterial({ color: 0x67e8f9 }), ledGeo = new THREE.CylinderGeometry(0.055,0.055,h-0.2,8);
-            [[-hw+0.08,-hd+0.08],[hw-0.08,-hd+0.08]].forEach(([lx,lz]) => { const l = new THREE.Mesh(ledGeo, ledMat); l.position.set(lx,h/2,lz); scene.add(l); });
+            const lw = new THREE.Mesh(new THREE.PlaneGeometry(BOX.depth,h), sideMat); lw.rotation.y = Math.PI/2; lw.position.set(-hw,h/2,0); lw.receiveShadow = true; scene.add(lw);
+            const rw = new THREE.Mesh(new THREE.PlaneGeometry(BOX.depth,h), sideMat); rw.rotation.y = -Math.PI/2; rw.position.set(hw,h/2,0); rw.receiveShadow = true; scene.add(rw);
+            const ledMat = new THREE.MeshBasicMaterial({ color: 0x67e8f9 }), ledGeo = new THREE.CylinderGeometry(0.05,0.05,h-0.2,8);
+            [[-hw+0.26,-hd+0.22],[hw-0.26,-hd+0.22]].forEach(([lx,lz]) => { const l = new THREE.Mesh(ledGeo, ledMat); l.position.set(lx,h/2,lz); scene.add(l); });
 
+            // ★ 높이 6.2로 확 높아진 좌측 전면 아크릴 배출구 타워!
             const chuteH = BOX.chuteTopY, cg = new THREE.Group(); cg.position.set(BOX.chuteX, 0, BOX.chuteZ);
             const acMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, transparent: true, opacity: 0.22, roughness: 0.06, clearcoat: 1, side: THREE.DoubleSide });
             const sideR = new THREE.Mesh(new THREE.BoxGeometry(0.12, chuteH, 2.3), acMat); sideR.position.set(1.12, chuteH/2, 0); cg.add(sideR);
             const sideB = new THREE.Mesh(new THREE.BoxGeometry(2.3, chuteH, 0.12), acMat); sideB.position.set(0, chuteH/2, -1.15); cg.add(sideB);
             const pm = new THREE.MeshStandardMaterial({ color: 0xfbbf24, metalness: 0.78, roughness: 0.2 });
             [[1.12,-1.15],[1.12,1.12]].forEach(([px,pz]) => { const p = new THREE.Mesh(new THREE.CylinderGeometry(0.055,0.055,chuteH,10), pm); p.position.set(px,chuteH/2,pz); cg.add(p); });
-            chuteRimMesh = new THREE.Mesh(new THREE.TorusGeometry(0.92,0.085,12,30), new THREE.MeshBasicMaterial({ color: 0xfbbf24 })); chuteRimMesh.rotation.x = Math.PI/2; chuteRimMesh.position.set(0,chuteH,0); cg.add(chuteRimMesh);
+            chuteRimMesh = new THREE.Mesh(new THREE.TorusGeometry(0.92,0.08,12,30), new THREE.MeshBasicMaterial({ color: 0xfbbf24 })); chuteRimMesh.rotation.x = Math.PI/2; chuteRimMesh.position.set(0,chuteH,0); cg.add(chuteRimMesh);
             chuteChevrons = [];
-            [3.7,2.6,1.5].forEach((cy,idx) => { const c = new THREE.Mesh(new THREE.ConeGeometry(0.22,0.3,3), new THREE.MeshBasicMaterial({ color:0xffffff, transparent:true, opacity:0.6 })); c.rotation.x = Math.PI; c.position.set(0,cy,1.05); c.userData.phase = idx*1.1; cg.add(c); chuteChevrons.push(c); });
+            [4.9, 3.6, 2.3].forEach((cy,idx) => { const c = new THREE.Mesh(new THREE.ConeGeometry(0.2,0.28,3), new THREE.MeshBasicMaterial({ color:0xffffff, transparent:true, opacity:0.6 })); c.rotation.x = Math.PI; c.position.set(0,cy,1.05); c.userData.phase = idx*1.1; cg.add(c); chuteChevrons.push(c); });
             const pit = new THREE.Mesh(new THREE.CircleGeometry(0.9,24), new THREE.MeshBasicMaterial({ color: 0x020617 })); pit.rotation.x = -Math.PI/2; pit.position.set(0,0.04,0); cg.add(pit);
             scene.add(cg);
 
@@ -1798,8 +1790,8 @@
 
             const t = 0.4;
             [[hw+t,t,hd+t,0,-t,0],[t,h/2+t,hd+t,-hw-t,h/2,0],[t,h/2+t,hd+t,hw+t,h/2,0],[hw+t,h/2+t,t,0,h/2,-hd-t],[hw+t,h/2+t,t,0,h/2,hd+t],
-             [0.14, 2.75, 1.3, BOX.chuteX + 1.15, 2.7, BOX.chuteZ],
-             [1.25, 2.75, 0.14, BOX.chuteX, 2.7, BOX.chuteZ - 1.2]
+             [0.14, 3.3, 1.3, BOX.chuteX + 1.15, 3.25, BOX.chuteZ],
+             [1.25, 3.3, 0.14, BOX.chuteX, 3.25, BOX.chuteZ - 1.2]
             ].forEach(([hx,hy,hz,x,y,z]) => { const b = new CANNON.Body({ mass:0, material:wallPhysMat, shape:new CANNON.Box(new CANNON.Vec3(hx,hy,hz)) }); b.position.set(x,y,z); world.addBody(b); });
         }
 
@@ -1824,99 +1816,108 @@
             const r = 0.66, lm = new THREE.MeshPhysicalMaterial({ color:0xfbbf24, roughness:0.12, metalness:0.45, clearcoat:1 });
             tunnelBallMesh.add(new THREE.Mesh(new THREE.SphereGeometry(r,24,14,0,Math.PI*2,Math.PI/2,Math.PI/2), lm));
             tunnelBallMesh.add(new THREE.Mesh(new THREE.SphereGeometry(r,24,14,0,Math.PI*2,0,Math.PI/2), new THREE.MeshPhysicalMaterial({ color:0xffffff, transparent:true, opacity:0.42, clearcoat:1 })));
-            const sb = new THREE.Mesh(new THREE.TorusGeometry(r*1.01,0.065,10,26), cm); sb.rotation.x = Math.PI/2; tunnelBallMesh.add(sb);
             tunnelBallMesh.add(new THREE.Mesh(new THREE.OctahedronGeometry(0.32), new THREE.MeshBasicMaterial({ color:0xfef08a })));
             tunnelBallMesh.userData.lowerMat = lm; tunnelGroup.add(tunnelBallMesh);
         }
 
+        // ★ 작아진 캡슐(r=0.42)에 딱 맞는 정밀 슬림 집게발 (scale 0.66!)
         function buildPrismClaw() {
-            const hm = new THREE.MeshStandardMaterial({ color:0xf43f5e, roughness:0.22, metalness:0.45 }), am = new THREE.MeshStandardMaterial({ color:0xbe123c, roughness:0.3, metalness:0.5 }), sm = new THREE.MeshStandardMaterial({ color:0xf8fafc, roughness:0.16, metalness:0.9 }), cm = new THREE.MeshStandardMaterial({ color:0xe2e8f0, roughness:0.25, metalness:0.65 });
-            clawCarriageMesh = new THREE.Mesh(new THREE.BoxGeometry(0.76,0.3,0.62), am); scene.add(clawCarriageMesh);
-            cableSegments = []; const sg = new THREE.CylinderGeometry(0.068,0.068,1,10);
+            const hm = new THREE.MeshStandardMaterial({ color:0xf43f5e, roughness:0.22, metalness:0.45 }), am = new THREE.MeshStandardMaterial({ color:0xbe123c, roughness:0.3, metalness:0.5 }), sm = new THREE.MeshStandardMaterial({ color:0xf8fafc, roughness:0.15, metalness:0.92 }), cm = new THREE.MeshStandardMaterial({ color:0xe2e8f0, roughness:0.25, metalness:0.65 });
+            clawCarriageMesh = new THREE.Mesh(new THREE.BoxGeometry(0.56,0.24,0.46), am); scene.add(clawCarriageMesh);
+            cableSegments = []; const sg = new THREE.CylinderGeometry(0.05,0.05,1,10);
             for (let i=0;i<CABLE_SEG_COUNT;i++) { const s = new THREE.Mesh(sg, cm); scene.add(s); cableSegments.push(s); }
-            clawGroup = new THREE.Group(); scene.add(clawGroup);
-            clawGroup.add(new THREE.Mesh(new THREE.CylinderGeometry(0.38,0.34,0.86,20), hm));
-            const tc = new THREE.Mesh(new THREE.CylinderGeometry(0.24,0.34,0.22,16), am); tc.position.y = 0.52; clawGroup.add(tc);
-            const br = new THREE.Mesh(new THREE.TorusGeometry(0.39,0.065,10,24), new THREE.MeshBasicMaterial({ color:0xfde047 })); br.rotation.x = Math.PI/2; br.position.y = -0.44; clawGroup.add(br);
+
+            clawGroup = new THREE.Group();
+            clawGroup.scale.setScalar(0.66); // ★ 캡슐 비율에 딱 맞는 정밀 집게 크기!
+            scene.add(clawGroup);
+
+            const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.36,0.32,0.84,20), hm); hub.castShadow = true; clawGroup.add(hub);
+            const tc = new THREE.Mesh(new THREE.CylinderGeometry(0.22,0.32,0.22,16), am); tc.position.y = 0.5; clawGroup.add(tc);
+            const br = new THREE.Mesh(new THREE.TorusGeometry(0.37,0.06,10,24), new THREE.MeshBasicMaterial({ color:0xfde047 })); br.rotation.x = Math.PI/2; br.position.y = -0.42; clawGroup.add(br);
             clawProngs = [];
             for (let i=0;i<3;i++) {
                 const angle = (i*Math.PI*2)/3 + Math.PI/6, root = new THREE.Group(); root.rotation.y = angle; clawGroup.add(root);
-                const pivot = new THREE.Group(); pivot.position.set(0.27,-0.48,0); root.add(pivot);
-                const up = new THREE.Mesh(new THREE.BoxGeometry(0.1,0.82,0.12), sm); up.position.set(0.2,-0.35,0); up.rotation.z = 0.52; pivot.add(up);
-                const lo = new THREE.Mesh(new THREE.BoxGeometry(0.095,0.78,0.12), sm); lo.position.set(0.24,-0.98,0); lo.rotation.z = -0.46; pivot.add(lo);
-                const tip = new THREE.Mesh(new THREE.SphereGeometry(0.085,10,10), hm); tip.position.set(0.08,-1.32,0); pivot.add(tip);
+                const pivot = new THREE.Group(); pivot.position.set(0.26,-0.46,0); root.add(pivot);
+                const up = new THREE.Mesh(new THREE.BoxGeometry(0.09,0.8,0.11), sm); up.position.set(0.2,-0.34,0); up.rotation.z = 0.52; up.castShadow = true; pivot.add(up);
+                const lo = new THREE.Mesh(new THREE.BoxGeometry(0.085,0.76,0.11), sm); lo.position.set(0.24,-0.96,0); lo.rotation.z = -0.46; lo.castShadow = true; pivot.add(lo);
+                const tip = new THREE.Mesh(new THREE.SphereGeometry(0.08,10,10), hm); tip.position.set(0.08,-1.3,0); pivot.add(tip);
                 clawProngs.push({ pivot, angle });
             }
-            aimBeamMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.03,0.03,BOX.height,8), new THREE.MeshBasicMaterial({ color:0xffffff, transparent:true, opacity:0.28, depthWrite:false })); scene.add(aimBeamMesh);
-            targetRingMesh = new THREE.Mesh(new THREE.RingGeometry(0.46,0.66,28), new THREE.MeshBasicMaterial({ color:0xfde047, transparent:true, opacity:0.8, side:THREE.DoubleSide, depthWrite:false }));
+            aimBeamMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.025,0.025,BOX.height,8), new THREE.MeshBasicMaterial({ color:0xffffff, transparent:true, opacity:0.25, depthWrite:false })); scene.add(aimBeamMesh);
+            targetRingMesh = new THREE.Mesh(new THREE.RingGeometry(0.34,0.5,28), new THREE.MeshBasicMaterial({ color:0xfde047, transparent:true, opacity:0.85, side:THREE.DoubleSide, depthWrite:false }));
             targetRingMesh.rotation.x = -Math.PI/2; scene.add(targetRingMesh);
         }
 
+        // ★ 커튼링 없는 깔끔 투톤 가챠폰 캡슐 + 높이 쌓기(최대 y=5.5) + 바닥 더미 전체 동적 물리!
         function spawnHybridCapsules(totalCount) {
             if (!scene) return;
             capsules.forEach(c => { scene.remove(c.mesh); world.removeBody(c.body); }); capsules = [];
-            if (bedInstMesh) { scene.remove(bedInstMesh); bedInstMesh.dispose(); bedInstMesh = null; }
-            if (bedRingInstMesh) { scene.remove(bedRingInstMesh); bedRingInstMesh.dispose(); bedRingInstMesh = null; }
+            if (bedLowerMesh) { scene.remove(bedLowerMesh); bedLowerMesh.dispose(); bedLowerMesh = null; }
+            if (bedUpperMesh) { scene.remove(bedUpperMesh); bedUpperMesh.dispose(); bedUpperMesh = null; }
+            bedCapsData = [];
             if (bedFloorBody) { world.removeBody(bedFloorBody); bedFloorBody = null; }
 
-            const total = Math.max(20, Math.min(400, Number(totalCount) || 60));
+            const total = Math.max(20, Math.min(400, Number(totalCount) || 120));
             STATE.remainingCapsules = total;
-            const radius = 0.44; // 작고 영롱한 3D 주얼 가챠폰 사이즈!
-            const activeCount = Math.min(total, 64), bedCount = Math.max(0, total - activeCount);
-            currentBedHeight = bedCount > 0 ? Math.min(2.1, 0.65 + (bedCount / 340) * 1.45) : 0;
-            const isInChute = (x, z) => (x < BOX.chuteX + 1.7 && z > BOX.chuteZ - 1.75);
+            const radius = 0.42;
+            const activeCount = Math.min(total, 66), bedCount = Math.max(0, total - activeCount);
+            // 높아진 배출구(6.2)에 맞춰 풍성하게 높이 쌓이도록!
+            currentBedHeight = bedCount > 0 ? Math.min(3.4, 0.9 + (bedCount / 334) * 2.5) : 0;
+            const isInChute = (x, z) => (x < BOX.chuteX + 1.65 && z > BOX.chuteZ - 1.7);
 
+            // 하단 대량 캡슐도 상단과 100% 똑같은 투톤 가챠폰 외형 + 개별 에어블로우 물리 데이터!
             if (bedCount > 0) {
-                bedInstMesh = new THREE.InstancedMesh(new THREE.SphereGeometry(radius * 0.92, 12, 10), new THREE.MeshStandardMaterial({ roughness: 0.16, metalness: 0.35 }), bedCount);
-                bedRingInstMesh = new THREE.InstancedMesh(new THREE.TorusGeometry(radius * 0.93, 0.045, 6, 14), new THREE.MeshBasicMaterial({ color: 0xffffff }), bedCount);
-                const dummy = new THREE.Object3D(), col = new THREE.Color();
+                const lowGeo = new THREE.SphereGeometry(radius, 14, 10, 0, Math.PI*2, Math.PI/2, Math.PI/2);
+                const upGeo  = new THREE.SphereGeometry(radius, 14, 10, 0, Math.PI*2, 0, Math.PI/2);
+                bedLowerMesh = new THREE.InstancedMesh(lowGeo, new THREE.MeshStandardMaterial({ roughness: 0.16, metalness: 0.32 }), bedCount);
+                bedUpperMesh = new THREE.InstancedMesh(upGeo, new THREE.MeshPhysicalMaterial({ color: 0xf8fafc, transparent: true, opacity: 0.48, roughness: 0.05, clearcoat: 1 }), bedCount);
+                bedLowerMesh.castShadow = true; bedLowerMesh.receiveShadow = true;
+
+                const col = new THREE.Color();
                 for (let i = 0; i < bedCount; i++) {
                     let x, z;
-                    do { x = -3.6 + Math.random()*7.2; z = -2.25 + Math.random()*4.5; } while (isInChute(x, z));
-                    const y = Math.min(currentBedHeight - radius * 0.85, radius * 0.8 + Math.random() * Math.max(0.15, currentBedHeight - radius * 1.4));
-                    dummy.position.set(x, Math.max(radius * 0.75, y), z);
-                    dummy.rotation.set(Math.random()*3.14, Math.random()*3.14, Math.random()*3.14); dummy.updateMatrix();
-                    bedInstMesh.setMatrixAt(i, dummy.matrix); bedRingInstMesh.setMatrixAt(i, dummy.matrix);
+                    do { x = -3.7 + Math.random()*7.4; z = -2.2 + Math.random()*4.4; } while (isInChute(x, z));
+                    const baseY = radius + Math.random() * Math.max(0.2, currentBedHeight - radius * 1.15);
+                    const b = { x, baseY, y: baseY, z, vy: 0, rx: (Math.random()-0.5)*1.2, ry: Math.random()*6.28, rz: (Math.random()-0.5)*1.2, vrx: 0, vry: 0 };
+                    bedCapsData.push(b);
+                    _bedDummy.position.set(b.x, b.y, b.z); _bedDummy.rotation.set(b.rx, b.ry, b.rz); _bedDummy.updateMatrix();
+                    bedLowerMesh.setMatrixAt(i, _bedDummy.matrix); bedUpperMesh.setMatrixAt(i, _bedDummy.matrix);
                     const isSpec = Math.random() < 0.2;
                     col.setHex((isSpec ? (Math.random()<0.65 ? CAPSULE_SKINS.specialGold : CAPSULE_SKINS.specialBlack) : (Math.random()<0.5 ? CAPSULE_SKINS.normalCyan : CAPSULE_SKINS.normalCoral)).hex);
-                    bedInstMesh.setColorAt(i, col);
+                    bedLowerMesh.setColorAt(i, col);
                 }
-                bedInstMesh.instanceMatrix.needsUpdate = true; bedInstMesh.instanceColor.needsUpdate = true; bedRingInstMesh.instanceMatrix.needsUpdate = true;
-                scene.add(bedInstMesh); scene.add(bedRingInstMesh);
+                bedLowerMesh.instanceMatrix.needsUpdate = true; bedLowerMesh.instanceColor.needsUpdate = true; bedUpperMesh.instanceMatrix.needsUpdate = true;
+                scene.add(bedLowerMesh); scene.add(bedUpperMesh);
                 bedFloorBody = new CANNON.Body({ mass: 0, material: wallPhysMat, shape: new CANNON.Box(new CANNON.Vec3(BOX.width/2, currentBedHeight/2, BOX.depth/2)) });
                 bedFloorBody.position.set(0, currentBedHeight/2, 0); world.addBody(bedFloorBody);
             }
 
-            const ringMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.18, metalness: 0.88 }), goldRingMat = new THREE.MeshStandardMaterial({ color: 0xfde047, roughness: 0.15, metalness: 0.95 });
-            const clearDomeMat = new THREE.MeshPhysicalMaterial({ color: 0xf0f9ff, transparent: true, opacity: 0.36, roughness: 0.05, clearcoat: 1 });
-            const specialCount = Math.max(6, Math.round(activeCount * 0.22));
+            // 상단 실제 Cannon.js 물리 캡슐 (두꺼운 커튼링 제거! 초슬림 심 + 깔끔 투톤 크리스탈 가챠폰!)
+            const clearTopMat = new THREE.MeshPhysicalMaterial({ color: 0xf8fafc, transparent: true, opacity: 0.45, roughness: 0.04, clearcoat: 1.0 });
+            const seamMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.2, metalness: 0.7 });
+            const specialCount = Math.max(8, Math.round(activeCount * 0.22));
             for (let i = 0; i < activeCount; i++) {
                 const isSpec = i < specialCount;
                 const skin = isSpec ? (i%2===0 ? CAPSULE_SKINS.specialGold : CAPSULE_SKINS.specialBlack) : (i%2===0 ? CAPSULE_SKINS.normalCyan : CAPSULE_SKINS.normalCoral);
                 const group = new THREE.Group();
-                // ★ 리디자인된 크리스탈 주얼 가챠폰 캡슐 (투명 아크릴 외피 + 내부 유광 보석 코어 + 실시간 그림자!)
-                const shellMesh = new THREE.Mesh(
-                    new THREE.SphereGeometry(radius, 18, 14),
-                    new THREE.MeshPhysicalMaterial({ color: isSpec ? 0xfef08a : 0xffffff, transparent: true, opacity: isSpec ? 0.42 : 0.32, roughness: 0.04, metalness: 0.1, clearcoat: 1.0 })
+                const lower = new THREE.Mesh(
+                    new THREE.SphereGeometry(radius, 18, 12, 0, Math.PI*2, Math.PI/2, Math.PI/2),
+                    new THREE.MeshPhysicalMaterial({ color: skin.hex, emissive: skin.emissive, emissiveIntensity: isSpec ? 0.45 : 0.12, roughness: 0.14, metalness: skin.metalness, clearcoat: 1 })
                 );
-                shellMesh.castShadow = true; group.add(shellMesh);
-                const innerCap = new THREE.Mesh(
-                    new THREE.SphereGeometry(radius * 0.76, 16, 10, 0, Math.PI*2, Math.PI/2, Math.PI/2),
-                    new THREE.MeshStandardMaterial({ color: skin.hex, emissive: skin.emissive, emissiveIntensity: isSpec ? 0.55 : 0.18, roughness: 0.18, metalness: skin.metalness })
-                );
-                group.add(innerCap);
-                const band = new THREE.Mesh(new THREE.TorusGeometry(radius * 0.99, 0.042, 8, 22), isSpec ? goldRingMat : ringMat); band.rotation.x = Math.PI/2; group.add(band);
-                const gem = new THREE.Mesh(
-                    isSpec ? new THREE.OctahedronGeometry(radius * 0.46) : new THREE.BoxGeometry(radius * 0.62, radius * 0.36, radius * 0.12),
-                    new THREE.MeshStandardMaterial({ color: isSpec ? 0xfde047 : skin.hex, emissive: isSpec ? 0xb45309 : 0x000000, metalness: 0.6, roughness: 0.2 })
-                );
-                gem.position.y = radius * 0.18; gem.rotation.set(0.4, 0.6, 0.2); group.add(gem);
+                lower.castShadow = true; lower.receiveShadow = true; group.add(lower);
+                const upper = new THREE.Mesh(new THREE.SphereGeometry(radius, 18, 12, 0, Math.PI*2, 0, Math.PI/2), clearTopMat);
+                upper.castShadow = true; group.add(upper);
+                const thinSeam = new THREE.Mesh(new THREE.TorusGeometry(radius * 1.005, 0.016, 6, 20), seamMat); thinSeam.rotation.x = Math.PI/2; group.add(thinSeam);
+                if (isSpec) {
+                    const gem = new THREE.Mesh(new THREE.OctahedronGeometry(radius * 0.42), new THREE.MeshBasicMaterial({ color: 0xfef08a }));
+                    gem.position.y = radius * 0.14; group.add(gem);
+                }
 
                 let sx, sz;
-                do { sx = -3.4 + Math.random()*6.8; sz = -2.1 + Math.random()*4.2; } while (isInChute(sx, sz));
-                const sy = currentBedHeight + radius + 0.15 + Math.floor(i / 10) * 1.15;
+                do { sx = -3.5 + Math.random()*7.0; sz = -2.05 + Math.random()*4.1; } while (isInChute(sx, sz));
+                const sy = currentBedHeight + radius + 0.1 + Math.floor(i / 12) * 0.88;
                 group.position.set(sx, sy, sz); scene.add(group);
-                const body = new CANNON.Body({ mass: 1.25, material: capPhysMat, shape: new CANNON.Sphere(radius), linearDamping: 0.45, angularDamping: 0.5 });
+                const body = new CANNON.Body({ mass: 1.1, material: capPhysMat, shape: new CANNON.Sphere(radius), linearDamping: 0.44, angularDamping: 0.48 });
                 body.position.set(sx, sy, sz); world.addBody(body);
                 capsules.push({ mesh: group, body, radius, isSpecial: isSpec, colorHex: skin.hex });
             }
@@ -1929,7 +1930,7 @@
             v.textContent = Math.max(0, STATE.turnTimeLeft).toFixed(1);
             p.className = (STATE.turnTimeLeft <= 5 && STATE.turnTimerActive) ? 'px-4 py-1 rounded-full bg-rose-600/95 border-2 border-yellow-300 text-white font-mono font-black text-base shadow-lg animate-pulse' : 'px-4 py-1 rounded-full bg-slate-950/85 border-2 border-cyan-400 text-cyan-300 font-mono font-black text-base shadow-lg';
         }
-        function getClawHeadWorldPos() { const dd = Math.max(0.8, BOX.height - 0.16 - clawPos.y); return { x: clawPos.x + Math.sin(swayX)*dd, z: clawPos.z + Math.sin(swayZ)*dd }; }
+        function getClawHeadWorldPos() { const dd = Math.max(0.8, BOX.height - 0.18 - clawPos.y); return { x: clawPos.x + Math.sin(swayX)*dd, z: clawPos.z + Math.sin(swayZ)*dd }; }
 
         function updateClawVisuals(dt = 0.016) {
             if (!clawGroup) return;
@@ -1938,18 +1939,18 @@
             const ax = (vx - clawVelX)/sDt, az = (vz - clawVelZ)/sDt;
             clawPrevX = clawPos.x; clawPrevZ = clawPos.z; clawVelX = vx; clawVelZ = vz;
 
-            const py = BOX.height - 0.16, dd = Math.max(1.0, py - clawPos.y), stiff = 20/Math.max(0.9, Math.sqrt(dd*0.55)), damp = (STATE.phase==='DROPPING'||STATE.phase==='LIFTING')?4.4:2.2;
-            const impX = Math.max(-34, Math.min(34, ax))*0.042, impZ = Math.max(-34, Math.min(34, az))*0.042;
-            swayVelX += (-stiff*(swayX + vx*0.055) - damp*swayVelX - impX)*sDt; swayX = Math.max(-0.3, Math.min(0.3, swayX + swayVelX*sDt));
-            swayVelZ += (-stiff*(swayZ + vz*0.055) - damp*swayVelZ - impZ)*sDt; swayZ = Math.max(-0.3, Math.min(0.3, swayZ + swayVelZ*sDt));
-            prongJigVel += (-36*prongJig - 2.6*prongJigVel + (swayVelX + swayVelZ)*1.2)*sDt; prongJig = Math.max(-0.22, Math.min(0.22, prongJig + prongJigVel*sDt));
+            const py = BOX.height - 0.18, dd = Math.max(1.0, py - clawPos.y), stiff = 20/Math.max(0.9, Math.sqrt(dd*0.55)), damp = (STATE.phase==='DROPPING'||STATE.phase==='LIFTING')?4.4:2.2;
+            const impX = Math.max(-34, Math.min(34, ax))*0.04, impZ = Math.max(-34, Math.min(34, az))*0.04;
+            swayVelX += (-stiff*(swayX + vx*0.05) - damp*swayVelX - impX)*sDt; swayX = Math.max(-0.28, Math.min(0.28, swayX + swayVelX*sDt));
+            swayVelZ += (-stiff*(swayZ + vz*0.05) - damp*swayVelZ - impZ)*sDt; swayZ = Math.max(-0.28, Math.min(0.28, swayZ + swayVelZ*sDt));
+            prongJigVel += (-36*prongJig - 2.6*prongJigVel + (swayVelX + swayVelZ)*1.1)*sDt; prongJig = Math.max(-0.2, Math.min(0.2, prongJig + prongJigVel*sDt));
 
             if (gantryBeamMesh) gantryBeamMesh.position.z = clawPos.z;
             clawCarriageMesh.position.set(clawPos.x, py, clawPos.z);
             const hx = clawPos.x + Math.sin(swayX)*dd, hz = clawPos.z + Math.sin(swayZ)*dd, hy = py - Math.cos(Math.hypot(swayX, swayZ))*dd;
-            clawGroup.position.set(hx, hy, hz); clawGroup.rotation.set(-swayZ*1.2, 0, swayX*1.2);
+            clawGroup.position.set(hx, hy, hz); clawGroup.rotation.set(-swayZ*1.15, 0, swayX*1.15);
 
-            const p0x = clawPos.x, p0y = py-0.1, p0z = clawPos.z, p2x = hx, p2y = hy+0.52, p2z = hz;
+            const p0x = clawPos.x, p0y = py-0.1, p0z = clawPos.z, p2x = hx, p2y = hy+0.34, p2z = hz;
             for (let i=0;i<CABLE_SEG_COUNT;i++) {
                 const tA = i/CABLE_SEG_COUNT, tB = (i+1)/CABLE_SEG_COUNT;
                 const ax2 = p0x+(p2x-p0x)*tA, ay2 = p0y+(p2y-p0y)*tA, az2 = p0z+(p2z-p0z)*tA;
@@ -1960,42 +1961,48 @@
                 s.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), dir.normalize());
             }
             clawOpenAngle += (targetClawOpenAngle - clawOpenAngle)*0.18;
-            const jw = (STATE.phase==='CLOSING'||STATE.grabbedCapsule) ? 0.18 : 1.0;
+            const jw = (STATE.phase==='CLOSING'||STATE.grabbedCapsule) ? 0.16 : 1.0;
             clawProngs.forEach(({pivot, angle}) => { pivot.rotation.z = clawOpenAngle + prongJig*Math.cos(angle)*jw; });
 
             const showAim = (STATE.phase === 'IDLE' || STATE.phase === 'POWER_GAUGE');
             aimBeamMesh.position.set(hx, BOX.height/2, hz); aimBeamMesh.visible = showAim;
-            if (targetRingMesh) { targetRingMesh.position.set(hx, currentBedHeight + 0.65, hz); targetRingMesh.visible = showAim; }
+            if (targetRingMesh) { targetRingMesh.position.set(hx, currentBedHeight + 0.55, hz); targetRingMesh.visible = showAim; }
 
             const tSec = performance.now() * 0.001;
             if (themePropsGroup) {
                 themePropsGroup.children.forEach(obj => {
                     const u = obj.userData; if (!u || !u.animType) return;
-                    if (u.animType === 'rise') { obj.position.y += u.speed * sDt; obj.position.x = u.baseX + Math.sin(tSec*2+u.phase)*0.18; if (obj.position.y > BOX.height-0.6) obj.position.y = 0.6; }
+                    if (u.animType === 'rise') { obj.position.y += u.speed*sDt; obj.position.x = u.baseX + Math.sin(tSec*2+u.phase)*0.18; if (obj.position.y > BOX.height-0.6) obj.position.y = 0.6; }
                     else if (u.animType === 'drift') { obj.position.x = u.baseX + Math.sin(tSec*u.speed+u.phase)*0.7; }
-                    else if (u.animType === 'fall') { obj.position.y -= u.speed * sDt; obj.position.x = u.baseX + Math.sin(tSec*1.8+u.phase)*0.35; obj.rotation.z += sDt*1.6; if (obj.position.y < 0.5) obj.position.y = BOX.height-0.8; }
+                    else if (u.animType === 'fall') { obj.position.y -= u.speed*sDt; obj.position.x = u.baseX + Math.sin(tSec*1.8+u.phase)*0.35; obj.rotation.z += sDt*1.6; if (obj.position.y < 0.5) obj.position.y = BOX.height-0.8; }
                     else if (u.animType === 'twinkle') { obj.scale.setScalar(Math.max(0.2, 0.6 + 0.55*Math.sin(tSec*u.speed+u.phase))); }
                 });
             }
             chuteChevrons.forEach(c => { c.material.opacity = 0.25 + 0.65*Math.max(0, Math.sin(tSec*4 - c.userData.phase)); });
 
+            // ★ 살아있는 바닥 캡슐 더미 개별 점프 & 착지 물리 시뮬레이션!
             if (STATE.bedWaveTimer > 0) {
                 STATE.bedWaveTimer = Math.max(0, STATE.bedWaveTimer - dt);
-                const frac = STATE.bedWaveTimer / 1.05;
-                if (bedInstMesh) { const by = Math.abs(Math.sin(STATE.bedWaveTimer * 22)) * 0.55 * frac; bedInstMesh.position.y = by; if (bedRingInstMesh) bedRingInstMesh.position.y = by; }
+                if (bedLowerMesh && bedUpperMesh && bedCapsData.length > 0) {
+                    for (let i = 0; i < bedCapsData.length; i++) {
+                        const b = bedCapsData[i];
+                        b.vy -= 24.0 * sDt;
+                        b.y += b.vy * sDt;
+                        if (b.y < b.baseY) { b.y = b.baseY; b.vy = -b.vy * 0.28; b.vrx *= 0.6; b.vry *= 0.6; }
+                        b.rx += b.vrx * sDt; b.ry += b.vry * sDt;
+                        _bedDummy.position.set(b.x, b.y, b.z); _bedDummy.rotation.set(b.rx, b.ry, b.rz); _bedDummy.updateMatrix();
+                        bedLowerMesh.setMatrixAt(i, _bedDummy.matrix); bedUpperMesh.setMatrixAt(i, _bedDummy.matrix);
+                    }
+                    bedLowerMesh.instanceMatrix.needsUpdate = true; bedUpperMesh.instanceMatrix.needsUpdate = true;
+                }
                 if (airParticles) {
-                    airParticles.material.opacity = frac * 0.9;
+                    airParticles.material.opacity = Math.min(1, STATE.bedWaveTimer) * 0.9;
                     const arr = airParticles.geometry.attributes.position.array;
-                    for (let i=1;i<arr.length;i+=3) { arr[i] += dt * 18; if (arr[i] > 9.5) arr[i] = 0.5; }
+                    for (let i=1;i<arr.length;i+=3) { arr[i] += dt * 19; if (arr[i] > 10.5) arr[i] = 0.5; }
                     airParticles.geometry.attributes.position.needsUpdate = true;
                 }
-            } else {
-                if (bedInstMesh) { bedInstMesh.position.y = 0; if (bedRingInstMesh) bedRingInstMesh.position.y = 0; }
-                if (airParticles) airParticles.material.opacity = 0;
-            }
+            } else if (airParticles) { airParticles.material.opacity = 0; }
         }
-
-        let lastTubeBounceStage = 0;
         function updateChuteCameraRoll(dt) {
             if (!tunnelBallMesh || !camera) return;
             const p = Math.min(1, STATE.chuteRollProgress), slope = -0.22; let bx = -5.6, by = 3.5;
@@ -2530,6 +2537,8 @@
                 yabawiSpeedMs: Number(document.getElementById('admin-yabawi-speed').value) || 320,
                 yabawiSwaps: Math.max(4, Number(document.getElementById('admin-yabawi-swaps').value) || 10),
                 frameTheme: document.getElementById('admin-frame-theme').value,
+                frameC1: document.getElementById('admin-frame-c1').value || '#38bdf8',
+                frameC2: document.getElementById('admin-frame-c2').value || '#0369a1',
                 interiorTheme: document.getElementById('admin-interior-theme').value
             };
         }
@@ -2540,7 +2549,11 @@
             document.getElementById('admin-overlap-threshold').value = s.overlapThreshold; document.getElementById('admin-overlap-val').textContent = `${s.overlapThreshold}%`;
             document.getElementById('admin-use-gauge').checked = Boolean(s.useTimingGauge);
             document.getElementById('admin-yabawi-cups').value = s.yabawiCups; document.getElementById('admin-yabawi-speed').value = s.yabawiSpeedMs;
-            document.getElementById('admin-yabawi-swaps').value = s.yabawiSwaps; document.getElementById('admin-frame-theme').value = s.frameTheme; document.getElementById('admin-interior-theme').value = s.interiorTheme;
+            document.getElementById('admin-yabawi-swaps').value = s.yabawiSwaps;
+            document.getElementById('admin-frame-theme').value = s.frameTheme && s.frameTheme.startsWith('pat-') ? s.frameTheme : 'pat-sunburst';
+            document.getElementById('admin-frame-c1').value = s.frameC1 || '#38bdf8';
+            document.getElementById('admin-frame-c2').value = s.frameC2 || '#0369a1';
+            document.getElementById('admin-interior-theme').value = s.interiorTheme;
             document.querySelectorAll('#admin-srv-selector button').forEach(b => { b.className = `px-3 py-1 rounded-lg text-xs font-black ${b.dataset.asrv===sid ? 'bg-indigo-600 text-white shadow' : 'bg-slate-200 text-slate-700'}`; });
             document.querySelectorAll('.asrv-badge').forEach(el => { el.textContent = `${sid.replace('S','')}서버`; });
             renderPrizeEditor('admin-prize-list', s.prizes);
