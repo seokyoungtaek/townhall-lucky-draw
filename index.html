@@ -284,24 +284,18 @@
         </div>
 
         <div class="kiosk-shell" id="kiosk-shell">
-            <header class="relative px-1 pb-2 flex items-center justify-between shrink-0 z-10 gap-2">
-                <div class="flex items-center gap-1.5 shrink-0">
-                    <button id="btn-back-lobby" class="glass-menu-btn px-3.5 h-9 rounded-full text-xs font-bold flex items-center gap-1">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg><span>로비</span>
-                    </button>
-                    <button id="btn-bgm" class="glass-menu-btn w-9 h-9 rounded-full flex items-center justify-center text-sm" title="BGM">🎵</button>
-                    <button id="btn-sound" class="glass-menu-btn w-9 h-9 rounded-full flex items-center justify-center text-sm" title="효과음">🔊</button>
-                </div>
-                <div class="flex-1 min-w-0 text-center px-1">
-                    <div id="kiosk-server-pill" class="text-[10px] font-bold text-white/95 bg-black/25 backdrop-blur-md border border-white/25 inline-block px-3 py-0.5 rounded-full">1서버 · 행사 동기화</div>
-                    <h1 id="kiosk-main-title" class="title-font text-xl sm:text-2xl text-white tracking-wide leading-tight mt-0.5 drop-shadow">3D 디지털 캡슐 뽑기</h1>
-                </div>
-                <div class="flex items-center gap-1.5 shrink-0">
-                    <button id="btn-take-host" class="hidden px-3 h-9 rounded-full bg-amber-400 text-slate-950 font-black text-xs shadow">👑 호스트</button>
-                    <button id="btn-connect-mobile" class="glass-menu-btn px-3.5 h-9 rounded-full flex items-center gap-1.5 text-xs font-black !bg-slate-900/55">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM18 18h3v3h-3z"/></svg><span>QR</span>
-                    </button>
-                    <button id="btn-free-settings" class="hidden glass-menu-btn px-3.5 h-9 rounded-full flex items-center gap-1 text-xs font-black !bg-emerald-600/75">⚙️ 설정</button>
+            <header class="relative px-1 pb-2 flex items-center justify-center shrink-0 z-10 min-h-[44px]">
+                <!-- 진행자용 미니 로비 복귀 버튼 (평소엔 은은하게 숨어있어 타이틀을 가리지 않음) -->
+                <button id="btn-back-lobby" title="로비로 돌아가기" class="absolute left-0 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/20 hover:bg-black/55 text-white/60 hover:text-white flex items-center justify-center transition opacity-35 hover:opacity-100">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+                </button>
+                <!-- 정중앙 대형 행사/게임 타이틀 (색상·크기 관리자 커스텀!) -->
+                <h1 id="kiosk-main-title" class="title-font text-3xl text-white tracking-wider text-center leading-tight drop-shadow px-9">3D 디지털 캡슐 뽑기</h1>
+                <!-- 우측: 관전 시 호스트 전환 / 자율 모드 전용 설정 & QR만 조건부 표시 -->
+                <div class="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                    <button id="btn-take-host" class="hidden px-2.5 h-8 rounded-full bg-amber-400 text-slate-950 font-black text-[11px] shadow">👑 호스트</button>
+                    <button id="btn-connect-mobile" class="hidden glass-menu-btn px-2.5 h-8 rounded-full text-[11px] font-black !bg-slate-900/55">📱 QR</button>
+                    <button id="btn-free-settings" class="hidden glass-menu-btn px-2.5 h-8 rounded-full text-[11px] font-black !bg-emerald-600/80">⚙️ 설정</button>
                 </div>
             </header>
 
@@ -325,6 +319,20 @@
                 <!-- GAME 1: TRUE 3D X-Z CLAW -->
                 <div id="game-view-claw" class="w-full h-full relative">
                     <div id="canvas-container" class="w-full h-full"></div>
+                    <!-- ★ 실시간 탑뷰 CCTV (CLAW CAM) PiP 창 (클릭 시 줌인 ↔ 전체 바닥 광각 전환!) -->
+                    <div id="claw-cctv-frame" title="클릭: 집게 줌인 ↔ 전체 바닥 광각 전환"
+                        class="absolute top-16 right-3 z-20 w-[132px] h-[132px] rounded-2xl border-2 border-cyan-300/80 shadow-[0_10px_28px_rgba(0,0,0,0.6)] pointer-events-auto cursor-pointer overflow-hidden">
+                        <div class="absolute top-1.5 left-1.5 flex items-center gap-1 px-1.5 py-0.5 rounded bg-black/65 text-[9px] font-black text-white">
+                            <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping"></span>
+                            <span id="cctv-mode-label">CLAW CAM</span>
+                        </div>
+                        <!-- 중앙 정밀 조준 십자선 (+) -->
+                        <div class="absolute inset-0 pointer-events-none flex items-center justify-center opacity-70">
+                            <div class="w-5 h-[1.5px] bg-yellow-300"></div>
+                            <div class="absolute h-5 w-[1.5px] bg-yellow-300"></div>
+                            <div class="absolute w-7 h-7 rounded-full border border-yellow-300/80"></div>
+                        </div>
+                    </div>
                     <div class="absolute bottom-3 left-3 right-3 z-20 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
                         <div class="flex flex-wrap items-center gap-1.5">
                             <span class="px-2.5 py-1 rounded-full bg-slate-950/75 border border-cyan-400/50 text-[11px] font-bold text-cyan-200">🫧 일반 (80% · 깜짝 1등!)</span>
@@ -429,8 +437,8 @@
                 </div>
 
                 <div class="flex flex-col items-center justify-center text-center px-2 min-w-0">
-                    <div id="kiosk-footer-brand" class="brand-en font-black text-base sm:text-lg tracking-[0.2em] text-white drop-shadow">CJ MEZZOMEDIA × DXE</div>
-                    <div id="kiosk-waiting-pill" class="mt-1.5 px-3.5 py-1 rounded-full bg-black/25 backdrop-blur-md border border-white/25 text-white text-[11px] font-bold">📱 QR 스캔 후 스위치 패드로 플레이!</div>
+                    <div id="kiosk-footer-brand" class="title-font whitespace-pre-line leading-tight tracking-wider text-white drop-shadow" style="font-size:20px;">CJ MEZZOMEDIA&#10;× DXE</div>
+                    <div id="kiosk-waiting-pill" class="mt-1.5 px-3 py-0.5 rounded-full bg-black/28 backdrop-blur-md border border-white/25 text-white text-[10px] font-bold truncate max-w-full">1서버 · 메인홀 A | 📱 QR 스캔 후 플레이!</div>
                 </div>
 
                 <button id="btn-green-grab" class="dome-btn dome-btn-green w-[86px] h-[86px] shrink-0" title="뽑기 (SPACE)">
@@ -497,8 +505,17 @@
                         <h3 class="font-black text-sm text-indigo-700">🏢 공통 브랜딩 · 타이틀 커스터마이징 · PIN 변경</h3>
                         <div class="grid grid-cols-1 sm:grid-cols-4 gap-2.5">
                             <div class="sm:col-span-2"><label class="block text-xs font-bold text-slate-600 mb-1">로비 메인 행사명</label><input id="admin-title" type="text" class="w-full px-3 py-1.5 rounded-xl border text-xs font-bold"></div>
-                            <div><label class="block text-xs font-bold text-slate-600 mb-1">하단 회사/브랜드명</label><input id="admin-footer-brand" type="text" class="w-full px-3 py-1.5 rounded-xl border text-xs font-bold"></div>
+                            <div><label class="block text-xs font-bold text-slate-600 mb-1">하단 회사/브랜드명 (2줄 엔터 가능)</label><textarea id="admin-footer-brand" rows="2" class="w-full px-2.5 py-1 rounded-xl border text-xs font-bold leading-tight resize-none"></textarea></div>
                             <div><label class="block text-xs font-bold text-rose-700 mb-1">새 PIN 변경 (비워두면 유지)</label><input id="admin-pin-new" type="password" maxlength="10" autocomplete="new-password" placeholder="변경 시에만 입력" class="w-full px-3 py-1.5 rounded-xl border border-rose-300 text-xs font-black text-center"></div>
+                        </div>
+                        <!-- 상단 타이틀 / 하단 브랜드명 글자색·크기 + 오디오 제어 -->
+                        <div class="grid grid-cols-2 sm:grid-cols-6 gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-200 items-center">
+                            <label class="flex items-center justify-between bg-white px-2 py-1 rounded-lg border text-[10px] font-bold"><span>게임명 색</span><input id="admin-title-color" type="color" value="#ffffff" class="w-6 h-5 cursor-pointer"></label>
+                            <label class="flex items-center justify-between bg-white px-2 py-1 rounded-lg border text-[10px] font-bold"><span>크기px</span><input id="admin-title-size" type="number" min="16" max="54" value="30" class="w-11 text-center font-black border-0"></label>
+                            <label class="flex items-center justify-between bg-white px-2 py-1 rounded-lg border text-[10px] font-bold"><span>회사명 색</span><input id="admin-brand-color" type="color" value="#ffffff" class="w-6 h-5 cursor-pointer"></label>
+                            <label class="flex items-center justify-between bg-white px-2 py-1 rounded-lg border text-[10px] font-bold"><span>크기px</span><input id="admin-brand-size" type="number" min="12" max="42" value="20" class="w-11 text-center font-black border-0"></label>
+                            <label class="flex items-center gap-1.5 bg-white px-2 py-1.5 rounded-lg border text-[10px] font-black cursor-pointer"><input id="admin-bgm-on" type="checkbox" checked class="accent-indigo-600"><span>🎵 BGM 켜기</span></label>
+                            <label class="flex items-center gap-1.5 bg-white px-2 py-1.5 rounded-lg border text-[10px] font-black cursor-pointer"><input id="admin-sfx-on" type="checkbox" checked class="accent-indigo-600"><span>🔊 효과음 켜기</span></label>
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-4 gap-2">
                             <div><label class="block text-[10px] font-bold text-slate-500 mb-1">캡슐 뽑기 상단 타이틀</label><input id="admin-title-claw" type="text" class="w-full px-2.5 py-1.5 rounded-lg border text-xs font-bold"></div>
@@ -1326,6 +1343,15 @@
                             CONFIG.servers = { ...CONFIG.servers, ...(msg.global.servers || {}) };
                             CONFIG.logoLeft = msg.global.logoLeft || CONFIG.logoLeft; CONFIG.logoRight = msg.global.logoRight || CONFIG.logoRight;
                             CONFIG.kujiFormula = msg.global.kujiFormula || CONFIG.kujiFormula;
+                            if (msg.global.titleColor) CONFIG.titleColor = msg.global.titleColor;
+                            if (msg.global.titleSize)  CONFIG.titleSize  = msg.global.titleSize;
+                            if (msg.global.brandColor) CONFIG.brandColor = msg.global.brandColor;
+                            if (msg.global.brandSize)  CONFIG.brandSize  = msg.global.brandSize;
+                            if (typeof msg.global.bgmOn === 'boolean') {
+                                STATE.bgmEnabled = msg.global.bgmOn;
+                                if (STATE.bgmEnabled) { SoundFX.init(); SoundFX.startBGM(); } else { SoundFX.stopBGM(); }
+                            }
+                            if (typeof msg.global.sfxOn === 'boolean') STATE.soundEnabled = msg.global.sfxOn;
                         }
                         if (msg.srvCfg) CONFIG.serverSettings[sid] = { ...CONFIG.serverSettings[sid], ...msg.srvCfg };
                         localStorage.setItem(STORAGE_KEY_CFG, JSON.stringify(CONFIG));
@@ -1400,7 +1426,12 @@
                 const ver = Date.now(); this.lastCfgVer = ver;
                 ['S1','S2','S3','S4'].forEach(sid => Net.pub(`${MQTT_PREFIX}/event_${sid}/config`, {
                     ver, sender: LOCAL_DEVICE_ID, capsuleChanged,
-                    global: { eventTitle:CONFIG.eventTitle, footerBrand:CONFIG.footerBrand, gameTitles:CONFIG.gameTitles, servers:CONFIG.servers, logoLeft:CONFIG.logoLeft, logoRight:CONFIG.logoRight, kujiFormula:CONFIG.kujiFormula },
+                    global: {
+                        eventTitle: CONFIG.eventTitle, footerBrand: CONFIG.footerBrand, gameTitles: CONFIG.gameTitles,
+                        servers: CONFIG.servers, logoLeft: CONFIG.logoLeft, logoRight: CONFIG.logoRight, kujiFormula: CONFIG.kujiFormula,
+                        titleColor: CONFIG.titleColor, titleSize: CONFIG.titleSize, brandColor: CONFIG.brandColor, brandSize: CONFIG.brandSize,
+                        bgmOn: STATE.bgmEnabled, sfxOn: STATE.soundEnabled
+                    },
                     srvCfg: CONFIG.serverSettings[sid]
                 }, true));
             },
@@ -1510,8 +1541,14 @@
         }
         function updateStageTitles() {
             if (!APP.activeGame) return;
-            document.getElementById('kiosk-main-title').textContent = CONFIG.gameTitles[APP.activeGame] || '럭키드로우';
-            document.getElementById('kiosk-footer-brand').textContent = CONFIG.footerBrand || 'CJ MEZZOMEDIA × DXE';
+            const titleEl = document.getElementById('kiosk-main-title');
+            const brandEl = document.getElementById('kiosk-footer-brand');
+            titleEl.textContent = CONFIG.gameTitles[APP.activeGame] || '럭키드로우';
+            titleEl.style.color = CONFIG.titleColor || '#ffffff';
+            titleEl.style.fontSize = `${Number(CONFIG.titleSize) || 30}px`;
+            brandEl.textContent = CONFIG.footerBrand || 'CJ MEZZOMEDIA\n× DXE';
+            brandEl.style.color = CONFIG.brandColor || '#ffffff';
+            brandEl.style.fontSize = `${Number(CONFIG.brandSize) || 20}px`;
         }
         function confirmEnterGame() {
             document.getElementById('entry-modal').classList.add('hidden'); document.getElementById('entry-modal').classList.remove('flex');
@@ -1532,9 +1569,9 @@
             document.getElementById('lobby-screen').classList.add('hidden'); document.getElementById('lobby-3d-canvas').classList.add('hidden');
             document.getElementById('stage-wrap').classList.remove('hidden');
             document.getElementById('btn-free-settings').classList.toggle('hidden', APP.selectedMode !== 'free');
+            document.getElementById('btn-connect-mobile').classList.toggle('hidden', APP.selectedMode !== 'free');
             document.getElementById('hud-spectator-badge').classList.toggle('hidden', APP.isHost);
             document.getElementById('btn-take-host').classList.toggle('hidden', APP.isHost);
-            document.getElementById('kiosk-server-pill').textContent = APP.selectedMode === 'event' ? `${CONFIG.servers[APP.selectedServer]} · ${APP.isHost ? '👑 메인 호스트' : '👁️ 144fps 관전'}` : `🎮 자율 모드 (${LOCAL_DEVICE_ID})`;
 
             switchVisibleGameView(APP.activeGame); applyThemeSettings(); ServerSync.attachCurrentChannel();
             if (APP.selectedMode === 'free' && APP.activeGame === 'claw') resetTurnTimer();
@@ -1564,7 +1601,7 @@
         // 5. TALL RECTANGULAR 3D DIORAMA CLAW MACHINE (물속 / 하늘 / 공원 / 갤럭시)
         // =====================================================================
         const BOX = { width: 8.8, height: 11.6, depth: 5.6, clawMinX: -3.3, clawMaxX: 3.45, clawMinZ: -2.05, clawMaxZ: 2.05, chuteX: -3.15, chuteZ: 1.55, chuteTopY: 6.2, clawTopY: 9.8, clawBottomY: 1.85 };
-        let scene, camera, renderer, world, clock, capPhysMat, wallPhysMat;
+        let scene, camera, cctvCamera, cctvWideMode = false, renderer, world, clock, capPhysMat, wallPhysMat;
         let capsules = [], bedLowerMesh = null, bedUpperMesh = null, bedCapsData = [], bedFloorBody = null, airParticles = null, interiorRefs = {}, themePropsGroup = null;
         let gantryBeamMesh, clawCarriageMesh, clawGroup, aimBeamMesh, targetRingMesh, cableSegments = [], clawProngs = [];
         let chuteRimMesh = null, chuteChevrons = [], tunnelGroup = null, tunnelBallMesh = null, tunnelFlapPivot = null;
@@ -1616,6 +1653,11 @@
             scene = new THREE.Scene(); scene.background = new THREE.Color(0x064e78); scene.fog = new THREE.FogExp2(0x064e78, 0.007);
             // ★ 삐뚤어짐 없는 스튜디오 망원 화각(34°) 적용!
             camera = new THREE.PerspectiveCamera(34, Math.max(1,c.clientWidth)/Math.max(1,c.clientHeight), 0.1, 110);
+            cctvCamera = new THREE.PerspectiveCamera(42, 1, 0.5, 40);
+            document.getElementById('claw-cctv-frame')?.addEventListener('click', () => {
+                cctvWideMode = !cctvWideMode;
+                document.getElementById('cctv-mode-label').textContent = cctvWideMode ? 'WIDE CAM' : 'CLAW CAM';
+            });
             updateFixedCamera(c.clientWidth||600, c.clientHeight||850);
             renderer = new THREE.WebGLRenderer({ antialias: true }); renderer.setSize(c.clientWidth||600, c.clientHeight||850);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.8));
@@ -1930,12 +1972,6 @@
                 const card3D = new THREE.Mesh(new THREE.BoxGeometry(radius * 1.15, radius * 0.62, 0.03), miniCardMat);
                 card3D.position.y = radius * 0.08; card3D.rotation.set(0.25, (Math.random()-0.5)*1.2, (Math.random()-0.5)*0.4);
                 group.add(card3D);
-
-                // ★ 스페셜 캡슐: 반짝이는 황금 후광 링(뒤쪽에 있어도 시선을 확 사로잡음!)
-                if (isSpec) {
-                    const aura = new THREE.Mesh(new THREE.RingGeometry(radius * 1.08, radius * 1.28, 22), new THREE.MeshBasicMaterial({ color: 0xfde047, transparent: true, opacity: 0.55, side: THREE.DoubleSide }));
-                    aura.rotation.x = -Math.PI/2; group.add(aura);
-                }
 
                 // ★ 스페셜 캡슐 70%는 안쪽(z < 0) 상단에 배치 -> 뒤쪽을 노려 뽑는 전략적 재미!
                 let sx, sz;
@@ -2530,15 +2566,16 @@
                 waitPill.textContent = '📱 QR 스캔 시 경품 선택 & 번호 뜯기 컨트롤러 연결!';
             } else {
                 leftSub.innerHTML = `남은 횟수 <span id="hud-plays-left" class="text-cyan-300">${STATE.playsLeft}</span>회`;
+                iconst srvPrefix = APP.selectedMode === 'event' ? `${CONFIG.servers[APP.selectedServer]} (${APP.isHost ? '호스트' : '관전'})` : '자율 모드';
                 if (APP.selectedMode === 'free') {
                     pLabel.textContent = '🎮 자율 체험 모드';
-                    waitPill.textContent = '🕹️ 4방향 D-Pad / 키보드 / QR로 자유롭게 플레이!';
+                    waitPill.textContent = `${srvPrefix} | 🕹️ 4방향 / 키보드 / QR 플레이!`;
                 } else if (STATE.currentPlayer && STATE.playsLeft > 0) {
                     pLabel.textContent = `🪪 ${STATE.currentPlayer.name}님 (${STATE.currentPlayer.dept})`;
-                    waitPill.textContent = `🎮 ${STATE.currentPlayer.name}님 진행 중`;
+                    waitPill.textContent = `${srvPrefix} | 🎮 ${STATE.currentPlayer.name}님 진행 중`;
                 } else {
                     pLabel.textContent = '📱 QR 접속 대기 중';
-                    waitPill.textContent = '📱 QR 스캔 후 스위치 패드로 플레이!';
+                    waitPill.textContent = `${srvPrefix} | 📱 QR 스캔 후 스위치 패드로 플레이!`;
                 }
             }
             const rLabel = document.getElementById('hud-right-label'), rVal = document.getElementById('hud-right-value');
@@ -2625,7 +2662,13 @@
             });
         }
         function openAdminModal() {
-            document.getElementById('admin-title').value = CONFIG.eventTitle; document.getElementById('admin-footer-brand').value = CONFIG.footerBrand || 'CJ MEZZOMEDIA × DXE';
+            document.getElementById('admin-title').value = CONFIG.eventTitle; document.getElementById('admin-footer-brand').value = CONFIG.footerBrand || 'CJ MEZZOMEDIA\n× DXE';
+            document.getElementById('admin-title-color').value = CONFIG.titleColor || '#ffffff';
+            document.getElementById('admin-title-size').value = CONFIG.titleSize || 30;
+            document.getElementById('admin-brand-color').value = CONFIG.brandColor || '#ffffff';
+            document.getElementById('admin-brand-size').value = CONFIG.brandSize || 20;
+            document.getElementById('admin-bgm-on').checked = STATE.bgmEnabled;
+            document.getElementById('admin-sfx-on').checked = STATE.soundEnabled;
             document.getElementById('admin-title-claw').value = CONFIG.gameTitles.claw; document.getElementById('admin-title-yabawi').value = CONFIG.gameTitles.yabawi; document.getElementById('admin-title-kuji').value = CONFIG.gameTitles.kuji;
             document.getElementById('admin-pin-new').value = ''; document.getElementById('admin-kuji-formula').value = CONFIG.kujiFormula || 'd_minus_e';
             document.getElementById('admin-logo-left').value = CONFIG.logoLeft || 'logo_cj.png'; document.getElementById('admin-logo-right').value = CONFIG.logoRight || 'logo_dxe.png';
@@ -2727,8 +2770,7 @@
 
             document.getElementById('btn-take-host').addEventListener('click', () => requireAdminPin(() => {
                 APP.isHost = true; document.getElementById('hud-spectator-badge').classList.add('hidden'); document.getElementById('btn-take-host').classList.add('hidden');
-                document.getElementById('kiosk-server-pill').textContent = `${CONFIG.servers[APP.selectedServer]} · 👑 메인 호스트`;
-                ServerSync.attachCurrentChannel(); showToast('👑 메인 호스트로 전환되었습니다!', 'super');
+                updateStageHUD(); ServerSync.attachCurrentChannel(); showToast('👑 메인 호스트로 전환되었습니다!', 'super');
             }));
 
             // Kiosk 4-Way D-Pad + Green Action Button
@@ -2765,8 +2807,8 @@
                 }
             });
 
-            document.getElementById('btn-bgm').addEventListener('click', () => { STATE.bgmEnabled = !STATE.bgmEnabled; const b = document.getElementById('btn-bgm'); if (STATE.bgmEnabled){b.textContent='🎵';b.classList.remove('opacity-45');SoundFX.init();SoundFX.startBGM();} else {b.textContent='🔇';b.classList.add('opacity-45');SoundFX.stopBGM();} });
-            document.getElementById('btn-sound').addEventListener('click', () => { STATE.soundEnabled = !STATE.soundEnabled; document.getElementById('btn-sound').textContent = STATE.soundEnabled ? '🔊' : '🔈'; });
+            document.getElementById('admin-bgm-on')?.addEventListener('change', e => { STATE.bgmEnabled = e.target.checked; if (STATE.bgmEnabled){SoundFX.init();SoundFX.startBGM();} else SoundFX.stopBGM(); });
+            document.getElementById('admin-sfx-on')?.addEventListener('change', e => { STATE.soundEnabled = e.target.checked; });
             document.getElementById('btn-connect-mobile').addEventListener('click', () => openQrModal());
             document.getElementById('btn-close-connect').addEventListener('click', () => { document.getElementById('connect-modal').classList.add('hidden'); document.getElementById('connect-modal').classList.remove('flex'); });
             document.getElementById('btn-copy-joypad-url').addEventListener('click', () => copyTextReliable(activeQrUrl || ServerSync.getQrUrlForChannel(APP.channelKey)).then(() => showToast('🔗 유저 접속 링크가 복사되었습니다!', 'super')));
@@ -2804,7 +2846,14 @@
                 saveCurrentDraftSrvFromDOM();
                 const prevCap = CONFIG.serverSettings[APP.selectedServer]?.capsuleCount;
                 CONFIG.eventTitle = document.getElementById('admin-title').value.trim() || DEFAULT_CONFIG.eventTitle;
-                CONFIG.footerBrand = document.getElementById('admin-footer-brand').value.trim() || 'CJ MEZZOMEDIA × DXE';
+                CONFIG.footerBrand = document.getElementById('admin-footer-brand').value.trim() || 'CJ MEZZOMEDIA\n× DXE';
+                CONFIG.titleColor = document.getElementById('admin-title-color').value || '#ffffff';
+                CONFIG.titleSize = Math.max(16, Math.min(54, Number(document.getElementById('admin-title-size').value) || 30));
+                CONFIG.brandColor = document.getElementById('admin-brand-color').value || '#ffffff';
+                CONFIG.brandSize = Math.max(12, Math.min(42, Number(document.getElementById('admin-brand-size').value) || 20));
+                STATE.bgmEnabled = document.getElementById('admin-bgm-on').checked;
+                STATE.soundEnabled = document.getElementById('admin-sfx-on').checked;
+                if (STATE.bgmEnabled) { SoundFX.init(); SoundFX.startBGM(); } else { SoundFX.stopBGM(); }
                 CONFIG.gameTitles = {
                     claw: document.getElementById('admin-title-claw').value.trim() || '3D 디지털 캡슐 뽑기',
                     yabawi: document.getElementById('admin-title-yabawi').value.trim() || '떡 먹는 용만이',
@@ -2848,13 +2897,57 @@
             if (APP.activeGame !== 'claw' || !renderer) return;
             const dt = Math.min(clock.getDelta(), 0.05);
             if (STATE.phase !== 'CHUTE_ROLL') {
-                // Adaptive 144Hz/60Hz physics step for buttery smooth high-refresh monitors!
                 world.step(dt < 0.011 ? 1 / 144 : 1 / 60, dt, 3);
                 updateClawVisuals(dt);
                 for (const cap of capsules) { cap.mesh.position.copy(cap.body.position); cap.mesh.quaternion.copy(cap.body.quaternion); }
             }
             updateClawGame(dt);
+
+            // 1) 메인 정면 3D 화면 렌더링
+            const c = document.getElementById('canvas-container');
+            const w = c.clientWidth || 1, h = c.clientHeight || 1;
+            renderer.setScissorTest(false);
+            renderer.setViewport(0, 0, w, h);
             renderer.render(scene, camera);
+
+            // 2) ★ 우측 상단 실시간 탑뷰 CCTV (CLAW CAM) PiP 렌더링!
+            const cctvBox = document.getElementById('claw-cctv-frame');
+            if (cctvCamera && cctvBox && STATE.phase !== 'CHUTE_ROLL' && STATE.phase !== 'REVEALING') {
+                cctvBox.classList.remove('hidden');
+                const cRect = c.getBoundingClientRect(), pRect = cctvBox.getBoundingClientRect();
+                const vx = Math.max(0, pRect.left - cRect.left);
+                const vy = Math.max(0, cRect.bottom - pRect.bottom);
+                const vw = Math.max(10, pRect.width), vh = Math.max(10, pRect.height);
+
+                if (cctvWideMode) {
+                    // 전체 바닥 광각 CCTV 뷰
+                    cctvCamera.fov = 52; cctvCamera.updateProjectionMatrix();
+                    cctvCamera.position.set(0.3, BOX.height - 0.5, 0.05);
+                    cctvCamera.lookAt(0.3, currentBedHeight, 0);
+                } else {
+                    // 집게 바로 위에서 아래를 내려다보는 정밀 추적 CLAW CAM!
+                    cctvCamera.fov = 38; cctvCamera.updateProjectionMatrix();
+                    cctvCamera.position.set(clawPos.x, BOX.height - 0.6, clawPos.z + 0.01);
+                    cctvCamera.lookAt(clawPos.x, currentBedHeight, clawPos.z);
+                }
+
+                // 상단 레일이 시야를 가리지 않게 잠시 숨겼다가 즉시 복원
+                if (gantryBeamMesh) gantryBeamMesh.visible = false;
+                if (clawCarriageMesh) clawCarriageMesh.visible = false;
+                if (aimBeamMesh) aimBeamMesh.visible = false;
+
+                renderer.setScissorTest(true);
+                renderer.setViewport(vx, vy, vw, vh);
+                renderer.setScissor(vx, vy, vw, vh);
+                renderer.clearDepth();
+                renderer.render(scene, cctvCamera);
+                renderer.setScissorTest(false);
+
+                if (gantryBeamMesh) gantryBeamMesh.visible = true;
+                if (clawCarriageMesh) clawCarriageMesh.visible = true;
+            } else if (cctvBox) {
+                cctvBox.classList.add('hidden');
+            }
         }
 
         window.onload = function () {
