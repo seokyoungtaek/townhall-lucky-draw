@@ -36,20 +36,25 @@
         .floating-side-logo img { max-width: min(190px, 11vw); max-height: 130px; object-fit: contain; filter: drop-shadow(0 10px 26px rgba(0,0,0,0.55)); }
 
         /* No height cap on large QHD/4K monitors! Fills 96dvh cleanly! */
+        /* 세로형 직사각형 키오스크 비율 + 상/좌/우 동일 두꺼운 테두리 + 하단 더 두꺼운 영역 */
         .kiosk-shell {
-            position: relative; width: min(98vw, 1520px); height: 96dvh; flex-shrink: 0;
-            display: flex; flex-direction: column; border-radius: 30px; overflow: hidden;
-            background: radial-gradient(circle at 18% 0%, rgba(0,210,255,0.22), transparent 45%), radial-gradient(circle at 82% 0%, rgba(244,63,94,0.22), transparent 45%), linear-gradient(180deg, #131c3a, #0a1024 55%, #110d24);
-            border: 2.5px solid rgba(148,210,255,0.42); box-shadow: 0 36px 90px rgba(0,0,0,0.88), 0 0 44px rgba(56,189,248,0.18);
+            position: relative; width: min(94vw, 68dvh); height: 96dvh; flex-shrink: 0;
+            display: flex; flex-direction: column;
+            padding: 24px 24px 30px 24px;
+            border-radius: 34px; overflow: hidden;
+            box-shadow: 0 36px 90px rgba(0,0,0,0.78), inset 0 2px 10px rgba(255,255,255,0.45);
+            transition: background 0.35s ease, border-color 0.35s ease;
         }
-        @media (min-width: 1180px) { .kiosk-shell { width: min(76vw, 1520px); } }
-        .kiosk-shell.theme-frame-gold { background: repeating-linear-gradient(135deg, rgba(251,191,36,0.08) 0 18px, transparent 18px 36px), linear-gradient(180deg, #261e12, #12100d 55%, #1e170d); border-color: rgba(251,191,36,0.7); }
-        .kiosk-shell.theme-frame-cyber { background: repeating-linear-gradient(90deg, rgba(34,211,238,0.09) 0 2px, transparent 2px 28px), repeating-linear-gradient(0deg, rgba(168,85,247,0.09) 0 2px, transparent 2px 28px), linear-gradient(180deg, #18133a, #0b0920); border-color: #22d3ee; }
-        .kiosk-shell.theme-frame-aurora { background: radial-gradient(circle at 0% 0%, rgba(244,63,94,0.42), transparent 48%), radial-gradient(circle at 100% 100%, rgba(56,189,248,0.42), transparent 48%), linear-gradient(135deg, #1e1b4b, #31103f 50%, #0f172a); border-color: #f472b6; }
-        .kiosk-shell.theme-frame-emerald { background: repeating-linear-gradient(45deg, rgba(45,212,191,0.08) 0 16px, transparent 16px 32px), linear-gradient(180deg, #0b2b2a, #061720 55%, #092126); border-color: #2dd4bf; }
-        .kiosk-shell.theme-frame-retro { background: repeating-conic-gradient(from 12deg at 50% 50%, rgba(244,63,94,0.22) 0 15deg, rgba(251,191,36,0.18) 15deg 30deg), linear-gradient(180deg, #1f1135, #120c24); border-color: #fbbf24; }
+        .kiosk-shell.theme-frame-ocean_wave { background: radial-gradient(circle at 20% 0%, #67e8f9 0%, #0ea5e9 42%, #0369a1 100%); border: 5px solid #bae6fd; }
+        .kiosk-shell.theme-frame-sky_pastel { background: linear-gradient(160deg, #93c5fd 0%, #fbcfe8 50%, #fde68a 100%); border: 5px solid #ffffff; }
+        .kiosk-shell.theme-frame-sky_pastel #kiosk-main-title,
+        .kiosk-shell.theme-frame-sky_pastel #kiosk-footer-brand { color: #1e293b; text-shadow: none; }
+        .kiosk-shell.theme-frame-park_fresh { background: linear-gradient(165deg, #6ee7b7 0%, #34d399 45%, #fef08a 100%); border: 5px solid #ecfdf5; }
+        .kiosk-shell.theme-frame-park_fresh #kiosk-main-title,
+        .kiosk-shell.theme-frame-park_fresh #kiosk-footer-brand { color: #064e3b; text-shadow: none; }
+        .kiosk-shell.theme-frame-midnight_luxe { background: radial-gradient(circle at 50% 0%, #312e81 0%, #1e1b4b 52%, #0f172a 100%); border: 5px solid #fbbf24; }
 
-        .screen-bezel { position: relative; flex: 1; min-height: 0; margin: 0 14px; border-radius: 22px; overflow: hidden; border: 2.5px solid rgba(56,189,248,0.5); box-shadow: inset 0 0 40px rgba(0,0,0,0.75); background: #060b1c; }
+        .screen-bezel { position: relative; flex: 1; min-height: 0; margin: 10px 0 14px 0; border-radius: 26px; overflow: hidden; border: 5px solid rgba(255,255,255,0.65); box-shadow: inset 0 10px 30px rgba(0,0,0,0.42), 0 12px 28px rgba(0,0,0,0.32); background: #0c4a6e; }
 
         /* ARCADE CONTROLS (4-WAY D-PAD + ACTION BUTTON) */
         .dpad-key { background: linear-gradient(180deg, #334155, #0f172a); border: 2px solid rgba(148,163,184,0.45); box-shadow: 0 4px 0 #020617; color: #f8fafc; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 900; touch-action: none; transition: transform 0.06s; }
@@ -498,11 +503,21 @@
                             <div class="bg-amber-50 p-3 rounded-xl border border-amber-200 space-y-2">
                                 <div class="font-black text-xs text-amber-900">🎨 패턴 프레임 & 3D 테마 (<span class="asrv-badge">1서버</span>)</div>
                                 <select id="admin-frame-theme" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold bg-white">
-                                    <option value="prism">프레임: 🌌 오리지널 프리즘</option><option value="gold">프레임: 👑 샴페인 골드 스트라이프</option><option value="cyber">프레임: ⚡ 사이버 네온 그리드</option><option value="aurora">프레임: 🌈 오로라 웨이브</option><option value="emerald">프레임: 💎 에메랄드 다이아</option><option value="retro">프레임: 🎪 레트로 선버스트</option>
+                                    <option value="ocean_wave">프레임: 🌊 아쿠아 웨이브 (기본)</option>
+                                    <option value="sky_pastel">프레임: ☁️ 파스텔 스카이</option>
+                                    <option value="park_fresh">프레임: 🌳 공원 프레시 민트</option>
+                                    <option value="midnight_luxe">프레임: 🌌 미드나잇 골드</option>
                                 </select>
                                 <select id="admin-interior-theme" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold bg-white">
-                                    <option value="midnight_prism">3D 공간: 🌌 미드나잇 프리즘</option><option value="royal_gold">3D 공간: ✨ 로얄 골드</option><option value="cyber_teal">3D 공간: 🩵 사이버 틸</option><option value="velvet_rose">3D 공간: 🌹 벨벳 로즈</option><option value="candy_pop">3D 공간: 🍬 캔디 팝 아케이드</option><option value="galaxy_nebula">3D 공간: 🪐 갤럭시 네뷸라</option>
+                                    <option value="underwater">3D 공간: 🌊 물속 아쿠아리움 (기본)</option>
+                                    <option value="sky">3D 공간: ☁️ 몽글몽글 하늘</option>
+                                    <option value="park">3D 공간: 🌳 햇살 가득 공원</option>
+                                    <option value="galaxy">3D 공간: 🌌 드림 갤럭시</option>
                                 </select>
+                                <label class="flex items-center gap-2 text-[11px] font-bold text-slate-700 pt-1 cursor-pointer">
+                                    <input id="admin-use-gauge" type="checkbox" class="accent-indigo-600 w-4 h-4">
+                                    <span>타이밍 스탑 게이지 사용 (기본: 즉시 하강)</span>
+                                </label>
                                 <button id="btn-reset-finale" type="button" class="w-full py-1.5 rounded-lg bg-amber-500 text-white text-xs font-black">🔄 피날레 쿠지 보드 리셋</button>
                             </div>
                         </div>
@@ -562,8 +577,8 @@
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
                         <select id="free-yabawi-cups" class="px-2 py-1.5 rounded-lg border text-xs font-bold"><option value="3">용만이 3돔</option><option value="4">용만이 4돔</option><option value="5">용만이 5돔</option></select>
                         <select id="free-yabawi-speed" class="px-2 py-1.5 rounded-lg border text-xs font-bold"><option value="420">속도: 보통</option><option value="280">속도: 빠름</option><option value="180">속도: 초고속</option></select>
-                        <select id="free-frame-theme" class="px-2 py-1.5 rounded-lg border text-xs font-bold"><option value="prism">프레임: 프리즘</option><option value="gold">프레임: 골드</option><option value="cyber">프레임: 사이버</option><option value="aurora">프레임: 오로라</option><option value="emerald">프레임: 에메랄드</option><option value="retro">프레임: 레트로</option></select>
-                        <select id="free-interior-theme" class="px-2 py-1.5 rounded-lg border text-xs font-bold"><option value="midnight_prism">3D: 미드나잇</option><option value="royal_gold">3D: 골드</option><option value="cyber_teal">3D: 틸</option><option value="velvet_rose">3D: 로즈</option><option value="candy_pop">3D: 캔디팝</option><option value="galaxy_nebula">3D: 갤럭시</option></select>
+                        <select id="free-frame-theme" class="px-2 py-1.5 rounded-lg border text-xs font-bold"><option value="ocean_wave">프레임: 🌊 아쿠아</option><option value="sky_pastel">프레임: ☁️ 스카이</option><option value="park_fresh">프레임: 🌳 공원</option><option value="midnight_luxe">프레임: 🌌 골드</option></select>
+                        <select id="free-interior-theme" class="px-2 py-1.5 rounded-lg border text-xs font-bold"><option value="underwater">3D: 🌊 물속</option><option value="sky">3D: ☁️ 하늘</option><option value="park">3D: 🌳 공원</option><option value="galaxy">3D: 🌌 갤럭시</option></select>
                     </div>
                     <button id="btn-free-add-plays" type="button" class="w-full py-2 rounded-xl bg-amber-400 text-amber-950 text-xs font-black">🎮 자율 횟수 +5회 충전</button>
                 </div>
@@ -719,12 +734,10 @@
         };
 
         const INTERIOR_THEMES = {
-            midnight_prism: { bg: 0x0b1536, gradTop: '#1e3a8a', gradMid: '#0f172a', gradBot: '#060a17', side: 0x111f4d, floor: 0x0b1330, ceil: 0x1e293b, grid: 0x38bdf8, led: 0x00d2ff, rim: 0xf43f5e },
-            royal_gold:     { bg: 0x171412, gradTop: '#78350f', gradMid: '#1c1917', gradBot: '#0c0a09', side: 0x292524, floor: 0x1c1917, ceil: 0x44403c, grid: 0xfbbf24, led: 0xfde047, rim: 0xf59e0b },
-            cyber_teal:     { bg: 0x08222a, gradTop: '#0f766e', gradMid: '#083344', gradBot: '#04141c', side: 0x0e444f, floor: 0x062c36, ceil: 0x115e59, grid: 0x2dd4bf, led: 0x5eead4, rim: 0x38bdf8 },
-            velvet_rose:    { bg: 0x240b1d, gradTop: '#9f1239', gradMid: '#3b0724', gradBot: '#140511', side: 0x4c0519, floor: 0x2a0717, ceil: 0x831843, grid: 0xfb7185, led: 0xfda4af, rim: 0xfbbf24 },
-            candy_pop:      { bg: 0x1e1b4b, gradTop: '#ec4899', gradMid: '#6366f1', gradBot: '#1e1b4b', side: 0x4338ca, floor: 0x312e81, ceil: 0x818cf8, grid: 0xfef08a, led: 0xf9a8d4, rim: 0x38bdf8 },
-            galaxy_nebula:  { bg: 0x09051a, gradTop: '#581c87', gradMid: '#1e1b4b', gradBot: '#030712', side: 0x2e1065, floor: 0x170b33, ceil: 0x4c1d95, grid: 0xc084fc, led: 0x38bdf8, rim: 0xf472b6 }
+            underwater: { bg: 0x064e78, top: '#38bdf8', mid: '#0284c7', bot: '#063052', side: 0x0369a1, floor: 0xd6b888, ceil: 0x7dd3fc, led: 0x67e8f9, rim: 0x38bdf8 },
+            sky:        { bg: 0x56a8f5, top: '#3b82f6', mid: '#7dd3fc', bot: '#fde68a', side: 0x60a5fa, floor: 0xf0f9ff, ceil: 0x93c5fd, led: 0xffffff, rim: 0xfef08a },
+            park:       { bg: 0x38bdf8, top: '#38bdf8', mid: '#bae6fd', bot: '#86efac', side: 0x4ade80, floor: 0x22c55e, ceil: 0x7dd3fc, led: 0xfef08a, rim: 0xfbbf24 },
+            galaxy:     { bg: 0x110a2e, top: '#4c1d95', mid: '#1e1b4b', bot: '#09051a', side: 0x2e1065, floor: 0x170f38, ceil: 0x581c87, led: 0xc084fc, rim: 0xf472b6 }
         };
 
         const DEFAULT_PRIZES = [
@@ -736,9 +749,10 @@
         ];
 
         const makeDefaultServerSetting = () => ({
-            capsuleCount: 220, winRate: 65, overlapThreshold: 50,
+            capsuleCount: 60, winRate: 65, overlapThreshold: 50,
+            useTimingGauge: false,
             yabawiCups: 3, yabawiSpeedMs: 320, yabawiSwaps: 10,
-            frameTheme: 'prism', interiorTheme: 'midnight_prism',
+            frameTheme: 'ocean_wave', interiorTheme: 'underwater',
             prizes: JSON.parse(JSON.stringify(DEFAULT_PRIZES))
         });
 
@@ -1440,17 +1454,17 @@
         }
 
         // =====================================================================
-        // 5. TRUE FULL-3D X-Z CLAW MACHINE (WIDE 12.6 × DEEP 7.4 + 400 CAPSULES + DYNAMIC AIR SHAKE!)
+        // 5. TALL RECTANGULAR 3D DIORAMA CLAW MACHINE (물속 / 하늘 / 공원 / 갤럭시)
         // =====================================================================
-        const BOX = { width: 12.6, height: 9.8, depth: 7.4, clawMinX: -4.9, clawMaxX: 5.2, clawMinZ: -2.8, clawMaxZ: 2.8, chuteX: -4.95, chuteZ: 2.15, chuteTopY: 4.7, clawTopY: 8.2, clawBottomY: 1.85 };
+        const BOX = { width: 8.6, height: 11.4, depth: 5.8, clawMinX: -3.25, clawMaxX: 3.4, clawMinZ: -2.15, clawMaxZ: 2.15, chuteX: -3.15, chuteZ: 1.65, chuteTopY: 4.8, clawTopY: 9.6, clawBottomY: 1.85 };
         let scene, camera, renderer, world, clock, capPhysMat, wallPhysMat;
-        let capsules = [], bedInstMesh = null, bedRingInstMesh = null, bedFloorBody = null, airParticles = null, interiorRefs = {};
+        let capsules = [], bedInstMesh = null, bedRingInstMesh = null, bedFloorBody = null, airParticles = null, interiorRefs = {}, themePropsGroup = null;
         let gantryBeamMesh, clawCarriageMesh, clawGroup, aimBeamMesh, targetRingMesh, cableSegments = [], clawProngs = [];
         let chuteRimMesh = null, chuteChevrons = [], tunnelGroup = null, tunnelBallMesh = null, tunnelFlapPivot = null;
         let chuteDropState = { vx: 0, vy: 0, vz: 0, rx: 0, rz: 0, passedRing: false, bounceCount: 0 };
-        const CABLE_SEG_COUNT = 8, clawPos = { x: 1.0, y: BOX.clawTopY, z: 0.0 };
-        let clawPrevX = 1.0, clawPrevZ = 0.0, clawVelX = 0, clawVelZ = 0, swayX = 0, swayVelX = 0, swayZ = 0, swayVelZ = 0, prongJig = 0, prongJigVel = 0, clawOpenAngle = 0.52, targetClawOpenAngle = 0.52;
-        let currentBedHeight = 1.5;
+        const CABLE_SEG_COUNT = 8, clawPos = { x: 0.8, y: BOX.clawTopY, z: 0.0 };
+        let clawPrevX = 0.8, clawPrevZ = 0.0, clawVelX = 0, clawVelZ = 0, swayX = 0, swayVelX = 0, swayZ = 0, swayVelZ = 0, prongJig = 0, prongJigVel = 0, clawOpenAngle = 0.52, targetClawOpenAngle = 0.52;
+        let currentBedHeight = 0;
 
         function pickPrizeForCapsuleType(isSpecial) {
             const list = getActivePrizes(), len = list.length; if (len <= 1) return list[0];
@@ -1460,20 +1474,18 @@
             return list[Math.min(idx, len - 1)];
         }
 
-        // ★ SUPER DYNAMIC AIR SHAKE (2x Blast + Swirl + 3D Air Jet Particles + Cabinet Rumble!)
         function triggerAirShake() {
             if (!APP.isHost || APP.activeGame !== 'claw' || STATE.phase !== 'IDLE') return;
             if (STATE.playsLeft <= 0) { showToast('먼저 QR 사번 인증으로 플레이를 시작하세요! 📱', 'warn'); return; }
             if (STATE.airShakeUsed) { showToast('💨 판 띄우기 찬스는 한 게임당 1회만 가능합니다!', 'warn'); return; }
-            STATE.airShakeUsed = true; STATE.bedWaveTimer = 1.05;
-            SoundFX.airShake();
+            STATE.airShakeUsed = true; STATE.bedWaveTimer = 1.05; SoundFX.airShake();
             const shell = document.getElementById('kiosk-shell'); shell.classList.remove('shake-anim'); void shell.offsetWidth; shell.classList.add('shake-anim');
             capsules.forEach(c => {
                 const vy = c.isSpecial ? (19.5 + Math.random()*3.0) : (13.5 + Math.random()*5.0);
-                c.body.velocity.set((Math.random()-0.5)*7.5, vy, (Math.random()-0.5)*6.5);
+                c.body.velocity.set((Math.random()-0.5)*6.5, vy, (Math.random()-0.5)*5.5);
                 c.body.angularVelocity.set((Math.random()-0.5)*14, (Math.random()-0.5)*14, (Math.random()-0.5)*14);
             });
-            updateAirShakeBtn(); showToast('💨 강력 에어블로우 발동!! 캡슐이 하늘로 솟구칩니다!!', 'super'); ServerSync.broadcastState();
+            updateAirShakeBtn(); showToast('💨 강력 에어블로우 발동!! 캡슐이 공중으로 솟구칩니다!!', 'super'); ServerSync.broadcastState();
         }
         function updateAirShakeBtn() {
             const b = document.getElementById('btn-air-shake'); if (!b) return;
@@ -1482,22 +1494,22 @@
 
         function init3D() {
             const c = document.getElementById('canvas-container'); clock = new THREE.Clock();
-            scene = new THREE.Scene(); scene.background = new THREE.Color(0x0b1536); scene.fog = new THREE.FogExp2(0x0b1536, 0.009);
+            scene = new THREE.Scene(); scene.background = new THREE.Color(0x064e78); scene.fog = new THREE.FogExp2(0x064e78, 0.008);
             camera = new THREE.PerspectiveCamera(42, Math.max(1,c.clientWidth)/Math.max(1,c.clientHeight), 0.1, 110);
-            updateFixedCamera(c.clientWidth||800, c.clientHeight||750);
-            renderer = new THREE.WebGLRenderer({ antialias: true }); renderer.setSize(c.clientWidth||800, c.clientHeight||750);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.8)); renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.25;
+            updateFixedCamera(c.clientWidth||600, c.clientHeight||850);
+            renderer = new THREE.WebGLRenderer({ antialias: true }); renderer.setSize(c.clientWidth||600, c.clientHeight||850);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.8)); renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.22;
             c.appendChild(renderer.domElement);
 
-            scene.add(new THREE.HemisphereLight(0xe0f2fe, 0x0f172a, 1.3));
-            const dl = new THREE.DirectionalLight(0xffffff, 1.25); dl.position.set(4, 14, 10); scene.add(dl);
-            const cf = new THREE.PointLight(0x38bdf8, 1.0, 28); cf.position.set(-5, 7, 7); scene.add(cf);
-            const rp = new THREE.PointLight(0xf43f5e, 0.9, 24); rp.position.set(6, 4, 4); scene.add(rp); interiorRefs.rimLight = rp;
+            scene.add(new THREE.HemisphereLight(0xf0f9ff, 0x0f172a, 1.35));
+            const dl = new THREE.DirectionalLight(0xffffff, 1.25); dl.position.set(4, 15, 11); scene.add(dl);
+            const cf = new THREE.PointLight(0x7dd3fc, 0.9, 28); cf.position.set(-4, 8, 7); scene.add(cf);
+            const rp = new THREE.PointLight(0xfde047, 0.75, 24); rp.position.set(5, 5, 5); scene.add(rp); interiorRefs.rimLight = rp;
 
-            world = new CANNON.World(); world.gravity.set(0, -21, 0); world.broadphase = new CANNON.NaiveBroadphase(); world.solver.iterations = 10;
+            world = new CANNON.World(); world.gravity.set(0, -22, 0); world.broadphase = new CANNON.NaiveBroadphase(); world.solver.iterations = 12;
             capPhysMat = new CANNON.Material('capsule'); wallPhysMat = new CANNON.Material('wall');
-            world.addContactMaterial(new CANNON.ContactMaterial(capPhysMat, wallPhysMat, { friction: 0.3, restitution: 0.22 }));
-            world.addContactMaterial(new CANNON.ContactMaterial(capPhysMat, capPhysMat, { friction: 0.24, restitution: 0.25 }));
+            world.addContactMaterial(new CANNON.ContactMaterial(capPhysMat, wallPhysMat, { friction: 0.36, restitution: 0.14 }));
+            world.addContactMaterial(new CANNON.ContactMaterial(capPhysMat, capPhysMat, { friction: 0.32, restitution: 0.14 }));
 
             buildDeep3DInterior(); buildLongExitTunnel(); buildPrismClaw();
             applyThemeSettings(); spawnHybridCapsules(getActiveGameSettings().capsuleCount);
@@ -1505,93 +1517,167 @@
             animate();
         }
 
-        // ★ Elevated 3/4 Perspective Camera looking deep into the 12.6 × 7.4 3D Capsule Pit!
         function updateFixedCamera(w, h) {
             if (!camera) return;
-            const aspect = Math.max(0.5, (w||800)/Math.max(1,h||750));
+            const aspect = Math.max(0.45, (w||600)/Math.max(1,h||850));
             camera.aspect = aspect;
-            const zDist = Math.max(15.2, 17.5 / aspect);
-            camera.position.set(0, 7.6, zDist);
-            camera.lookAt(0, 3.85, 0.0);
+            const zDist = Math.max(15.6, 12.2 / aspect);
+            camera.position.set(0, 8.2, zDist);
+            camera.lookAt(0, 4.9, 0.0);
             camera.updateProjectionMatrix();
         }
 
-        function createBackWallTexture(key = 'midnight_prism') {
-            const th = INTERIOR_THEMES[key] || INTERIOR_THEMES.midnight_prism;
-            const cvs = document.createElement('canvas'); cvs.width = 512; cvs.height = 512; const ctx = cvs.getContext('2d');
-            const g = ctx.createRadialGradient(256,140,30,256,256,430); g.addColorStop(0,th.gradTop); g.addColorStop(0.55,th.gradMid); g.addColorStop(1,th.gradBot);
-            ctx.fillStyle = g; ctx.fillRect(0,0,512,512);
-            ctx.strokeStyle = 'rgba(255,255,255,0.14)'; ctx.lineWidth = 2;
-            for (let x=-512;x<1024;x+=64) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x+256,512); ctx.stroke(); }
-            for (let y=64;y<512;y+=64) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(512,y); ctx.stroke(); }
+        function createBackWallTexture(key = 'underwater') {
+            const th = INTERIOR_THEMES[key] || INTERIOR_THEMES.underwater;
+            const cvs = document.createElement('canvas'); cvs.width = 512; cvs.height = 768; const ctx = cvs.getContext('2d');
+            const g = ctx.createLinearGradient(0, 0, 0, 768);
+            g.addColorStop(0, th.top); g.addColorStop(0.55, th.mid); g.addColorStop(1, th.bot);
+            ctx.fillStyle = g; ctx.fillRect(0, 0, 512, 768);
+
+            if (key === 'underwater') {
+                for (let i = 0; i < 6; i++) {
+                    const bg = ctx.createLinearGradient(80 + i*75, 0, 30 + i*85, 620);
+                    bg.addColorStop(0, 'rgba(224,242,254,0.28)'); bg.addColorStop(1, 'rgba(224,242,254,0)');
+                    ctx.fillStyle = bg; ctx.beginPath();
+                    ctx.moveTo(60+i*75, 0); ctx.lineTo(115+i*75, 0); ctx.lineTo(65+i*90, 660); ctx.lineTo(-10+i*90, 660); ctx.fill();
+                }
+                for (let i = 0; i < 28; i++) {
+                    ctx.fillStyle = `rgba(255,255,255,${0.08 + Math.random()*0.16})`;
+                    ctx.beginPath(); ctx.arc(Math.random()*512, Math.random()*720, 4+Math.random()*16, 0, Math.PI*2); ctx.fill();
+                }
+            } else if (key === 'sky') {
+                const sun = ctx.createRadialGradient(380, 140, 15, 380, 140, 220);
+                sun.addColorStop(0, 'rgba(255,251,235,0.85)'); sun.addColorStop(1, 'rgba(255,251,235,0)');
+                ctx.fillStyle = sun; ctx.fillRect(0, 0, 512, 500);
+                ctx.fillStyle = 'rgba(255,255,255,0.45)';
+                [[110,220,55],[160,210,65],[210,225,48],[340,360,60],[400,350,70],[455,365,50]].forEach(([x,y,r]) => { ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill(); });
+            } else if (key === 'park') {
+                const sun = ctx.createRadialGradient(110, 110, 10, 110, 110, 210);
+                sun.addColorStop(0, 'rgba(254,249,195,0.8)'); sun.addColorStop(1, 'rgba(254,249,195,0)');
+                ctx.fillStyle = sun; ctx.fillRect(0, 0, 512, 420);
+                ctx.fillStyle = 'rgba(74,222,128,0.55)'; ctx.beginPath(); ctx.ellipse(150, 740, 290, 210, 0, 0, Math.PI*2); ctx.fill();
+                ctx.fillStyle = 'rgba(34,197,94,0.65)'; ctx.beginPath(); ctx.ellipse(400, 760, 280, 220, 0, 0, Math.PI*2); ctx.fill();
+            } else {
+                const neb = ctx.createRadialGradient(256, 260, 20, 256, 260, 320);
+                neb.addColorStop(0, 'rgba(236,72,153,0.32)'); neb.addColorStop(0.5, 'rgba(56,189,248,0.18)'); neb.addColorStop(1, 'transparent');
+                ctx.fillStyle = neb; ctx.fillRect(0,0,512,768);
+                for (let i = 0; i < 70; i++) { ctx.fillStyle = `rgba(255,255,255,${0.3+Math.random()*0.7})`; ctx.beginPath(); ctx.arc(Math.random()*512, Math.random()*768, 1+Math.random()*2.5, 0, Math.PI*2); ctx.fill(); }
+            }
             const tex = new THREE.CanvasTexture(cvs); tex.needsUpdate = true; return tex;
         }
+
+        function rebuild3DThemeProps(key = 'underwater') {
+            if (!scene) return;
+            if (themePropsGroup) { scene.remove(themePropsGroup); themePropsGroup = null; }
+            themePropsGroup = new THREE.Group(); scene.add(themePropsGroup);
+            const hd = BOX.depth / 2;
+
+            if (key === 'underwater') {
+                const coralMat1 = new THREE.MeshStandardMaterial({ color: 0xfb7185, roughness: 0.4 }), coralMat2 = new THREE.MeshStandardMaterial({ color: 0x34d399, roughness: 0.45 });
+                [[-3.6,-2.3,1.5,coralMat1],[3.5,-2.2,1.8,coralMat2],[2.6,-2.4,1.2,coralMat1],[-2.2,-2.5,1.3,coralMat2]].forEach(([x,z,h,m]) => {
+                    const c = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.24, h, 10), m); c.position.set(x, h/2, z); themePropsGroup.add(c);
+                });
+                const bubMat = new THREE.MeshPhysicalMaterial({ color: 0xe0f2fe, transparent: true, opacity: 0.48, roughness: 0.05, clearcoat: 1 });
+                for (let i = 0; i < 24; i++) {
+                    const b = new THREE.Mesh(new THREE.SphereGeometry(0.08 + Math.random()*0.16, 12, 10), bubMat);
+                    b.position.set((Math.random()-0.5)*7.6, 1 + Math.random()*9.5, -hd + 0.4 + Math.random()*1.6);
+                    b.userData = { animType: 'rise', speed: 0.6 + Math.random()*0.9, baseX: b.position.x, phase: Math.random()*6.28 };
+                    themePropsGroup.add(b);
+                }
+            } else if (key === 'sky') {
+                const cloudMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.85 });
+                [[-2.5, 7.6, -2.0, 1.0], [2.4, 6.4, -2.2, 0.9], [-0.4, 8.8, -2.3, 0.75]].forEach(([cx,cy,cz,sc]) => {
+                    const cl = new THREE.Group(); cl.position.set(cx,cy,cz); cl.scale.setScalar(sc);
+                    [[0,0,0,0.85],[-0.75,-0.15,0,0.62],[0.78,-0.12,0,0.65],[0.15,0.4,0,0.55]].forEach(([x,y,z,r]) => {
+                        const s = new THREE.Mesh(new THREE.SphereGeometry(r, 14, 12), cloudMat); s.position.set(x,y,z); cl.add(s);
+                    });
+                    cl.userData = { animType: 'drift', speed: 0.25 + Math.random()*0.2, baseX: cx, phase: Math.random()*6.28 };
+                    themePropsGroup.add(cl);
+                });
+            } else if (key === 'park') {
+                const trunkMat = new THREE.MeshStandardMaterial({ color: 0x92400e, roughness: 0.8 }), leafMat = new THREE.MeshStandardMaterial({ color: 0x16a34a, roughness: 0.6 });
+                [[3.4, -2.1, 1.0], [-3.4, -2.2, 0.9]].forEach(([tx, tz, sc]) => {
+                    const tr = new THREE.Group(); tr.position.set(tx, 0, tz); tr.scale.setScalar(sc);
+                    const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.28, 3.2, 10), trunkMat); trunk.position.y = 1.6; tr.add(trunk);
+                    [[0,3.6,0,1.1],[-0.6,3.1,0.2,0.75],[0.6,3.2,-0.1,0.8]].forEach(([x,y,z,r]) => { const l = new THREE.Mesh(new THREE.SphereGeometry(r,14,12), leafMat); l.position.set(x,y,z); tr.add(l); });
+                    themePropsGroup.add(tr);
+                });
+                const petalMat = new THREE.MeshBasicMaterial({ color: 0xfbcfe8, side: THREE.DoubleSide });
+                for (let i = 0; i < 24; i++) {
+                    const pt = new THREE.Mesh(new THREE.CircleGeometry(0.11, 6), petalMat);
+                    pt.position.set((Math.random()-0.5)*7.5, 1 + Math.random()*9.5, -hd + 0.5 + Math.random()*2.0);
+                    pt.userData = { animType: 'fall', speed: 0.5 + Math.random()*0.7, baseX: pt.position.x, phase: Math.random()*6.28 };
+                    themePropsGroup.add(pt);
+                }
+            } else {
+                const starMat = new THREE.MeshBasicMaterial({ color: 0xfef08a });
+                for (let i = 0; i < 28; i++) {
+                    const st = new THREE.Mesh(new THREE.OctahedronGeometry(0.09, 0), starMat);
+                    st.position.set((Math.random()-0.5)*7.8, 1.5 + Math.random()*9.0, -hd + 0.4 + Math.random()*1.8);
+                    st.userData = { animType: 'twinkle', speed: 1.5 + Math.random()*2, phase: Math.random()*6.28 };
+                    themePropsGroup.add(st);
+                }
+            }
+        }
+
         function applyThemeSettings() {
             const gs = getActiveGameSettings(), shell = document.getElementById('kiosk-shell');
-            shell.classList.remove('theme-frame-prism','theme-frame-gold','theme-frame-cyber','theme-frame-aurora','theme-frame-emerald','theme-frame-retro');
-            shell.classList.add('theme-frame-' + (gs.frameTheme || 'prism'));
+            shell.classList.remove('theme-frame-ocean_wave','theme-frame-sky_pastel','theme-frame-park_fresh','theme-frame-midnight_luxe');
+            shell.classList.add('theme-frame-' + (gs.frameTheme || 'ocean_wave'));
             if (!scene || !interiorRefs.backMat) return;
-            const key = gs.interiorTheme || 'midnight_prism', th = INTERIOR_THEMES[key] || INTERIOR_THEMES.midnight_prism;
+            const key = gs.interiorTheme || 'underwater', th = INTERIOR_THEMES[key] || INTERIOR_THEMES.underwater;
             scene.background.setHex(th.bg); scene.fog.color.setHex(th.bg);
             if (interiorRefs.backMat.map) interiorRefs.backMat.map.dispose();
             interiorRefs.backMat.map = createBackWallTexture(key); interiorRefs.backMat.needsUpdate = true;
             interiorRefs.sideMat.color.setHex(th.side); interiorRefs.floorMat.color.setHex(th.floor);
-            interiorRefs.ceilMat.color.setHex(th.ceil); interiorRefs.gridMat.color.setHex(th.grid);
-            interiorRefs.ledMat.color.setHex(th.led);
+            interiorRefs.ceilMat.color.setHex(th.ceil); interiorRefs.ledMat.color.setHex(th.led);
             if (interiorRefs.rimLight) interiorRefs.rimLight.color.setHex(th.rim);
+            rebuild3DThemeProps(key);
         }
 
         function buildDeep3DInterior() {
             const hw = BOX.width/2, hd = BOX.depth/2, h = BOX.height;
-            const backMat = new THREE.MeshStandardMaterial({ map: createBackWallTexture(getActiveGameSettings().interiorTheme), roughness: 0.48, metalness: 0.16 });
-            const sideMat = new THREE.MeshStandardMaterial({ color: 0x111f4d, roughness: 0.45, metalness: 0.2 });
-            const floorMat = new THREE.MeshStandardMaterial({ color: 0x0b1330, roughness: 0.35, metalness: 0.3 });
-            const ceilMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.6 });
+            const backMat = new THREE.MeshStandardMaterial({ map: createBackWallTexture(getActiveGameSettings().interiorTheme), roughness: 0.65, metalness: 0.05 });
+            const sideMat = new THREE.MeshStandardMaterial({ color: 0x0369a1, roughness: 0.55, metalness: 0.1, transparent: true, opacity: 0.72 });
+            const floorMat = new THREE.MeshStandardMaterial({ color: 0xd6b888, roughness: 0.75, metalness: 0.05 });
+            const ceilMat = new THREE.MeshStandardMaterial({ color: 0x7dd3fc, roughness: 0.6 });
+
             const bw = new THREE.Mesh(new THREE.PlaneGeometry(BOX.width,h), backMat); bw.position.set(0,h/2,-hd); scene.add(bw);
             const fl = new THREE.Mesh(new THREE.PlaneGeometry(BOX.width,BOX.depth), floorMat); fl.rotation.x = -Math.PI/2; scene.add(fl);
-            const gridMat = new THREE.LineBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.3 });
-            for (let x=-hw;x<=hw+0.01;x+=1.4) scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(x,0.02,-hd), new THREE.Vector3(x,0.02,hd)]), gridMat));
-            for (let z=-hd;z<=hd+0.01;z+=1.2) scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-hw,0.02,z), new THREE.Vector3(hw,0.02,z)]), gridMat));
             const ce = new THREE.Mesh(new THREE.PlaneGeometry(BOX.width,BOX.depth), ceilMat); ce.rotation.x = Math.PI/2; ce.position.set(0,h,0); scene.add(ce);
 
-            // Overhead Left & Right Z-Rails + Moving X-Gantry Beam!
-            const railMat = new THREE.MeshStandardMaterial({ color: 0xcbd5e1, metalness: 0.85, roughness: 0.2 });
-            [-hw+0.25, hw-0.25].forEach(rx => { const r = new THREE.Mesh(new THREE.BoxGeometry(0.18,0.18,BOX.depth-0.3), railMat); r.position.set(rx,h-0.16,0); scene.add(r); });
-            gantryBeamMesh = new THREE.Mesh(new THREE.BoxGeometry(BOX.width-0.4,0.2,0.28), railMat); gantryBeamMesh.position.set(0,h-0.16,0); scene.add(gantryBeamMesh);
+            const railMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.8, roughness: 0.2 });
+            [-hw+0.22, hw-0.22].forEach(rx => { const r = new THREE.Mesh(new THREE.BoxGeometry(0.16,0.16,BOX.depth-0.3), railMat); r.position.set(rx,h-0.16,0); scene.add(r); });
+            gantryBeamMesh = new THREE.Mesh(new THREE.BoxGeometry(BOX.width-0.36,0.18,0.24), railMat); gantryBeamMesh.position.set(0,h-0.16,0); scene.add(gantryBeamMesh);
 
             const lw = new THREE.Mesh(new THREE.PlaneGeometry(BOX.depth,h), sideMat); lw.rotation.y = Math.PI/2; lw.position.set(-hw,h/2,0); scene.add(lw);
             const rw = new THREE.Mesh(new THREE.PlaneGeometry(BOX.depth,h), sideMat); rw.rotation.y = -Math.PI/2; rw.position.set(hw,h/2,0); scene.add(rw);
-            const ledMat = new THREE.MeshBasicMaterial({ color: 0x00d2ff }), ledGeo = new THREE.CylinderGeometry(0.065,0.065,h-0.2,8);
-            [[-hw+0.09,-hd+0.09],[hw-0.09,-hd+0.09],[-hw+0.09,hd-0.09],[hw-0.09,hd-0.09]].forEach(([lx,lz]) => { const l = new THREE.Mesh(ledGeo, ledMat); l.position.set(lx,h/2,lz); scene.add(l); });
+            const ledMat = new THREE.MeshBasicMaterial({ color: 0x67e8f9 }), ledGeo = new THREE.CylinderGeometry(0.055,0.055,h-0.2,8);
+            [[-hw+0.08,-hd+0.08],[hw-0.08,-hd+0.08]].forEach(([lx,lz]) => { const l = new THREE.Mesh(ledGeo, ledMat); l.position.set(lx,h/2,lz); scene.add(l); });
 
-            // ★ TALL LEFT-FRONT CORNER PRIZE DROP CHUTE TOWER (x = -4.95, z = +2.15, height = 4.7!)
             const chuteH = BOX.chuteTopY, cg = new THREE.Group(); cg.position.set(BOX.chuteX, 0, BOX.chuteZ);
-            const acMat = new THREE.MeshPhysicalMaterial({ color: 0x7dd3fc, transparent: true, opacity: 0.24, roughness: 0.06, clearcoat: 1, side: THREE.DoubleSide });
-            const sideR = new THREE.Mesh(new THREE.BoxGeometry(0.14, chuteH, 2.7), acMat); sideR.position.set(1.25, chuteH/2, 0); cg.add(sideR);
-            const sideB = new THREE.Mesh(new THREE.BoxGeometry(2.6, chuteH, 0.14), acMat); sideB.position.set(0, chuteH/2, -1.35); cg.add(sideB);
-            const pm = new THREE.MeshStandardMaterial({ color: 0xfbbf24, metalness: 0.8, roughness: 0.2 });
-            const p1 = new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.06,chuteH,10), pm); p1.position.set(1.25,chuteH/2,-1.35); cg.add(p1);
-            const p2 = new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.06,chuteH,10), pm); p2.position.set(1.25,chuteH/2,1.3); cg.add(p2);
-            const st = new THREE.Mesh(new THREE.CylinderGeometry(0.95,0.95,chuteH-0.2,24,1,true), new THREE.MeshPhysicalMaterial({ color:0xbae6fd, transparent:true, opacity:0.18, side:THREE.DoubleSide })); st.position.set(0,chuteH/2-0.1,0); cg.add(st);
-            chuteRimMesh = new THREE.Mesh(new THREE.TorusGeometry(1.0,0.09,12,30), new THREE.MeshBasicMaterial({ color: 0xfbbf24 })); chuteRimMesh.rotation.x = Math.PI/2; chuteRimMesh.position.set(0,chuteH,0); cg.add(chuteRimMesh);
+            const acMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, transparent: true, opacity: 0.22, roughness: 0.06, clearcoat: 1, side: THREE.DoubleSide });
+            const sideR = new THREE.Mesh(new THREE.BoxGeometry(0.12, chuteH, 2.3), acMat); sideR.position.set(1.12, chuteH/2, 0); cg.add(sideR);
+            const sideB = new THREE.Mesh(new THREE.BoxGeometry(2.3, chuteH, 0.12), acMat); sideB.position.set(0, chuteH/2, -1.15); cg.add(sideB);
+            const pm = new THREE.MeshStandardMaterial({ color: 0xfbbf24, metalness: 0.78, roughness: 0.2 });
+            [[1.12,-1.15],[1.12,1.12]].forEach(([px,pz]) => { const p = new THREE.Mesh(new THREE.CylinderGeometry(0.055,0.055,chuteH,10), pm); p.position.set(px,chuteH/2,pz); cg.add(p); });
+            chuteRimMesh = new THREE.Mesh(new THREE.TorusGeometry(0.92,0.085,12,30), new THREE.MeshBasicMaterial({ color: 0xfbbf24 })); chuteRimMesh.rotation.x = Math.PI/2; chuteRimMesh.position.set(0,chuteH,0); cg.add(chuteRimMesh);
             chuteChevrons = [];
-            [3.6,2.5,1.4].forEach((cy,idx) => { const c = new THREE.Mesh(new THREE.ConeGeometry(0.24,0.32,3), new THREE.MeshBasicMaterial({ color:0x38bdf8, transparent:true, opacity:0.55 })); c.rotation.x = Math.PI; c.position.set(0,cy,1.15); c.userData.phase = idx*1.1; cg.add(c); chuteChevrons.push(c); });
-            const pit = new THREE.Mesh(new THREE.CircleGeometry(0.95,24), new THREE.MeshBasicMaterial({ color: 0x020617 })); pit.rotation.x = -Math.PI/2; pit.position.set(0,0.04,0); cg.add(pit);
+            [3.7,2.6,1.5].forEach((cy,idx) => { const c = new THREE.Mesh(new THREE.ConeGeometry(0.22,0.3,3), new THREE.MeshBasicMaterial({ color:0xffffff, transparent:true, opacity:0.6 })); c.rotation.x = Math.PI; c.position.set(0,cy,1.05); c.userData.phase = idx*1.1; cg.add(c); chuteChevrons.push(c); });
+            const pit = new THREE.Mesh(new THREE.CircleGeometry(0.9,24), new THREE.MeshBasicMaterial({ color: 0x020617 })); pit.rotation.x = -Math.PI/2; pit.position.set(0,0.04,0); cg.add(pit);
             scene.add(cg);
 
-            // Air-Jet Blast Particles (Hidden until Air Shake triggers!)
             const aPos = new Float32Array(90*3);
-            for (let i=0;i<90;i++) { aPos[i*3]=(Math.random()-0.5)*10; aPos[i*3+1]=Math.random()*6; aPos[i*3+2]=(Math.random()-0.5)*5.5; }
+            for (let i=0;i<90;i++) { aPos[i*3]=(Math.random()-0.5)*7.5; aPos[i*3+1]=Math.random()*7; aPos[i*3+2]=(Math.random()-0.5)*4.5; }
             const aGeo = new THREE.BufferGeometry(); aGeo.setAttribute('position', new THREE.BufferAttribute(aPos,3));
-            airParticles = new THREE.Points(aGeo, new THREE.PointsMaterial({ color:0x7dd3fc, size:0.22, transparent:true, opacity:0 })); scene.add(airParticles);
+            airParticles = new THREE.Points(aGeo, new THREE.PointsMaterial({ color:0xffffff, size:0.22, transparent:true, opacity:0 })); scene.add(airParticles);
 
-            interiorRefs = { ...interiorRefs, backMat, sideMat, floorMat, ceilMat, gridMat, ledMat };
+            interiorRefs = { ...interiorRefs, backMat, sideMat, floorMat, ceilMat, ledMat };
 
-            // Static Physics Walls including TALL Corner Chute Barriers (top at y = 5.3 -> ZERO spills!)
             const t = 0.4;
             [[hw+t,t,hd+t,0,-t,0],[t,h/2+t,hd+t,-hw-t,h/2,0],[t,h/2+t,hd+t,hw+t,h/2,0],[hw+t,h/2+t,t,0,h/2,-hd-t],[hw+t,h/2+t,t,0,h/2,hd+t],
-             [0.16, 2.7, 1.5, BOX.chuteX + 1.28, 2.65, BOX.chuteZ],
-             [1.4, 2.7, 0.16, BOX.chuteX, 2.65, BOX.chuteZ - 1.38]
+             [0.14, 2.75, 1.3, BOX.chuteX + 1.15, 2.7, BOX.chuteZ],
+             [1.25, 2.75, 0.14, BOX.chuteX, 2.7, BOX.chuteZ - 1.2]
             ].forEach(([hx,hy,hz,x,y,z]) => { const b = new CANNON.Body({ mass:0, material:wallPhysMat, shape:new CANNON.Box(new CANNON.Vec3(hx,hy,hz)) }); b.position.set(x,y,z); world.addBody(b); });
         }
 
@@ -1599,8 +1685,6 @@
             tunnelGroup = new THREE.Group(); tunnelGroup.position.set(0, -42, 0); scene.add(tunnelGroup);
             [[0x38bdf8,-4,4,5,2.2],[0xffffff,0,3,7,2.0],[0xfef08a,6.5,-0.5,2.5,3.6]].forEach(([c,x,y,z,i]) => { const l = new THREE.PointLight(c,i,26); l.position.set(x,y,z); tunnelGroup.add(l); });
             const wall = new THREE.Mesh(new THREE.PlaneGeometry(24,12), new THREE.MeshStandardMaterial({ color:0x0d1736, roughness:0.4, metalness:0.45 })); wall.position.set(0,0,-2.2); tunnelGroup.add(wall);
-            const sm = new THREE.MeshBasicMaterial({ color:0x1e40af, transparent:true, opacity:0.45 });
-            for (let sx=-9;sx<=9;sx+=2.2) { const bar = new THREE.Mesh(new THREE.PlaneGeometry(0.12,11), sm); bar.position.set(sx,0,-2.15); bar.rotation.z = -0.25; tunnelGroup.add(bar); }
             const gt = new THREE.MeshPhysicalMaterial({ color:0xe0f2fe, transparent:true, opacity:0.25, roughness:0.05, clearcoat:1, side:THREE.DoubleSide });
             const ep = new THREE.Mesh(new THREE.CylinderGeometry(1.15,1.15,4.2,24,1,true), gt); ep.position.set(-5.6,3.4,0); tunnelGroup.add(ep);
             const trackLen = 12.2, tubePivot = new THREE.Group(); tubePivot.position.set(-0.2, 0.15, 0); tubePivot.rotation.z = -0.22; tunnelGroup.add(tubePivot);
@@ -1624,26 +1708,25 @@
         }
 
         function buildPrismClaw() {
-            const hm = new THREE.MeshStandardMaterial({ color:0x0ea5e9, roughness:0.22, metalness:0.55 }), am = new THREE.MeshStandardMaterial({ color:0xf43f5e, roughness:0.3, metalness:0.45 }), sm = new THREE.MeshStandardMaterial({ color:0xf1f5f9, roughness:0.18, metalness:0.9 }), cm = new THREE.MeshStandardMaterial({ color:0xe2e8f0, roughness:0.28, metalness:0.65 });
-            clawCarriageMesh = new THREE.Mesh(new THREE.BoxGeometry(0.84,0.34,0.68), am); scene.add(clawCarriageMesh);
+            const hm = new THREE.MeshStandardMaterial({ color:0xf43f5e, roughness:0.22, metalness:0.45 }), am = new THREE.MeshStandardMaterial({ color:0xbe123c, roughness:0.3, metalness:0.5 }), sm = new THREE.MeshStandardMaterial({ color:0xf8fafc, roughness:0.16, metalness:0.9 }), cm = new THREE.MeshStandardMaterial({ color:0xe2e8f0, roughness:0.25, metalness:0.65 });
+            clawCarriageMesh = new THREE.Mesh(new THREE.BoxGeometry(0.76,0.3,0.62), am); scene.add(clawCarriageMesh);
             cableSegments = []; const sg = new THREE.CylinderGeometry(0.068,0.068,1,10);
             for (let i=0;i<CABLE_SEG_COUNT;i++) { const s = new THREE.Mesh(sg, cm); scene.add(s); cableSegments.push(s); }
             clawGroup = new THREE.Group(); scene.add(clawGroup);
-            clawGroup.add(new THREE.Mesh(new THREE.CylinderGeometry(0.4,0.36,0.86,20), hm));
+            clawGroup.add(new THREE.Mesh(new THREE.CylinderGeometry(0.38,0.34,0.86,20), hm));
             const tc = new THREE.Mesh(new THREE.CylinderGeometry(0.24,0.34,0.22,16), am); tc.position.y = 0.52; clawGroup.add(tc);
-            const br = new THREE.Mesh(new THREE.TorusGeometry(0.41,0.065,10,24), new THREE.MeshBasicMaterial({ color:0xfbbf24 })); br.rotation.x = Math.PI/2; br.position.y = -0.44; clawGroup.add(br);
+            const br = new THREE.Mesh(new THREE.TorusGeometry(0.39,0.065,10,24), new THREE.MeshBasicMaterial({ color:0xfde047 })); br.rotation.x = Math.PI/2; br.position.y = -0.44; clawGroup.add(br);
             clawProngs = [];
             for (let i=0;i<3;i++) {
                 const angle = (i*Math.PI*2)/3 + Math.PI/6, root = new THREE.Group(); root.rotation.y = angle; clawGroup.add(root);
-                const pivot = new THREE.Group(); pivot.position.set(0.28,-0.48,0); root.add(pivot);
+                const pivot = new THREE.Group(); pivot.position.set(0.27,-0.48,0); root.add(pivot);
                 const up = new THREE.Mesh(new THREE.BoxGeometry(0.1,0.82,0.12), sm); up.position.set(0.2,-0.35,0); up.rotation.z = 0.52; pivot.add(up);
                 const lo = new THREE.Mesh(new THREE.BoxGeometry(0.095,0.78,0.12), sm); lo.position.set(0.24,-0.98,0); lo.rotation.z = -0.46; pivot.add(lo);
-                const tip = new THREE.Mesh(new THREE.SphereGeometry(0.085,10,10), am); tip.position.set(0.08,-1.32,0); pivot.add(tip);
+                const tip = new THREE.Mesh(new THREE.SphereGeometry(0.085,10,10), hm); tip.position.set(0.08,-1.32,0); pivot.add(tip);
                 clawProngs.push({ pivot, angle });
             }
-            // ★ 3D Laser Vertical Beam + Glowing Ground Target Crosshair Ring for effortless X+Z aiming!
-            aimBeamMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.035,0.035,BOX.height,8), new THREE.MeshBasicMaterial({ color:0x38bdf8, transparent:true, opacity:0.35, depthWrite:false })); scene.add(aimBeamMesh);
-            targetRingMesh = new THREE.Mesh(new THREE.RingGeometry(0.48,0.68,28), new THREE.MeshBasicMaterial({ color:0xfde047, transparent:true, opacity:0.75, side:THREE.DoubleSide, depthWrite:false }));
+            aimBeamMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.03,0.03,BOX.height,8), new THREE.MeshBasicMaterial({ color:0xffffff, transparent:true, opacity:0.28, depthWrite:false })); scene.add(aimBeamMesh);
+            targetRingMesh = new THREE.Mesh(new THREE.RingGeometry(0.46,0.66,28), new THREE.MeshBasicMaterial({ color:0xfde047, transparent:true, opacity:0.8, side:THREE.DoubleSide, depthWrite:false }));
             targetRingMesh.rotation.x = -Math.PI/2; scene.add(targetRingMesh);
         }
 
@@ -1654,54 +1737,54 @@
             if (bedRingInstMesh) { scene.remove(bedRingInstMesh); bedRingInstMesh.dispose(); bedRingInstMesh = null; }
             if (bedFloorBody) { world.removeBody(bedFloorBody); bedFloorBody = null; }
 
-            const total = Math.max(20, Math.min(400, Number(totalCount) || 220));
+            const total = Math.max(20, Math.min(400, Number(totalCount) || 60));
             STATE.remainingCapsules = total;
-            const activeCount = Math.min(total, 44), bedCount = Math.max(0, total - activeCount);
-            currentBedHeight = bedCount > 0 ? Math.min(1.85, 0.5 + (bedCount / 360) * 1.4) : 0;
-
-            const isInsideChuteZone = (x, z) => (x < BOX.chuteX + 1.85 && z > BOX.chuteZ - 1.95);
+            const radius = 0.60;
+            const activeCount = Math.min(total, 52), bedCount = Math.max(0, total - activeCount);
+            currentBedHeight = bedCount > 0 ? Math.min(2.2, 0.75 + (bedCount / 350) * 1.45) : 0;
+            const isInChute = (x, z) => (x < BOX.chuteX + 1.7 && z > BOX.chuteZ - 1.75);
 
             if (bedCount > 0) {
-                const capR = 0.44;
-                bedInstMesh = new THREE.InstancedMesh(new THREE.SphereGeometry(capR,12,10), new THREE.MeshStandardMaterial({ roughness:0.18, metalness:0.38 }), bedCount);
-                bedRingInstMesh = new THREE.InstancedMesh(new THREE.TorusGeometry(capR*1.01,0.04,6,14), new THREE.MeshBasicMaterial({ color:0xffffff }), bedCount);
+                bedInstMesh = new THREE.InstancedMesh(new THREE.SphereGeometry(radius * 0.92, 12, 10), new THREE.MeshStandardMaterial({ roughness: 0.16, metalness: 0.35 }), bedCount);
+                bedRingInstMesh = new THREE.InstancedMesh(new THREE.TorusGeometry(radius * 0.93, 0.045, 6, 14), new THREE.MeshBasicMaterial({ color: 0xffffff }), bedCount);
                 const dummy = new THREE.Object3D(), col = new THREE.Color();
-                for (let i=0;i<bedCount;i++) {
+                for (let i = 0; i < bedCount; i++) {
                     let x, z;
-                    do { x = -5.6 + Math.random()*11.2; z = -3.0 + Math.random()*6.0; } while (isInsideChuteZone(x, z));
-                    dummy.position.set(x, capR + Math.random()*Math.max(0.2, currentBedHeight - capR*0.5), z);
+                    do { x = -3.6 + Math.random()*7.2; z = -2.25 + Math.random()*4.5; } while (isInChute(x, z));
+                    const y = Math.min(currentBedHeight - radius * 0.85, radius * 0.8 + Math.random() * Math.max(0.15, currentBedHeight - radius * 1.4));
+                    dummy.position.set(x, Math.max(radius * 0.75, y), z);
                     dummy.rotation.set(Math.random()*3.14, Math.random()*3.14, Math.random()*3.14); dummy.updateMatrix();
                     bedInstMesh.setMatrixAt(i, dummy.matrix); bedRingInstMesh.setMatrixAt(i, dummy.matrix);
                     const isSpec = Math.random() < 0.2;
-                    const skin = isSpec ? (Math.random()<0.65 ? CAPSULE_SKINS.specialGold : CAPSULE_SKINS.specialBlack) : (Math.random()<0.5 ? CAPSULE_SKINS.normalCyan : CAPSULE_SKINS.normalCoral);
-                    col.setHex(skin.hex); bedInstMesh.setColorAt(i, col);
+                    col.setHex((isSpec ? (Math.random()<0.65 ? CAPSULE_SKINS.specialGold : CAPSULE_SKINS.specialBlack) : (Math.random()<0.5 ? CAPSULE_SKINS.normalCyan : CAPSULE_SKINS.normalCoral)).hex);
+                    bedInstMesh.setColorAt(i, col);
                 }
                 bedInstMesh.instanceMatrix.needsUpdate = true; bedInstMesh.instanceColor.needsUpdate = true; bedRingInstMesh.instanceMatrix.needsUpdate = true;
                 scene.add(bedInstMesh); scene.add(bedRingInstMesh);
-                bedFloorBody = new CANNON.Body({ mass:0, material:wallPhysMat, shape:new CANNON.Box(new CANNON.Vec3(BOX.width/2, currentBedHeight/2, BOX.depth/2)) });
+                bedFloorBody = new CANNON.Body({ mass: 0, material: wallPhysMat, shape: new CANNON.Box(new CANNON.Vec3(BOX.width/2, currentBedHeight/2, BOX.depth/2)) });
                 bedFloorBody.position.set(0, currentBedHeight/2, 0); world.addBody(bedFloorBody);
             }
 
-            const radius = 0.56, ringMat = new THREE.MeshStandardMaterial({ color:0xffffff, roughness:0.18, metalness:0.88 }), goldRingMat = new THREE.MeshStandardMaterial({ color:0xfde047, roughness:0.15, metalness:0.95 });
-            const clearDomeMat = new THREE.MeshPhysicalMaterial({ color:0xf0f9ff, transparent:true, opacity:0.38, roughness:0.05, clearcoat:1 });
+            const ringMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.18, metalness: 0.88 }), goldRingMat = new THREE.MeshStandardMaterial({ color: 0xfde047, roughness: 0.15, metalness: 0.95 });
+            const clearDomeMat = new THREE.MeshPhysicalMaterial({ color: 0xf0f9ff, transparent: true, opacity: 0.36, roughness: 0.05, clearcoat: 1 });
             const specialCount = Math.max(6, Math.round(activeCount * 0.22));
-            for (let i=0;i<activeCount;i++) {
+            for (let i = 0; i < activeCount; i++) {
                 const isSpec = i < specialCount;
                 const skin = isSpec ? (i%2===0 ? CAPSULE_SKINS.specialGold : CAPSULE_SKINS.specialBlack) : (i%2===0 ? CAPSULE_SKINS.normalCyan : CAPSULE_SKINS.normalCoral);
                 const group = new THREE.Group();
-                const lowerMat = new THREE.MeshPhysicalMaterial({ color:skin.hex, emissive:skin.emissive, emissiveIntensity:isSpec?0.55:0.18, roughness:0.12, metalness:skin.metalness, clearcoat:1 });
-                group.add(new THREE.Mesh(new THREE.SphereGeometry(radius,18,12,0,Math.PI*2,Math.PI/2,Math.PI/2), lowerMat));
-                group.add(new THREE.Mesh(new THREE.SphereGeometry(radius,18,12,0,Math.PI*2,0,Math.PI/2), clearDomeMat));
-                const band = new THREE.Mesh(new THREE.TorusGeometry(radius*1.01,0.052,8,22), isSpec ? goldRingMat : ringMat); band.rotation.x = Math.PI/2; group.add(band);
-                group.add(new THREE.Mesh(new THREE.OctahedronGeometry(radius*(isSpec?0.45:0.28)), new THREE.MeshBasicMaterial({ color: isSpec ? 0xfef08a : skin.hex })));
+                const lowerMat = new THREE.MeshPhysicalMaterial({ color: skin.hex, emissive: skin.emissive, emissiveIntensity: isSpec ? 0.5 : 0.16, roughness: 0.12, metalness: skin.metalness, clearcoat: 1 });
+                group.add(new THREE.Mesh(new THREE.SphereGeometry(radius, 18, 12, 0, Math.PI*2, Math.PI/2, Math.PI/2), lowerMat));
+                group.add(new THREE.Mesh(new THREE.SphereGeometry(radius, 18, 12, 0, Math.PI*2, 0, Math.PI/2), clearDomeMat));
+                const band = new THREE.Mesh(new THREE.TorusGeometry(radius*1.01, 0.055, 8, 22), isSpec ? goldRingMat : ringMat); band.rotation.x = Math.PI/2; group.add(band);
+                group.add(new THREE.Mesh(new THREE.OctahedronGeometry(radius*(isSpec?0.44:0.26)), new THREE.MeshBasicMaterial({ color: isSpec ? 0xfef08a : skin.hex })));
 
                 let sx, sz;
-                do { sx = -5.2 + Math.random()*10.4; sz = -2.7 + Math.random()*5.4; } while (isInsideChuteZone(sx, sz));
-                const sy = currentBedHeight + 0.7 + (i % 4) * 0.85;
-                group.position.set(sx,sy,sz); scene.add(group);
-                const body = new CANNON.Body({ mass:1.1, material:capPhysMat, shape:new CANNON.Sphere(radius), linearDamping:0.38, angularDamping:0.42 });
-                body.position.set(sx,sy,sz); world.addBody(body);
-                capsules.push({ mesh:group, body, radius, isSpecial: isSpec, colorHex: skin.hex });
+                do { sx = -3.4 + Math.random()*6.8; sz = -2.1 + Math.random()*4.2; } while (isInChute(sx, sz));
+                const sy = currentBedHeight + radius + 0.15 + Math.floor(i / 10) * 1.15;
+                group.position.set(sx, sy, sz); scene.add(group);
+                const body = new CANNON.Body({ mass: 1.25, material: capPhysMat, shape: new CANNON.Sphere(radius), linearDamping: 0.45, angularDamping: 0.5 });
+                body.position.set(sx, sy, sz); world.addBody(body);
+                capsules.push({ mesh: group, body, radius, isSpecial: isSpec, colorHex: skin.hex });
             }
             updateStageHUD();
         }
@@ -1712,10 +1795,7 @@
             v.textContent = Math.max(0, STATE.turnTimeLeft).toFixed(1);
             p.className = (STATE.turnTimeLeft <= 5 && STATE.turnTimerActive) ? 'px-4 py-1 rounded-full bg-rose-600/95 border-2 border-yellow-300 text-white font-mono font-black text-base shadow-lg animate-pulse' : 'px-4 py-1 rounded-full bg-slate-950/85 border-2 border-cyan-400 text-cyan-300 font-mono font-black text-base shadow-lg';
         }
-        function getClawHeadWorldPos() {
-            const dd = Math.max(0.8, BOX.height - 0.16 - clawPos.y);
-            return { x: clawPos.x + Math.sin(swayX)*dd, z: clawPos.z + Math.sin(swayZ)*dd };
-        }
+        function getClawHeadWorldPos() { const dd = Math.max(0.8, BOX.height - 0.16 - clawPos.y); return { x: clawPos.x + Math.sin(swayX)*dd, z: clawPos.z + Math.sin(swayZ)*dd }; }
 
         function updateClawVisuals(dt = 0.016) {
             if (!clawGroup) return;
@@ -1751,20 +1831,28 @@
 
             const showAim = (STATE.phase === 'IDLE' || STATE.phase === 'POWER_GAUGE');
             aimBeamMesh.position.set(hx, BOX.height/2, hz); aimBeamMesh.visible = showAim;
-            if (targetRingMesh) { targetRingMesh.position.set(hx, currentBedHeight + 0.55, hz); targetRingMesh.visible = showAim; }
+            if (targetRingMesh) { targetRingMesh.position.set(hx, currentBedHeight + 0.65, hz); targetRingMesh.visible = showAim; }
 
-            const ns = performance.now()*0.004;
-            chuteChevrons.forEach(c => { c.material.opacity = 0.25 + 0.65*Math.max(0, Math.sin(ns - c.userData.phase)); });
+            const tSec = performance.now() * 0.001;
+            if (themePropsGroup) {
+                themePropsGroup.children.forEach(obj => {
+                    const u = obj.userData; if (!u || !u.animType) return;
+                    if (u.animType === 'rise') { obj.position.y += u.speed * sDt; obj.position.x = u.baseX + Math.sin(tSec*2+u.phase)*0.18; if (obj.position.y > BOX.height-0.6) obj.position.y = 0.6; }
+                    else if (u.animType === 'drift') { obj.position.x = u.baseX + Math.sin(tSec*u.speed+u.phase)*0.7; }
+                    else if (u.animType === 'fall') { obj.position.y -= u.speed * sDt; obj.position.x = u.baseX + Math.sin(tSec*1.8+u.phase)*0.35; obj.rotation.z += sDt*1.6; if (obj.position.y < 0.5) obj.position.y = BOX.height-0.8; }
+                    else if (u.animType === 'twinkle') { obj.scale.setScalar(Math.max(0.2, 0.6 + 0.55*Math.sin(tSec*u.speed+u.phase))); }
+                });
+            }
+            chuteChevrons.forEach(c => { c.material.opacity = 0.25 + 0.65*Math.max(0, Math.sin(tSec*4 - c.userData.phase)); });
 
-            // Dynamic Air-Shake Floor Wave + Upward Air-Jet Particles!
             if (STATE.bedWaveTimer > 0) {
                 STATE.bedWaveTimer = Math.max(0, STATE.bedWaveTimer - dt);
                 const frac = STATE.bedWaveTimer / 1.05;
-                if (bedInstMesh) { const by = Math.abs(Math.sin(STATE.bedWaveTimer * 22)) * 0.65 * frac; bedInstMesh.position.y = by; if (bedRingInstMesh) bedRingInstMesh.position.y = by; }
+                if (bedInstMesh) { const by = Math.abs(Math.sin(STATE.bedWaveTimer * 22)) * 0.55 * frac; bedInstMesh.position.y = by; if (bedRingInstMesh) bedRingInstMesh.position.y = by; }
                 if (airParticles) {
                     airParticles.material.opacity = frac * 0.9;
                     const arr = airParticles.geometry.attributes.position.array;
-                    for (let i=1;i<arr.length;i+=3) { arr[i] += dt * 18; if (arr[i] > 8.5) arr[i] = 0.5; }
+                    for (let i=1;i<arr.length;i+=3) { arr[i] += dt * 18; if (arr[i] > 9.5) arr[i] = 0.5; }
                     airParticles.geometry.attributes.position.needsUpdate = true;
                 }
             } else {
@@ -1796,6 +1884,7 @@
         }
 
         function handleClawAction() {
+            const gs = getActiveGameSettings();
             if (STATE.phase === 'POWER_GAUGE') {
                 const p = STATE.gaugePos; let tier = 'NORMAL', bonus = 0;
                 if (p>=41 && p<=59) { tier='SUPER'; bonus=25; } else if (p>=24 && p<=76) { tier='GOOD'; bonus=12; }
@@ -1809,11 +1898,20 @@
             }
             if (STATE.phase !== 'IDLE') return;
             if (STATE.playsLeft <= 0) { showToast('현장 QR 스캔 후 사번 인증을 진행해주세요! 📱', 'warn'); return; }
-            if (capsules.length === 0) spawnHybridCapsules(getActiveGameSettings().capsuleCount);
-            STATE.phase = 'POWER_GAUGE'; STATE.gaugePos = 15; STATE.gaugeDir = 1; STATE.gaugeBonus = 0; STATE.turnTimerActive = false;
-            const go = document.getElementById('power-gauge-overlay'); go.classList.remove('hidden'); go.classList.add('flex');
-            document.getElementById('btn-green-grab').classList.add('gauge-active');
-            SoundFX.setTension(true); SoundFX.gaugeStart(); ServerSync.broadcastFastClaw(); ServerSync.broadcastState();
+            if (capsules.length === 0) spawnHybridCapsules(gs.capsuleCount);
+
+            if (gs.useTimingGauge) {
+                STATE.phase = 'POWER_GAUGE'; STATE.gaugePos = 15; STATE.gaugeDir = 1; STATE.gaugeBonus = 0; STATE.turnTimerActive = false;
+                const go = document.getElementById('power-gauge-overlay'); go.classList.remove('hidden'); go.classList.add('flex');
+                document.getElementById('btn-green-grab').classList.add('gauge-active');
+                SoundFX.setTension(true); SoundFX.gaugeStart();
+            } else {
+                STATE.playsLeft = Math.max(0, STATE.playsLeft - 1);
+                STATE.turnTimerActive = false; STATE.gaugeBonus = 0;
+                updateStageHUD(); SoundFX.setTension(true); SoundFX.drop();
+                STATE.phase = 'DROPPING'; STATE.grabbedCapsule = null; STATE.willSlip = false; STATE.slipTriggered = false; targetClawOpenAngle = 0.74;
+            }
+            ServerSync.broadcastFastClaw(); ServerSync.broadcastState();
         }
 
         let lastWarnSec = 6;
@@ -2293,9 +2391,10 @@
             const cur = draftServerSettings[adminEditingSrv] || makeDefaultServerSetting();
             draftServerSettings[adminEditingSrv] = {
                 ...cur,
-                capsuleCount: Number(document.getElementById('admin-capsule-count').value) || 220,
+                capsuleCount: Number(document.getElementById('admin-capsule-count').value) || 60,
                 winRate: Number(document.getElementById('admin-win-rate').value),
                 overlapThreshold: Number(document.getElementById('admin-overlap-threshold').value) || 50,
+                useTimingGauge: document.getElementById('admin-use-gauge').checked,
                 yabawiCups: Number(document.getElementById('admin-yabawi-cups').value) || 3,
                 yabawiSpeedMs: Number(document.getElementById('admin-yabawi-speed').value) || 320,
                 yabawiSwaps: Math.max(4, Number(document.getElementById('admin-yabawi-swaps').value) || 10),
@@ -2308,6 +2407,7 @@
             document.getElementById('admin-capsule-count').value = s.capsuleCount; document.getElementById('admin-capsule-val').textContent = `${s.capsuleCount}개`;
             document.getElementById('admin-win-rate').value = s.winRate; document.getElementById('admin-winrate-val').textContent = `${s.winRate}%`;
             document.getElementById('admin-overlap-threshold').value = s.overlapThreshold; document.getElementById('admin-overlap-val').textContent = `${s.overlapThreshold}%`;
+            document.getElementById('admin-use-gauge').checked = Boolean(s.useTimingGauge);
             document.getElementById('admin-yabawi-cups').value = s.yabawiCups; document.getElementById('admin-yabawi-speed').value = s.yabawiSpeedMs;
             document.getElementById('admin-yabawi-swaps').value = s.yabawiSwaps; document.getElementById('admin-frame-theme').value = s.frameTheme; document.getElementById('admin-interior-theme').value = s.interiorTheme;
             document.querySelectorAll('#admin-srv-selector button').forEach(b => { b.className = `px-3 py-1 rounded-lg text-xs font-black ${b.dataset.asrv===sid ? 'bg-indigo-600 text-white shadow' : 'bg-slate-200 text-slate-700'}`; });
