@@ -36,13 +36,13 @@
         .floating-side-logo img { max-width: min(190px, 11vw); max-height: 130px; object-fit: contain; filter: drop-shadow(0 10px 26px rgba(0,0,0,0.55)); }
 
         /* No height cap on large QHD/4K monitors! Fills 96dvh cleanly! */
-        /* 세로형 직사각형 키오스크 비율 + 상/좌/우 동일 두꺼운 테두리 + 하단 더 두꺼운 영역 */
+        /* 세로형 직사각형 + 상·좌·우 두꺼운 동일 테두리(42px) + 깊은 하단 데크 */
         .kiosk-shell {
-            position: relative; width: min(94vw, 68dvh); height: 96dvh; flex-shrink: 0;
+            position: relative; width: min(94vw, 66dvh); height: 96dvh; flex-shrink: 0;
             display: flex; flex-direction: column;
-            padding: 24px 24px 30px 24px;
-            border-radius: 34px; overflow: hidden;
-            box-shadow: 0 36px 90px rgba(0,0,0,0.78), inset 0 2px 10px rgba(255,255,255,0.45);
+            padding: clamp(26px, 3.6dvh, 42px) clamp(32px, 4.4dvh, 52px) clamp(28px, 3.8dvh, 46px);
+            border-radius: 38px; overflow: hidden;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.82), inset 0 2px 14px rgba(255,255,255,0.5), inset 0 -6px 18px rgba(0,0,0,0.28);
             transition: background 0.35s ease, border-color 0.35s ease;
         }
         .kiosk-shell.theme-frame-ocean_wave { background: radial-gradient(circle at 20% 0%, #67e8f9 0%, #0ea5e9 42%, #0369a1 100%); border: 5px solid #bae6fd; }
@@ -57,12 +57,45 @@
         .screen-bezel { position: relative; flex: 1; min-height: 0; margin: 10px 0 14px 0; border-radius: 26px; overflow: hidden; border: 5px solid rgba(255,255,255,0.65); box-shadow: inset 0 10px 30px rgba(0,0,0,0.42), 0 12px 28px rgba(0,0,0,0.32); background: #0c4a6e; }
 
         /* ARCADE CONTROLS (4-WAY D-PAD + ACTION BUTTON) */
-        .dpad-key { background: linear-gradient(180deg, #334155, #0f172a); border: 2px solid rgba(148,163,184,0.45); box-shadow: 0 4px 0 #020617; color: #f8fafc; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 900; touch-action: none; transition: transform 0.06s; }
-        .dpad-key:active, .dpad-key.pressed { transform: translateY(3px); box-shadow: 0 1px 0 #020617; border-color: #38bdf8; background: #1e293b; }
-        .dome-btn { position: relative; border-radius: 9999px; border: 4px solid rgba(255,255,255,0.5); cursor: pointer; transition: transform 0.08s; touch-action: none; display: flex; align-items: center; justify-content: center; }
-        .dome-btn::after { content: ''; position: absolute; top: 7px; left: 18%; width: 64%; height: 34%; border-radius: 9999px; background: linear-gradient(180deg, rgba(255,255,255,0.75), rgba(255,255,255,0.05)); pointer-events: none; }
-        .dome-btn-green { background: radial-gradient(circle at 35% 28%, #6bff5e, #00d936 55%, #008c20); box-shadow: 0 7px 0 #005712, 0 14px 24px rgba(0,0,0,0.5); }
-        .dome-btn-green:active, .dome-btn-green.pressed { transform: translateY(5px); box-shadow: 0 2px 0 #005712; }
+        /* MODERN GLASS NEO-ARCADE CONTROLS (세련된 PS5 / 애플 스타일) */
+        .glass-menu-btn {
+            background: rgba(15, 23, 42, 0.38); backdrop-filter: blur(14px);
+            border: 1.5px solid rgba(255, 255, 255, 0.32); color: #fff;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.35);
+            transition: all 0.16s ease;
+        }
+        .glass-menu-btn:hover { background: rgba(255,255,255,0.24); transform: translateY(-1px); }
+        .glass-menu-btn:active { transform: scale(0.94); }
+
+        .dpad-cluster {
+            background: rgba(15, 23, 42, 0.34); backdrop-filter: blur(14px);
+            border: 1.5px solid rgba(255,255,255,0.26); border-radius: 9999px;
+            padding: 8px; box-shadow: inset 0 4px 12px rgba(0,0,0,0.3), 0 8px 20px rgba(0,0,0,0.25);
+        }
+        .dpad-key {
+            background: linear-gradient(180deg, rgba(255,255,255,0.26), rgba(255,255,255,0.08));
+            border: 1.5px solid rgba(255,255,255,0.38); color: #ffffff;
+            border-radius: 9999px; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.28), inset 0 1px 2px rgba(255,255,255,0.5);
+            touch-action: none; transition: transform 0.08s, background 0.12s;
+        }
+        .dpad-key:active, .dpad-key.pressed {
+            transform: scale(0.9); background: rgba(56, 189, 248, 0.65); border-color: #fff;
+        }
+        .dome-btn {
+            position: relative; border-radius: 9999px; border: 3px solid rgba(255,255,255,0.72); cursor: pointer;
+            transition: transform 0.1s ease, box-shadow 0.1s ease; touch-action: none;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .dome-btn::after {
+            content: ''; position: absolute; top: 6px; left: 20%; width: 60%; height: 32%;
+            border-radius: 9999px; background: linear-gradient(180deg, rgba(255,255,255,0.68), transparent); pointer-events: none;
+        }
+        .dome-btn-green {
+            background: linear-gradient(145deg, #34d399 0%, #059669 58%, #047857 100%);
+            box-shadow: 0 8px 22px rgba(5, 150, 105, 0.55), 0 5px 0 #064e3b, inset 0 2px 6px rgba(255,255,255,0.45);
+        }
+        .dome-btn-green:active, .dome-btn-green.pressed { transform: translateY(4px) scale(0.96); box-shadow: 0 2px 0 #064e3b; }
         .dome-btn.gauge-active { animation: pulseGold 0.42s ease-in-out infinite alternate; }
         @keyframes pulseGold { 0% { box-shadow: 0 7px 0 #005712, 0 0 18px rgba(250,204,21,0.75); } 100% { box-shadow: 0 7px 0 #005712, 0 0 38px rgba(250,204,21,1); } }
         .gauge-track { position: relative; height: 28px; border-radius: 9999px; overflow: hidden; border: 3px solid #fff; background: linear-gradient(90deg, #334155 0 24%, #06b6d4 24% 41%, #facc15 41%, #f43f5e 50%, #facc15 59%, #06b6d4 59% 76%, #334155 76% 100%); }
@@ -249,20 +282,24 @@
         </div>
 
         <div class="kiosk-shell" id="kiosk-shell">
-            <header class="relative px-4 pt-2.5 pb-2 flex items-center justify-between shrink-0 z-10 gap-2">
+            <header class="relative px-1 pb-2 flex items-center justify-between shrink-0 z-10 gap-2">
                 <div class="flex items-center gap-1.5 shrink-0">
-                    <button id="btn-back-lobby" class="px-3 h-9 rounded-full bg-white/12 hover:bg-white/25 text-white border border-white/20 text-xs font-bold">🏠 로비</button>
-                    <button id="btn-bgm" class="w-9 h-9 rounded-full bg-white/12 text-amber-300 border border-white/20 flex items-center justify-center text-sm">🎵</button>
-                    <button id="btn-sound" class="w-9 h-9 rounded-full bg-white/12 text-sky-200 border border-white/20 flex items-center justify-center text-sm">🔊</button>
+                    <button id="btn-back-lobby" class="glass-menu-btn px-3.5 h-9 rounded-full text-xs font-bold flex items-center gap-1">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg><span>로비</span>
+                    </button>
+                    <button id="btn-bgm" class="glass-menu-btn w-9 h-9 rounded-full flex items-center justify-center text-sm" title="BGM">🎵</button>
+                    <button id="btn-sound" class="glass-menu-btn w-9 h-9 rounded-full flex items-center justify-center text-sm" title="효과음">🔊</button>
                 </div>
-                <div class="flex-1 min-w-0 text-center px-2">
-                    <div id="kiosk-server-pill" class="text-[11px] font-bold text-cyan-200 bg-cyan-500/20 border border-cyan-400/35 inline-block px-3 py-0.5 rounded-full">1서버 · 행사 동기화</div>
-                    <h1 id="kiosk-main-title" class="title-font text-xl sm:text-2xl text-white tracking-wider leading-tight mt-0.5">3D 디지털 캡슐 뽑기</h1>
+                <div class="flex-1 min-w-0 text-center px-1">
+                    <div id="kiosk-server-pill" class="text-[10px] font-bold text-white/95 bg-black/25 backdrop-blur-md border border-white/25 inline-block px-3 py-0.5 rounded-full">1서버 · 행사 동기화</div>
+                    <h1 id="kiosk-main-title" class="title-font text-xl sm:text-2xl text-white tracking-wide leading-tight mt-0.5 drop-shadow">3D 디지털 캡슐 뽑기</h1>
                 </div>
                 <div class="flex items-center gap-1.5 shrink-0">
-                    <button id="btn-take-host" class="hidden px-3 h-9 rounded-full bg-amber-400 text-amber-950 font-black text-xs">👑 호스트</button>
-                    <button id="btn-connect-mobile" class="px-3 h-9 rounded-full bg-sky-500 text-white border border-white/35 flex items-center gap-1 text-xs font-black"><span>📱</span><span>QR</span></button>
-                    <button id="btn-free-settings" class="hidden px-3 h-9 rounded-full bg-emerald-500 text-white border border-white/35 flex items-center gap-1 text-xs font-black"><span>🛠️</span><span>자율설정</span></button>
+                    <button id="btn-take-host" class="hidden px-3 h-9 rounded-full bg-amber-400 text-slate-950 font-black text-xs shadow">👑 호스트</button>
+                    <button id="btn-connect-mobile" class="glass-menu-btn px-3.5 h-9 rounded-full flex items-center gap-1.5 text-xs font-black !bg-slate-900/55">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM18 18h3v3h-3z"/></svg><span>QR</span>
+                    </button>
+                    <button id="btn-free-settings" class="hidden glass-menu-btn px-3.5 h-9 rounded-full flex items-center gap-1 text-xs font-black !bg-emerald-600/75">⚙️ 설정</button>
                 </div>
             </header>
 
@@ -375,26 +412,30 @@
             </main>
 
             <!-- ★ UPGRADED BOTTOM DECK: 4-WAY ARCADE D-PAD (좌/우/앞/뒤) + CUSTOM BRAND + GREEN ACTION BUTTON -->
-            <footer class="relative px-6 sm:px-10 py-2.5 flex items-center justify-between gap-4 shrink-0 z-10">
-                <!-- Left: 4-Way Arcade D-Pad -->
-                <div class="grid grid-cols-3 grid-rows-2 gap-1.5 w-[132px] sm:w-[152px]">
+           <footer class="relative px-2 pt-2 pb-1 flex items-center justify-between gap-3 shrink-0 z-10">
+                <!-- Sleek Circular Frosted-Glass 4-Way Thumb Pad -->
+                <div class="dpad-cluster grid grid-cols-3 grid-rows-3 gap-1 w-[112px] h-[112px] shrink-0">
                     <div></div>
-                    <button id="kiosk-pad-up" class="dpad-key h-9 text-sm" title="안쪽으로 이동 (▲)">▲</button>
+                    <button id="kiosk-pad-up" class="dpad-key" title="안쪽 (▲)"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 6l-7 9h14z"/></svg></button>
                     <div></div>
-                    <button id="kiosk-pad-left" class="dpad-key h-9 text-sm" title="왼쪽 이동 (◀)">◀</button>
-                    <button id="kiosk-pad-down" class="dpad-key h-9 text-sm" title="앞쪽으로 이동 (▼)">▼</button>
-                    <button id="kiosk-pad-right" class="dpad-key h-9 text-sm" title="오른쪽 이동 (▶)">▶</button>
+                    <button id="kiosk-pad-left" class="dpad-key" title="왼쪽 (◀)"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 12l9-7v14z"/></svg></button>
+                    <div class="rounded-full bg-white/15 m-2"></div>
+                    <button id="kiosk-pad-right" class="dpad-key" title="오른쪽 (▶)"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 12l-9-7v14z"/></svg></button>
+                    <div></div>
+                    <button id="kiosk-pad-down" class="dpad-key" title="앞쪽 (▼)"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 18l-7-9h14z"/></svg></button>
+                    <div></div>
                 </div>
 
-                <!-- Center: Customizable Footer Brand Name -->
                 <div class="flex flex-col items-center justify-center text-center px-2 min-w-0">
-                    <div id="kiosk-footer-brand" class="brand-en font-black text-sm sm:text-base tracking-[0.2em] text-white">CJ MEZZOMEDIA × DXE</div>
-                    <div id="kiosk-waiting-pill" class="mt-1 px-3 py-0.5 rounded-full bg-white/10 border border-white/15 text-sky-200 text-[11px] font-bold">📱 QR 스캔 후 스위치 패드로 플레이!</div>
+                    <div id="kiosk-footer-brand" class="brand-en font-black text-base sm:text-lg tracking-[0.2em] text-white drop-shadow">CJ MEZZOMEDIA × DXE</div>
+                    <div id="kiosk-waiting-pill" class="mt-1.5 px-3.5 py-1 rounded-full bg-black/25 backdrop-blur-md border border-white/25 text-white text-[11px] font-bold">📱 QR 스캔 후 스위치 패드로 플레이!</div>
                 </div>
 
-                <!-- Right: Big Glossy Green Grab / Stop Dome Button -->
-                <button id="btn-green-grab" class="dome-btn dome-btn-green w-[72px] h-[72px] sm:w-[82px] sm:h-[82px]" title="뽑기 / 스탑 (SPACE)">
-                    <span class="title-font text-white text-sm sm:text-base drop-shadow">뽑기!</span>
+                <button id="btn-green-grab" class="dome-btn dome-btn-green w-[86px] h-[86px] shrink-0" title="뽑기 (SPACE)">
+                    <div class="flex flex-col items-center leading-none">
+                        <span class="title-font text-white text-lg drop-shadow">뽑기</span>
+                        <span class="brand-en text-[9px] font-bold text-emerald-100 tracking-widest mt-0.5">GRAB</span>
+                    </div>
                 </button>
             </footer>
         </div>
@@ -603,47 +644,65 @@
             </div>
         </div>
 
-        <div id="mc-auth-view" class="hidden w-full h-full flex flex-col items-center justify-center p-4 overflow-y-auto">
+        <<div id="mc-auth-view" class="hidden w-full h-full flex flex-col items-center justify-center p-4 overflow-y-auto">
             <div class="w-full max-w-sm bg-white/10 backdrop-blur-md border border-cyan-400/40 rounded-3xl p-5 space-y-4 shadow-2xl">
                 <div class="flex items-center justify-between">
                     <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/25 border border-emerald-400/50 text-emerald-300 text-[11px] font-black"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span><span id="mc-conn-server-label">1:1 연결 완료</span></span>
                     <button id="btn-mc-leave-auth" type="button" class="text-[11px] text-slate-300 underline font-bold">나가기</button>
                 </div>
-                <div class="text-center"><div id="mc-event-title" class="title-font text-xl text-yellow-300 leading-snug">2026 CJ메조미디어 럭키드로우</div><p class="text-xs text-sky-200 mt-1 font-bold">사번을 입력해 보유 행운권을 확인하세요 (영문 자동 대문자)</p></div>
-                <div class="grid grid-cols-[minmax(0,1fr)_auto] gap-2 w-full">
-                    <input id="jp-emp-id" type="text" autocapitalize="characters" style="text-transform:uppercase" placeholder="사번 입력 (예: CJ202401)" class="min-w-0 w-full px-3.5 py-3 rounded-xl bg-slate-900/90 border-2 border-white/25 text-white font-black text-sm focus:outline-none focus:border-cyan-400">
-                    <button id="btn-jp-lookup" type="button" class="shrink-0 whitespace-nowrap px-4 py-3 rounded-xl bg-cyan-500 text-slate-950 font-black text-sm">조회</button>
-                </div>
-                <div id="jp-emp-info" class="hidden bg-slate-950/75 border border-sky-400/40 rounded-2xl p-4 space-y-3.5">
-                    <div class="flex items-center justify-between gap-2">
-                        <div class="min-w-0"><div id="jp-emp-name" class="font-black text-lg text-white truncate">홍길동</div><div id="jp-emp-dept" class="text-xs text-slate-300 truncate">기획팀</div></div>
-                        <div class="text-right shrink-0">
-                            <div class="flex items-center justify-end gap-1"><span class="text-[10px] text-sky-300 font-bold">보유 행운권</span><button id="btn-jp-refresh-tickets" type="button" class="text-[10px] text-amber-300 underline">🔄</button></div>
-                            <div class="text-2xl font-black text-yellow-300"><span id="jp-emp-tickets">0</span>장</div>
-                        </div>
+                <div class="text-center"><div id="mc-event-title" class="title-font text-xl text-yellow-300 leading-snug">2026 CJ메조미디어 럭키드로우</div></div>
+
+                <!-- ① 행사 동기화 모드용: 사번 조회 & 행운권 차감 영역 -->
+                <div id="mc-event-auth-box" class="space-y-3.5">
+                    <p class="text-xs text-sky-200 text-center font-bold">사번을 입력해 보유 행운권을 확인하세요 (영문 자동 대문자)</p>
+                    <div class="grid grid-cols-[minmax(0,1fr)_auto] gap-2 w-full">
+                        <input id="jp-emp-id" type="text" autocapitalize="characters" style="text-transform:uppercase" placeholder="사번 입력 (예: CJ202401)" class="min-w-0 w-full px-3.5 py-3 rounded-xl bg-slate-900/90 border-2 border-white/25 text-white font-black text-sm focus:outline-none focus:border-cyan-400">
+                        <button id="btn-jp-lookup" type="button" class="shrink-0 whitespace-nowrap px-4 py-3 rounded-xl bg-cyan-500 text-slate-950 font-black text-sm">조회</button>
                     </div>
-                    <div class="bg-white/5 rounded-xl p-3 text-center">
-                        <div class="text-[11px] text-slate-300 font-bold mb-2">플레이 횟수 선택 (시작 시 즉시 차감)</div>
-                        <div class="flex items-center justify-center gap-4">
-                            <button id="btn-jp-minus" type="button" class="w-11 h-11 rounded-full bg-white/15 font-black text-xl">−</button>
-                            <div class="text-3xl font-black text-white w-20"><span id="jp-play-count">1</span>회</div>
-                            <button id="btn-jp-plus" type="button" class="w-11 h-11 rounded-full bg-white/15 font-black text-xl">+</button>
+                    <div id="jp-emp-info" class="hidden bg-slate-950/75 border border-sky-400/40 rounded-2xl p-4 space-y-3.5">
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="min-w-0"><div id="jp-emp-name" class="font-black text-lg text-white truncate">홍길동</div><div id="jp-emp-dept" class="text-xs text-slate-300 truncate">기획팀</div></div>
+                            <div class="text-right shrink-0">
+                                <div class="flex items-center justify-end gap-1"><span class="text-[10px] text-sky-300 font-bold">보유 행운권</span><button id="btn-jp-refresh-tickets" type="button" class="text-[10px] text-amber-300 underline">🔄</button></div>
+                                <div class="text-2xl font-black text-yellow-300"><span id="jp-emp-tickets">0</span>장</div>
+                            </div>
                         </div>
+                        <div class="bg-white/5 rounded-xl p-3 text-center">
+                            <div class="text-[11px] text-slate-300 font-bold mb-2">플레이 횟수 선택 (시작 시 즉시 차감)</div>
+                            <div class="flex items-center justify-center gap-4">
+                                <button id="btn-jp-minus" type="button" class="w-11 h-11 rounded-full bg-white/15 font-black text-xl">−</button>
+                                <div class="text-3xl font-black text-white w-20"><span id="jp-play-count">1</span>회</div>
+                                <button id="btn-jp-plus" type="button" class="w-11 h-11 rounded-full bg-white/15 font-black text-xl">+</button>
+                            </div>
+                        </div>
+                        <button id="btn-jp-start" type="button" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-green-500 text-white font-black text-base shadow-lg">행운권 차감 & 스위치 패드 시작! 🎮</button>
                     </div>
-                    <button id="btn-jp-start" type="button" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-green-500 text-white font-black text-base shadow-lg">행운권 차감 & 스위치 패드 시작! 🎮</button>
+                    <div id="jp-auth-msg" class="text-xs font-bold text-center text-amber-300 min-h-[16px]"></div>
                 </div>
-                <div id="jp-auth-msg" class="text-xs font-bold text-center text-amber-300 min-h-[16px]"></div>
+
+                <!-- ② 자율 모드 전용: 사번 없이 [1회 / 3회 / 5회] 선택 후 즉시 시작! -->
+                <div id="mc-free-start-box" class="hidden space-y-4">
+                    <p class="text-xs text-emerald-200 text-center font-bold">🎮 자율 모드 · 사번 없이 플레이 횟수를 선택하세요!</p>
+                    <div class="grid grid-cols-3 gap-2.5">
+                        <button data-free-plays="1" type="button" class="py-4 rounded-2xl border-2 border-white/25 bg-slate-900/70 font-black text-xl text-white transition">1회</button>
+                        <button data-free-plays="3" type="button" class="py-4 rounded-2xl border-2 border-emerald-400 bg-emerald-500/30 font-black text-xl text-yellow-300 shadow-lg transition">3회</button>
+                        <button data-free-plays="5" type="button" class="py-4 rounded-2xl border-2 border-white/25 bg-slate-900/70 font-black text-xl text-white transition">5회</button>
+                    </div>
+                    <button id="btn-jp-free-start" type="button" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-black text-base shadow-lg">
+                        자율 모드 스위치 패드 시작! 🚀
+                    </button>
+                </div>
             </div>
         </div>
 
-        <!-- VIEW C1: 4-WAY SWITCH JOY-CON (◀ ▶ ▲ ▼ + AIR SHAKE!) -->
+        <!-- VIEW C1: 4-WAY SWITCH JOY-CON (💨 판 띄우기 -> 가운데 OLED 하단으로 이동!) -->
         <div id="mc-joypad-view" class="hidden switch-stage-wrap">
             <div id="switch-console-main" class="switch-console">
                 <div class="switch-body">
                     <div class="joycon-left">
                         <div class="joycon-minus"></div>
-                        <div id="jp-dpad-caption" class="text-[10px] font-black tracking-widest text-white/95 uppercase">3D 4-WAY MOVE</div>
-                        <div class="grid grid-cols-3 grid-rows-3 gap-1.5 w-[174px] h-[174px]">
+                        <div id="jp-dpad-caption" class="text-[10px] font-black tracking-widest text-white/95 uppercase mb-1">3D 4-WAY MOVE</div>
+                        <div class="grid grid-cols-3 grid-rows-3 gap-2 w-[184px] h-[184px]">
                             <div></div>
                             <button id="joypad-up" oncontextmenu="return false" class="switch-dpad-btn rounded-xl flex items-center justify-center text-2xl font-black">▲</button>
                             <div></div>
@@ -654,21 +713,24 @@
                             <button id="joypad-down" oncontextmenu="return false" class="switch-dpad-btn rounded-xl flex items-center justify-center text-2xl font-black">▼</button>
                             <div></div>
                         </div>
-                        <button id="btn-jp-air-shake" type="button" class="px-3.5 py-1.5 rounded-full bg-amber-400 active:scale-95 text-slate-950 font-black text-[11px] shadow-lg border-2 border-yellow-200">💨 판 띄우기 (1회)</button>
                     </div>
                     <div class="switch-oled-bezel">
                         <div id="switch-oled-screen" class="switch-oled-screen">
                             <div class="flex items-center justify-between gap-2 pb-1.5 border-b border-white/10 shrink-0">
-                                <div class="flex items-center gap-1.5 min-w-0"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span><span id="jp-hud-player" class="text-xs font-black text-yellow-300 truncate">홍길동</span></div>
+                                <div class="flex items-center gap-1.5 min-w-0"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span><span id="jp-hud-player" class="text-xs font-black text-yellow-300 truncate">자율 플레이</span></div>
                                 <div class="flex items-center gap-1.5 shrink-0">
                                     <span class="px-2 py-0.5 rounded-full bg-sky-500/25 border border-sky-400/40 text-[11px] font-black text-sky-200">남은 <span id="jp-hud-plays" class="text-white">0</span>회</span>
                                     <button id="btn-jp-end-session" type="button" class="px-2 py-0.5 rounded-full bg-white/10 text-[10px] font-black text-slate-300">종료</button>
                                 </div>
                             </div>
                             <div class="flex-1 flex flex-col items-center justify-center text-center px-2 py-1">
-                                <div id="jp-monitor-badge" class="px-3 py-0.5 rounded-full bg-sky-500/20 border border-sky-400/40 text-sky-300 text-[11px] font-black mb-2">LIVE SYNC</div>
+                                <div id="jp-monitor-badge" class="px-3 py-0.5 rounded-full bg-sky-500/20 border border-sky-400/40 text-sky-300 text-[11px] font-black mb-1.5">LIVE SYNC</div>
                                 <div id="joypad-feedback-title" class="title-font text-2xl text-white leading-snug">4방향으로 조준하세요!</div>
-                                <div id="joypad-feedback-sub" class="text-xs text-slate-300 mt-1.5 leading-relaxed">오른쪽 조이콘 초록 버튼으로 뽑기!</div>
+                                <div id="joypad-feedback-sub" class="text-xs text-slate-300 mt-1 leading-relaxed">오른쪽 조이콘 초록 버튼으로 뽑기!</div>
+                                <!-- ★ 오터치 방지: 가운데 OLED 패널 중간 아래로 이동! -->
+                                <button id="btn-jp-air-shake" type="button" class="mt-3 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 active:scale-95 text-slate-950 font-black text-xs shadow-lg border border-yellow-200">
+                                    💨 판 띄우기 (1회 찬스)
+                                </button>
                             </div>
                             <div class="pt-1 border-t border-white/10 flex items-center justify-between text-[10px] text-slate-400 font-bold shrink-0"><span>CJ MEZZOMEDIA × DXE</span><span class="text-emerald-400">● 1:1 CONNECTED</span></div>
                         </div>
@@ -1007,7 +1069,17 @@
                         if (currentHostGame === 'kuji') {
                             kujiPrizes = msg.prizes || []; kujiSelectedPrizeIdx = msg.finalePrizeIdx || 0; kujiMaxNum = msg.finaleTotal || 700;
                             document.getElementById('mc-kuji-max').textContent = kujiMaxNum; renderMobileKujiPrizes(); showView('mc-kuji-view');
-                        } else { showView('mc-auth-view'); if (empInput.value.trim()) lookupEmployeeLive(true); }
+                        } else if (msg.playMode === 'free' || channelKey.startsWith('free_')) {
+                            // ★ 자율 모드: 사번 입력 숨기고 [1회 / 3회 / 5회] 선택 화면 즉시 표시!
+                            document.getElementById('mc-event-auth-box').classList.add('hidden');
+                            document.getElementById('mc-free-start-box').classList.remove('hidden');
+                            showView('mc-auth-view');
+                        } else {
+                            document.getElementById('mc-event-auth-box').classList.remove('hidden');
+                            document.getElementById('mc-free-start-box').classList.add('hidden');
+                            showView('mc-auth-view');
+                            if (empInput.value.trim()) lookupEmployeeLive(true);
+                        }
                     } else setStatus('🔒', '현재 다른 임직원이 플레이 중!', '잠시 후 다시 확인해주세요!', msg.playerName ? `${msg.playerName}님` : '다른 참가자');
                 }
                 if (topic === tState && claimed) {
@@ -1076,7 +1148,27 @@
                     showView('mc-joypad-view'); msgEl.textContent = ''; btn.disabled = false; btn.textContent = '행운권 차감 & 스위치 패드 시작! 🎮';
                 } catch (e) { msgEl.textContent = '차감 통신 오류!'; btn.disabled = false; btn.textContent = '행운권 차감 & 스위치 패드 시작! 🎮'; }
             });
-
+            // 자율 모드 [1회 / 3회 / 5회] 선택 및 즉시 시작!
+            let freeSelectedPlays = 3;
+            document.querySelectorAll('[data-free-plays]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    freeSelectedPlays = Number(btn.dataset.freePlays) || 3;
+                    document.querySelectorAll('[data-free-plays]').forEach(b => {
+                        const on = Number(b.dataset.freePlays) === freeSelectedPlays;
+                        b.className = on
+                            ? 'py-4 rounded-2xl border-2 border-emerald-400 bg-emerald-500/30 font-black text-xl text-yellow-300 shadow-lg transition'
+                            : 'py-4 rounded-2xl border-2 border-white/25 bg-slate-900/70 font-black text-xl text-white transition';
+                    });
+                });
+            });
+            document.getElementById('btn-jp-free-start').addEventListener('click', () => {
+                if (!claimed) return;
+                sessionStarted = true;
+                document.getElementById('jp-hud-player').textContent = '🎮 자율 플레이';
+                document.getElementById('jp-hud-plays').textContent = freeSelectedPlays;
+                sendCmd('START_FREE_SESSION', { playCount: freeSelectedPlays });
+                showView('mc-joypad-view');
+            });
             // 4-Way Switch D-Pad (X & Z!)
             const bind4Way = (id, axis, dir) => {
                 const el = document.getElementById(id); if (!el) return;
@@ -1246,7 +1338,7 @@
                         if (isBusy) { Net.pub(T.ackPrefix + msg.clientId, { ok:false, reason:'BUSY', playerName: APP.activeClient.player?maskName(APP.activeClient.player.name):'진행 중', playsLeft: STATE.playsLeft }); return; }
                         APP.activeClient = { clientId: msg.clientId, player: null, lastSeen: Date.now() };
                         this.publishLock(); this.updateRemoteHUD();
-                        Net.pub(T.ackPrefix + msg.clientId, { ok:true, gasUrl:SheetAPI.gasUrl, eventTitle:CONFIG.eventTitle, serverName:getCurrentServerLabel(), activeGame:APP.activeGame, prizes:getActivePrizes(), finalePrizeIdx:STATE.finalePrizeIdx, finaleTotal:STATE.finaleBoard.length });
+                        Net.pub(T.ackPrefix + msg.clientId, { ok:true, playMode:APP.selectedMode, gasUrl:SheetAPI.gasUrl, eventTitle:CONFIG.eventTitle, serverName:getCurrentServerLabel(), activeGame:APP.activeGame, prizes:getActivePrizes(), finalePrizeIdx:STATE.finalePrizeIdx, finaleTotal:STATE.finaleBoard.length });
                         return;
                     }
                     if (APP.isHost && topic === T.cmd) {
@@ -1261,6 +1353,13 @@
                             startPlayerSession(msg.value.employee, msg.value.playCount);
                             document.getElementById('connect-modal').classList.add('hidden'); document.getElementById('connect-modal').classList.remove('flex');
                             this.publishLock(); this.updateRemoteHUD();
+                        } else if (msg.type === 'START_FREE_SESSION' && msg.value) {
+                            STATE.currentPlayer = null;
+                            STATE.playsLeft = Math.max(1, Number(msg.value.playCount) || 3);
+                            SoundFX.init(); if (APP.activeGame === 'claw') { lastWarnSec = 6; resetTurnTimer(); }
+                            document.getElementById('connect-modal').classList.add('hidden'); document.getElementById('connect-modal').classList.remove('flex');
+                            updateStageHUD(); this.publishLock(); this.updateRemoteHUD(); this.broadcastState();
+                            showToast(`🎮 자율 모드 ${STATE.playsLeft}회 시작!`, 'super');
                         } else if (msg.type === 'MOVE_X') handleMoveInput(Number(msg.value)||0, null);
                         else if (msg.type === 'MOVE_Z') handleMoveInput(null, Number(msg.value)||0);
                         else if (msg.type === 'ACTION') handlePrimaryAction();
@@ -1418,7 +1517,7 @@
                 APP.isHost = !(st && st.hostId && st.hostId !== LOCAL_DEVICE_ID && (Date.now()-(st.ts||0)<15000));
                 STATE.playsLeft = 0;
             } else {
-                APP.channelKey = `free_${LOCAL_DEVICE_ID}`; APP.isHost = true;
+                APP.channelKey = `free_${Math.random().toString(36).slice(2, 8).toUpperCase()}`; APP.isHost = true;
                 STATE.playsLeft = APP.activeGame === 'kuji' ? 0 : 5;
                 STATE.airShakeUsed = false;
             }
@@ -1467,11 +1566,16 @@
         let currentBedHeight = 0;
 
         function pickPrizeForCapsuleType(isSpecial) {
-            const list = getActivePrizes(), len = list.length; if (len <= 1) return list[0];
+            const all = getActivePrizes();
+            const avail = all.filter(p => p.stock === undefined || p.stock > 0);
+            const list = avail.length > 0 ? avail : all;
+            const len = list.length; if (len <= 1) { if (list[0]?.stock > 0) list[0].stock--; return list[0]; }
             const r = Math.random() * 100; let idx = len - 1;
             if (isSpecial) { if (r<24) idx=0; else if (r<56) idx=1; else if (r<82) idx=2; else if (r<93) idx=3; else idx=4; }
             else { if (r<3) idx=0; else if (r<12) idx=1; else if (r<36) idx=2; else if (r<68) idx=3; else idx=4; }
-            return list[Math.min(idx, len - 1)];
+            const chosen = list[Math.min(idx, len - 1)];
+            if (typeof chosen.stock === 'number' && chosen.stock > 0) chosen.stock -= 1;
+            return chosen;
         }
 
         function triggerAirShake() {
@@ -1498,11 +1602,17 @@
             camera = new THREE.PerspectiveCamera(42, Math.max(1,c.clientWidth)/Math.max(1,c.clientHeight), 0.1, 110);
             updateFixedCamera(c.clientWidth||600, c.clientHeight||850);
             renderer = new THREE.WebGLRenderer({ antialias: true }); renderer.setSize(c.clientWidth||600, c.clientHeight||850);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.8)); renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.22;
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.8));
+            renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.2;
             c.appendChild(renderer.domElement);
 
-            scene.add(new THREE.HemisphereLight(0xf0f9ff, 0x0f172a, 1.35));
-            const dl = new THREE.DirectionalLight(0xffffff, 1.25); dl.position.set(4, 15, 11); scene.add(dl);
+            scene.add(new THREE.HemisphereLight(0xe0f2fe, 0x0b1224, 0.95));
+            const dl = new THREE.DirectionalLight(0xffffff, 1.45); dl.position.set(4.5, 15, 9.5);
+            dl.castShadow = true; dl.shadow.mapSize.set(1024, 1024);
+            dl.shadow.camera.near = 2; dl.shadow.camera.far = 32;
+            dl.shadow.camera.left = -6; dl.shadow.camera.right = 6; dl.shadow.camera.top = 12; dl.shadow.camera.bottom = -2;
+            scene.add(dl);
             const cf = new THREE.PointLight(0x7dd3fc, 0.9, 28); cf.position.set(-4, 8, 7); scene.add(cf);
             const rp = new THREE.PointLight(0xfde047, 0.75, 24); rp.position.set(5, 5, 5); scene.add(rp); interiorRefs.rimLight = rp;
 
@@ -1563,6 +1673,10 @@
                 ctx.fillStyle = neb; ctx.fillRect(0,0,512,768);
                 for (let i = 0; i < 70; i++) { ctx.fillStyle = `rgba(255,255,255,${0.3+Math.random()*0.7})`; ctx.beginPath(); ctx.arc(Math.random()*512, Math.random()*768, 1+Math.random()*2.5, 0, Math.PI*2); ctx.fill(); }
             }
+            // 3D 깊이감을 극대화하는 모서리 암부(Ambient Occlusion) 비네팅!
+            const vig = ctx.createRadialGradient(256, 360, 140, 256, 384, 460);
+            vig.addColorStop(0, 'rgba(0,0,0,0)'); vig.addColorStop(0.75, 'rgba(0,10,30,0.22)'); vig.addColorStop(1, 'rgba(0,5,20,0.62)');
+            ctx.fillStyle = vig; ctx.fillRect(0, 0, 512, 768);
             const tex = new THREE.CanvasTexture(cvs); tex.needsUpdate = true; return tex;
         }
 
@@ -1642,9 +1756,17 @@
             const floorMat = new THREE.MeshStandardMaterial({ color: 0xd6b888, roughness: 0.75, metalness: 0.05 });
             const ceilMat = new THREE.MeshStandardMaterial({ color: 0x7dd3fc, roughness: 0.6 });
 
-            const bw = new THREE.Mesh(new THREE.PlaneGeometry(BOX.width,h), backMat); bw.position.set(0,h/2,-hd); scene.add(bw);
-            const fl = new THREE.Mesh(new THREE.PlaneGeometry(BOX.width,BOX.depth), floorMat); fl.rotation.x = -Math.PI/2; scene.add(fl);
+            const bw = new THREE.Mesh(new THREE.PlaneGeometry(BOX.width,h), backMat); bw.position.set(0,h/2,-hd); bw.receiveShadow = true; scene.add(bw);
+            const fl = new THREE.Mesh(new THREE.PlaneGeometry(BOX.width,BOX.depth), floorMat); fl.rotation.x = -Math.PI/2; fl.receiveShadow = true; scene.add(fl);
             const ce = new THREE.Mesh(new THREE.PlaneGeometry(BOX.width,BOX.depth), ceilMat); ce.rotation.x = Math.PI/2; ce.position.set(0,h,0); scene.add(ce);
+            // 3D 박스 깊이감을 즉각 보여주는 4개 내부 입체 메탈 코너 기둥 + 상/하 깊이 프레임!
+            const framePillarMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, metalness: 0.7, roughness: 0.35 });
+            [[-hw+0.12,-hd+0.12],[hw-0.12,-hd+0.12],[-hw+0.12,hd-0.12],[hw-0.12,hd-0.12]].forEach(([px,pz]) => {
+                const col = new THREE.Mesh(new THREE.BoxGeometry(0.26, h, 0.26), framePillarMat); col.position.set(px, h/2, pz); scene.add(col);
+            });
+            [[-hw+0.12, 0.14],[hw-0.12, 0.14],[-hw+0.12, h-0.14],[hw-0.12, h-0.14]].forEach(([px,py]) => {
+                const beam = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.24, BOX.depth), framePillarMat); beam.position.set(px, py, 0); scene.add(beam);
+            });
 
             const railMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.8, roughness: 0.2 });
             [-hw+0.22, hw-0.22].forEach(rx => { const r = new THREE.Mesh(new THREE.BoxGeometry(0.16,0.16,BOX.depth-0.3), railMat); r.position.set(rx,h-0.16,0); scene.add(r); });
@@ -1739,9 +1861,9 @@
 
             const total = Math.max(20, Math.min(400, Number(totalCount) || 60));
             STATE.remainingCapsules = total;
-            const radius = 0.60;
-            const activeCount = Math.min(total, 52), bedCount = Math.max(0, total - activeCount);
-            currentBedHeight = bedCount > 0 ? Math.min(2.2, 0.75 + (bedCount / 350) * 1.45) : 0;
+            const radius = 0.44; // 작고 영롱한 3D 주얼 가챠폰 사이즈!
+            const activeCount = Math.min(total, 64), bedCount = Math.max(0, total - activeCount);
+            currentBedHeight = bedCount > 0 ? Math.min(2.1, 0.65 + (bedCount / 340) * 1.45) : 0;
             const isInChute = (x, z) => (x < BOX.chuteX + 1.7 && z > BOX.chuteZ - 1.75);
 
             if (bedCount > 0) {
@@ -1772,11 +1894,23 @@
                 const isSpec = i < specialCount;
                 const skin = isSpec ? (i%2===0 ? CAPSULE_SKINS.specialGold : CAPSULE_SKINS.specialBlack) : (i%2===0 ? CAPSULE_SKINS.normalCyan : CAPSULE_SKINS.normalCoral);
                 const group = new THREE.Group();
-                const lowerMat = new THREE.MeshPhysicalMaterial({ color: skin.hex, emissive: skin.emissive, emissiveIntensity: isSpec ? 0.5 : 0.16, roughness: 0.12, metalness: skin.metalness, clearcoat: 1 });
-                group.add(new THREE.Mesh(new THREE.SphereGeometry(radius, 18, 12, 0, Math.PI*2, Math.PI/2, Math.PI/2), lowerMat));
-                group.add(new THREE.Mesh(new THREE.SphereGeometry(radius, 18, 12, 0, Math.PI*2, 0, Math.PI/2), clearDomeMat));
-                const band = new THREE.Mesh(new THREE.TorusGeometry(radius*1.01, 0.055, 8, 22), isSpec ? goldRingMat : ringMat); band.rotation.x = Math.PI/2; group.add(band);
-                group.add(new THREE.Mesh(new THREE.OctahedronGeometry(radius*(isSpec?0.44:0.26)), new THREE.MeshBasicMaterial({ color: isSpec ? 0xfef08a : skin.hex })));
+                // ★ 리디자인된 크리스탈 주얼 가챠폰 캡슐 (투명 아크릴 외피 + 내부 유광 보석 코어 + 실시간 그림자!)
+                const shellMesh = new THREE.Mesh(
+                    new THREE.SphereGeometry(radius, 18, 14),
+                    new THREE.MeshPhysicalMaterial({ color: isSpec ? 0xfef08a : 0xffffff, transparent: true, opacity: isSpec ? 0.42 : 0.32, roughness: 0.04, metalness: 0.1, clearcoat: 1.0 })
+                );
+                shellMesh.castShadow = true; group.add(shellMesh);
+                const innerCap = new THREE.Mesh(
+                    new THREE.SphereGeometry(radius * 0.76, 16, 10, 0, Math.PI*2, Math.PI/2, Math.PI/2),
+                    new THREE.MeshStandardMaterial({ color: skin.hex, emissive: skin.emissive, emissiveIntensity: isSpec ? 0.55 : 0.18, roughness: 0.18, metalness: skin.metalness })
+                );
+                group.add(innerCap);
+                const band = new THREE.Mesh(new THREE.TorusGeometry(radius * 0.99, 0.042, 8, 22), isSpec ? goldRingMat : ringMat); band.rotation.x = Math.PI/2; group.add(band);
+                const gem = new THREE.Mesh(
+                    isSpec ? new THREE.OctahedronGeometry(radius * 0.46) : new THREE.BoxGeometry(radius * 0.62, radius * 0.36, radius * 0.12),
+                    new THREE.MeshStandardMaterial({ color: isSpec ? 0xfde047 : skin.hex, emissive: isSpec ? 0xb45309 : 0x000000, metalness: 0.6, roughness: 0.2 })
+                );
+                gem.position.y = radius * 0.18; gem.rotation.set(0.4, 0.6, 0.2); group.add(gem);
 
                 let sx, sz;
                 do { sx = -3.4 + Math.random()*6.8; sz = -2.1 + Math.random()*4.2; } while (isInChute(sx, sz));
@@ -2002,7 +2136,7 @@
                     clawPos.y = BOX.clawTopY;
                     if (STATE.grabbedCapsule) {
                         STATE.phase = 'MOVING_TO_CHUTE';
-                        showToast(STATE.grabbedCapsule.isSpecial ? '✨ 스페셜 캡슐 획득!! 배출구로 이동 중!!' : '🎁 좌측 배출구로 이동 중!!', 'super');
+                        showToast(STATE.grabbedCapsule.isSpecial ? '✨ 스페셜 캡슐을 잡았습니다!' : '🎁 캡슐을 잡았습니다! 배출구로 이동합니다', 'super');
                     } else {
                         SoundFX.setTension(false); STATE.phase = 'IDLE';
                         SheetAPI.logResult(STATE.currentPlayer, null, '-', '캡슐뽑기');
@@ -2051,18 +2185,15 @@
                         chuteDropState.passedRing = true;
                         if (chuteRimMesh) chuteRimMesh.material.color.setHex(0x4ade80);
                         SoundFX.mono('G5', '16n'); SoundFX.mono('C6', '8n', 0.07);
-                        showToast('✨ 골인!! 배출 파이프로 쏙 들어갔습니다!', 'super');
-                    }
+                        }
                     if (cap.body.position.y <= 0.65) {
                         const idx = capsules.indexOf(cap); if (idx !== -1) capsules.splice(idx, 1);
                         scene.remove(cap.mesh); world.removeBody(cap.body);
                         STATE.grabbedCapsule = null;
-                        // ★ Decrement real live remaining capsule counter!
                         STATE.remainingCapsules = Math.max(0, STATE.remainingCapsules - 1);
                         updateStageHUD();
                         SoundFX.setTension(false); SoundFX.chuteRoll();
                         STATE.phase = 'CHUTE_ROLL'; STATE.chuteRollProgress = 0; lastTubeBounceStage = 0;
-                        document.getElementById('chute-cam-banner').classList.remove('hidden');
                         ServerSync.broadcastFastClaw(); ServerSync.broadcastState();
                     }
                 }
@@ -2419,9 +2550,22 @@
             const totalW = listArr.reduce((s, p) => s + Math.max(0, Number(p.weight)||0), 0);
             listArr.forEach((p, i) => {
                 const pct = totalW > 0 ? ((Math.max(0, Number(p.weight)||0) / totalW) * 100).toFixed(1) : '0.0';
+                if (typeof p.stock !== 'number') p.stock = 10;
                 const row = document.createElement('div'); row.className = 'grid grid-cols-12 gap-1.5 items-center bg-slate-50 p-2 rounded-xl border border-slate-200';
-                row.innerHTML = `<input data-f="tier" value="${p.tier||'A상'}" class="col-span-2 sm:col-span-1 px-1 py-1 rounded-lg border text-xs font-black text-center bg-white"><input data-f="emoji" value="${p.emoji||'🎁'}" class="col-span-2 sm:col-span-1 px-1 py-1 rounded-lg border text-center bg-white"><input data-f="name" value="${p.name||''}" placeholder="상품명" class="col-span-8 sm:col-span-3 px-2 py-1 rounded-lg border text-xs font-bold bg-white"><input data-f="image" value="${p.image||''}" placeholder="이미지 파일/URL" class="col-span-12 sm:col-span-3 px-2 py-1 rounded-lg border border-sky-200 text-xs font-mono bg-white"><input data-f="desc" value="${p.desc||''}" placeholder="당첨 문구" class="col-span-6 sm:col-span-2 px-2 py-1 rounded-lg border text-xs bg-white"><input type="number" min="0" data-f="weight" value="${p.weight}" class="col-span-3 sm:col-span-1 px-1 py-1 rounded-lg border border-indigo-300 text-xs font-black text-center bg-white"><button type="button" class="col-span-3 sm:col-span-1 py-1 rounded-lg bg-rose-100 text-rose-600 text-[10px] font-black">${pct}% ✕</button>`;
-                row.querySelectorAll('input').forEach(inp => inp.addEventListener('input', e => { const f = e.target.dataset.f; listArr[i][f] = f==='weight' ? Math.max(0, Number(e.target.value)||0) : e.target.value; if (f==='weight') renderPrizeEditor(containerId, listArr); }));
+                row.innerHTML = `
+                    <input data-f="tier" value="${p.tier||'A상'}" title="등급" class="col-span-2 sm:col-span-1 px-1 py-1 rounded-lg border text-xs font-black text-center bg-white">
+                    <input data-f="emoji" value="${p.emoji||'🎁'}" title="이모지" class="col-span-2 sm:col-span-1 px-1 py-1 rounded-lg border text-center bg-white">
+                    <input data-f="name" value="${p.name||''}" placeholder="상품명" class="col-span-8 sm:col-span-3 px-2 py-1 rounded-lg border text-xs font-bold bg-white">
+                    <input data-f="image" value="${p.image||''}" placeholder="이미지 파일/URL" class="col-span-12 sm:col-span-2 px-2 py-1 rounded-lg border border-sky-200 text-xs font-mono bg-white">
+                    <input data-f="desc" value="${p.desc||''}" placeholder="당첨 문구" class="col-span-5 sm:col-span-2 px-2 py-1 rounded-lg border text-xs bg-white">
+                    <input type="number" min="0" data-f="stock" value="${p.stock}" title="경품 수량(재고)" placeholder="수량" class="col-span-3 sm:col-span-1 px-1 py-1 rounded-lg border border-emerald-300 text-xs font-black text-center bg-white">
+                    <input type="number" min="0" data-f="weight" value="${p.weight}" title="확률 가중치" placeholder="가중치" class="col-span-2 sm:col-span-1 px-1 py-1 rounded-lg border border-indigo-300 text-xs font-black text-center bg-white">
+                    <button type="button" class="col-span-2 sm:col-span-1 py-1 rounded-lg bg-rose-100 text-rose-600 text-[10px] font-black">${pct}% ✕</button>`;
+                row.querySelectorAll('input').forEach(inp => inp.addEventListener('input', e => {
+                    const f = e.target.dataset.f;
+                    listArr[i][f] = (f==='weight' || f==='stock') ? Math.max(0, Number(e.target.value)||0) : e.target.value;
+                    if (f==='weight') renderPrizeEditor(containerId, listArr);
+                }));
                 row.querySelector('button').addEventListener('click', () => { listArr.splice(i, 1); renderPrizeEditor(containerId, listArr); });
                 listEl.appendChild(row);
             });
