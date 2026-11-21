@@ -1006,7 +1006,12 @@
             window.addEventListener('orientationchange', () => setTimeout(syncSwitchViewport, 120));
 
             const channelKey = URL_PARAMS.get('ch') || ('event_' + (URL_PARAMS.get('server') || 'S1'));
-            const myClientId = 'M_' + Math.random().toString(36).slice(2, 8).toUpperCase();
+            const cidKey = 'cj_claw_cid_' + channelKey;
+            let myClientId = localStorage.getItem(cidKey);
+            if (!myClientId) {
+                myClientId = 'M_' + Math.random().toString(36).slice(2, 8).toUpperCase();
+                localStorage.setItem(cidKey, myClientId);
+            }
             const tLock = `${MQTT_PREFIX}/${channelKey}/lock`, tReq = `${MQTT_PREFIX}/${channelKey}/req`, tAck = `${MQTT_PREFIX}/${channelKey}/ack/${myClientId}`, tCmd = `${MQTT_PREFIX}/${channelKey}/cmd`, tState = `${MQTT_PREFIX}/${channelKey}/state`, tAdmin = `${MQTT_PREFIX}/${channelKey}/admin`;
 
             let foundEmp = null, selectedPlays = 1, claimed = false, sessionStarted = false, currentHostGame = 'claw';
@@ -1091,7 +1096,13 @@
                         if (msg.eventTitle) document.getElementById('mc-event-title').textContent = msg.eventTitle;
                         if (msg.serverName) document.getElementById('mc-conn-server-label').textContent = `${msg.serverName} · 1:1 연결`;
                         if (hbTimer) clearInterval(hbTimer); hbTimer = setInterval(() => sendCmd('HEARTBEAT'), 3000);
-                        if (currentHostGame === 'kuji') {
+                        if (msg.resumedSession && currentHostGame !== 'kuji') {
+                            // ★ 끊겼다가 재접속한 본인 세션! 행운권 재차감 없이 즉시 조이패드 복귀!
+                            sessionStarted = true;
+                            document.getElementById('jp-hud-player').textContent = msg.player ? `${msg.player.name}님 (${msg.player.dept})` : '🎮 자율 플레이';
+                            document.getElementById('jp-hud-plays').textContent = msg.playsLeft ?? 0;
+                            showView('mc-joypad-view');
+                        } else if (currentHostGame === 'kuji') {
                             kujiPrizes = msg.prizes || []; kujiSelectedPrizeIdx = msg.finalePrizeIdx || 0; kujiMaxNum = msg.finaleTotal || 700;
                             document.getElementById('mc-kuji-max').textContent = kujiMaxNum; renderMobileKujiPrizes(); showView('mc-kuji-view');
                         } else if (msg.playMode === 'free' || channelKey.startsWith('free_')) {
@@ -1358,8 +1369,6 @@
                         applyBrandLogos(); renderLobbyFloatingPrizes();
                         if (APP.activeGame && APP.selectedMode === 'event' && APP.selectedServer === sid) {
                             applyThemeSettings(); updateStageTitles();
-                            if (APP.activeGame === 'claw' && renderer && msg.capsuleChanged) spawnHybridCapsules(getActiveGameSettings().capsuleCount);
-                            if (APP.activeGame === 'yabawi' && STATE.yabawiPhase === 'READY') initYabawiStage();
                             showToast(`⚙️ 관리자 설정이 실시간 반영되었습니다! (확률 ${getActiveGameSettings().winRate}% / 겹침 ${getActiveGameSettings().overlapThreshold}%)`, 'super');
                         }
                         return;
@@ -1368,11 +1377,22 @@
                     if (!APP.activeGame) return;
                     const T = this.topics(APP.channelKey);
                     if (APP.isHost && topic === T.req && msg.type === 'CLAIM') {
-                        const isBusy = APP.activeClient && (Date.now() - APP.activeClient.lastSeen < 18000) && APP.activeClient.clientId !== msg.clientId;
-                        if (isBusy) { Net.pub(T.ackPrefix + msg.clientId, { ok:false, reason:'BUSY', playerName: APP.activeClient.player?maskName(APP.activeClient.player.name):'진행 중', playsLeft: STATE.playsLeft }); return; }
-                        APP.activeClient = { clientId: msg.clientId, player: null, lastSeen: Date.now() };
+                        const isSameClient = APP.activeClient && APP.activeClient.clientId === msg.clientId;
+                        const isBusy = APP.activeClient && !isSameClient && (Date.now() - APP.activeClient.lastSeen < 18000);
+                        if (isBusy) {
+                            Net.pub(T.ackPrefix + msg.clientId, { ok:false, reason:'BUSY', playerName: APP.activeClient.player?maskName(APP.activeClient.player.name):'진행 중', playsLeft: STATE.playsLeft });
+                            return;
+                        }
+                        // ★ 본인 재접속 시 기존 플레이어 정보와 남은 횟수를 보존!
+                        const canResume = isSameClient && STATE.playsLeft > 0;
+                        APP.activeClient = { clientId: msg.clientId, player: canResume ? APP.activeClient.player : null, lastSeen: Date.now() };
                         this.publishLock(); this.updateRemoteHUD();
-                        Net.pub(T.ackPrefix + msg.clientId, { ok:true, playMode:APP.selectedMode, gasUrl:SheetAPI.gasUrl, eventTitle:CONFIG.eventTitle, serverName:getCurrentServerLabel(), activeGame:APP.activeGame, prizes:getActivePrizes(), finalePrizeIdx:STATE.finalePrizeIdx, finaleTotal:STATE.finaleBoard.length });
+                        Net.pub(T.ackPrefix + msg.clientId, {
+                            ok: true, resumedSession: canResume, player: canResume ? STATE.currentPlayer : null, playsLeft: STATE.playsLeft,
+                            playMode: APP.selectedMode, gasUrl: SheetAPI.gasUrl, eventTitle: CONFIG.eventTitle, serverName: getCurrentServerLabel(),
+                            activeGame: APP.activeGame, prizes: getActivePrizes(), finalePrizeIdx: STATE.finalePrizeIdx, finaleTotal: STATE.finaleBoard.length
+                        });
+                        if (canResume) this.broadcastState();
                         return;
                     }
                     if (APP.isHost && topic === T.cmd) {
@@ -1653,11 +1673,7 @@
             scene = new THREE.Scene(); scene.background = new THREE.Color(0x064e78); scene.fog = new THREE.FogExp2(0x064e78, 0.007);
             // ★ 삐뚤어짐 없는 스튜디오 망원 화각(34°) 적용!
             camera = new THREE.PerspectiveCamera(34, Math.max(1,c.clientWidth)/Math.max(1,c.clientHeight), 0.1, 110);
-            cctvCamera = new THREE.PerspectiveCamera(42, 1, 0.5, 40);
-            document.getElementById('claw-cctv-frame')?.addEventListener('click', () => {
-                cctvWideMode = !cctvWideMode;
-                document.getElementById('cctv-mode-label').textContent = cctvWideMode ? 'WIDE CAM' : 'CLAW CAM';
-            });
+            cctvCamera = new THREE.PerspectiveCamera(28, 1, 0.3, 30);
             updateFixedCamera(c.clientWidth||600, c.clientHeight||850);
             renderer = new THREE.WebGLRenderer({ antialias: true }); renderer.setSize(c.clientWidth||600, c.clientHeight||850);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.8));
@@ -2033,16 +2049,16 @@
             const showAim = (STATE.phase === 'IDLE' || STATE.phase === 'POWER_GAUGE');
             aimBeamMesh.position.set(hx, BOX.height/2, hz); aimBeamMesh.visible = showAim;
             if (targetRingMesh) {
-                // ★ 바로 아래 캡슐 높이에 자동 밀착 + 스페셜 캡슐 위에서 황금빛 Lock-On 펄스!
-                let hitY = currentBedHeight + 0.45, overSpecial = false;
+                let hitY = currentBedHeight + 0.45;
                 for (const c of capsules) {
                     if (Math.hypot(c.body.position.x - hx, c.body.position.z - hz) < 0.65 && c.body.position.y + 0.45 > hitY) {
-                        hitY = c.body.position.y + 0.45; overSpecial = Boolean(c.isSpecial);
+                        hitY = c.body.position.y + 0.45;
                     }
                 }
-                targetRingMesh.position.set(hx, hitY, hz); targetRingMesh.visible = showAim;
-                targetRingMesh.material.color.setHex(overSpecial ? 0xfde047 : 0xffffff);
-                targetRingMesh.scale.setScalar(overSpecial ? (1.28 + Math.sin(performance.now()*0.012)*0.14) : 1.0);
+                targetRingMesh.position.set(hx, hitY, hz);
+                targetRingMesh.visible = showAim;
+                targetRingMesh.material.color.setHex(0xffffff);
+                targetRingMesh.scale.setScalar(1.0);
             }
 
             const tSec = performance.now() * 0.001;
@@ -2890,10 +2906,7 @@
                 document.getElementById('lobby-event-title').innerHTML = CONFIG.eventTitle;
                 applyBrandLogos(); renderLobbyFloatingPrizes(); renderEntryServers(); applyThemeSettings(); updateStageTitles();
 
-                const capChanged = prevCap !== CONFIG.serverSettings[APP.selectedServer]?.capsuleCount;
-                ServerSync.pushLiveServerConfigs(capChanged);
-                if (APP.activeGame === 'claw' && renderer && capChanged) spawnHybridCapsules(getActiveGameSettings().capsuleCount);
-                if (APP.activeGame === 'yabawi' && STATE.yabawiPhase === 'READY') initYabawiStage();
+                ServerSync.pushLiveServerConfigs(false);
                 if (APP.activeGame === 'kuji') renderFinaleKujiUI();
                 const saveBtn = document.getElementById('btn-admin-save');
                 const origTxt = saveBtn.textContent;
@@ -2928,6 +2941,7 @@
             renderer.render(scene, camera);
 
             // 2) ★ 우측 상단 실시간 탑뷰 CCTV (CLAW CAM) PiP 렌더링!
+            // 2) ★ 우측 상단 초근접 탑뷰 CLAW CAM (집게발 가림 0% + 캡슐 3배 확대!)
             const cctvBox = document.getElementById('claw-cctv-frame');
             if (cctvCamera && cctvBox && STATE.phase !== 'CHUTE_ROLL' && STATE.phase !== 'REVEALING') {
                 cctvBox.classList.remove('hidden');
@@ -2936,22 +2950,18 @@
                 const vy = Math.max(0, cRect.bottom - pRect.bottom);
                 const vw = Math.max(10, pRect.width), vh = Math.max(10, pRect.height);
 
-                if (cctvWideMode) {
-                    // 전체 바닥 광각 CCTV 뷰
-                    cctvCamera.fov = 52; cctvCamera.updateProjectionMatrix();
-                    cctvCamera.position.set(0.3, BOX.height - 0.5, 0.05);
-                    cctvCamera.lookAt(0.3, currentBedHeight, 0);
-                } else {
-                    // 집게 바로 위에서 아래를 내려다보는 정밀 추적 CLAW CAM!
-                    cctvCamera.fov = 38; cctvCamera.updateProjectionMatrix();
-                    cctvCamera.position.set(clawPos.x, BOX.height - 0.6, clawPos.z + 0.01);
-                    cctvCamera.lookAt(clawPos.x, currentBedHeight, clawPos.z);
-                }
+                // 캡슐 표면 바로 위(높이 +4.3)에서 초근접 수직 줌인 촬영!
+                const hp = getClawHeadWorldPos();
+                const camY = Math.min(BOX.height - 1.2, currentBedHeight + 4.3);
+                cctvCamera.position.set(hp.x, camY, hp.z + 0.01);
+                cctvCamera.lookAt(hp.x, currentBedHeight + 0.3, hp.z);
 
-                // 상단 레일이 시야를 가리지 않게 잠시 숨겼다가 즉시 복원
+                // 집게발·와이어·레일을 CCTV 프레임에서만 잠깐 숨겨 시야 가림 완전 제거!
                 if (gantryBeamMesh) gantryBeamMesh.visible = false;
                 if (clawCarriageMesh) clawCarriageMesh.visible = false;
+                if (clawGroup) clawGroup.visible = false;
                 if (aimBeamMesh) aimBeamMesh.visible = false;
+                cableSegments.forEach(s => { s.visible = false; });
 
                 renderer.setScissorTest(true);
                 renderer.setViewport(vx, vy, vw, vh);
@@ -2962,6 +2972,8 @@
 
                 if (gantryBeamMesh) gantryBeamMesh.visible = true;
                 if (clawCarriageMesh) clawCarriageMesh.visible = true;
+                if (clawGroup) clawGroup.visible = true;
+                cableSegments.forEach(s => { s.visible = true; });
             } else if (cctvBox) {
                 cctvBox.classList.add('hidden');
             }
