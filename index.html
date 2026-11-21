@@ -36,28 +36,25 @@
         .floating-side-logo img { max-width: min(190px, 11vw); max-height: 130px; object-fit: contain; filter: drop-shadow(0 10px 26px rgba(0,0,0,0.55)); }
 
         /* No height cap on large QHD/4K monitors! Fills 96dvh cleanly! */
-        /* 세로형 직사각형 + 상·좌·우 두꺼운 동일 테두리(42px) + 깊은 하단 데크 */
+        /* 세로형 직사각형 + 상·좌·우 두꺼운 동일 테두리 + 선명한 투톤 패턴 프레임 */
         .kiosk-shell {
+            --fc1: #38bdf8; --fc2: #0284c7;
             position: relative; width: min(94vw, 66dvh); height: 96dvh; flex-shrink: 0;
             display: flex; flex-direction: column;
             padding: clamp(26px, 3.6dvh, 42px) clamp(32px, 4.4dvh, 52px) clamp(28px, 3.8dvh, 46px);
             border-radius: 38px; overflow: hidden;
+            background: linear-gradient(160deg, var(--fc1) 0%, var(--fc2) 100%);
+            border: 5px solid rgba(255,255,255,0.78);
             box-shadow: 0 40px 100px rgba(0,0,0,0.82), inset 0 2px 14px rgba(255,255,255,0.5), inset 0 -6px 18px rgba(0,0,0,0.28);
             transition: background 0.35s ease, border-color 0.35s ease;
         }
-        /* 행사 맞춤 커스텀 2색 + 6종 패턴 프레임 */
-        .kiosk-shell {
-            --fc1: #0ea5e9; --fc2: #0369a1;
-            background: linear-gradient(160deg, var(--fc1) 0%, var(--fc2) 100%);
-            border: 5px solid rgba(255,255,255,0.72);
-        }
-        .kiosk-shell.pat-smooth   { background: radial-gradient(circle at 20% 0%, rgba(255,255,255,0.35), transparent 50%), linear-gradient(160deg, var(--fc1) 0%, var(--fc2) 100%); }
-        .kiosk-shell.pat-stripe   { background: repeating-linear-gradient(-45deg, rgba(255,255,255,0.16) 0 22px, transparent 22px 44px), linear-gradient(160deg, var(--fc1), var(--fc2)); }
-        .kiosk-shell.pat-sunburst { background: repeating-conic-gradient(from 10deg at 50% 48%, rgba(255,255,255,0.18) 0 18deg, transparent 18deg 36deg), linear-gradient(160deg, var(--fc1), var(--fc2)); }
-        .kiosk-shell.pat-dots     { background: radial-gradient(rgba(255,255,255,0.28) 3px, transparent 3.5px) 0 0 / 26px 26px, linear-gradient(160deg, var(--fc1), var(--fc2)); }
-        .kiosk-shell.pat-checker  { background: conic-gradient(rgba(255,255,255,0.12) 90deg, transparent 90deg 180deg, rgba(255,255,255,0.12) 180deg 270deg, transparent 270deg) 0 0 / 34px 34px, linear-gradient(160deg, var(--fc1), var(--fc2)); }
-        .kiosk-shell.pat-diamond  { background: repeating-linear-gradient(45deg, rgba(255,255,255,0.12) 0 2px, transparent 2px 24px), repeating-linear-gradient(-45deg, rgba(255,255,255,0.12) 0 2px, transparent 2px 24px), linear-gradient(160deg, var(--fc1), var(--fc2)); }
-
+        .kiosk-shell.pat-smooth   { background: radial-gradient(circle at 20% 0%, rgba(255,255,255,0.32), transparent 50%), linear-gradient(160deg, var(--fc1) 0%, var(--fc2) 100%); }
+        .kiosk-shell.pat-sunburst { background: repeating-conic-gradient(from 12deg at 50% 48%, var(--fc1) 0deg 18deg, var(--fc2) 18deg 36deg); }
+        .kiosk-shell.pat-stripe   { background: repeating-linear-gradient(-45deg, var(--fc1) 0 28px, var(--fc2) 28px 56px); }
+        .kiosk-shell.pat-dots     { background: radial-gradient(var(--fc2) 7px, transparent 7.5px) 0 0 / 32px 32px, var(--fc1); }
+        .kiosk-shell.pat-checker  { background: conic-gradient(var(--fc1) 90deg, var(--fc2) 90deg 180deg, var(--fc1) 180deg 270deg, var(--fc2) 270deg) 0 0 / 46px 46px; }
+        .kiosk-shell.pat-diamond  { background: repeating-linear-gradient(45deg, var(--fc2) 0 2px, transparent 2px 26px), repeating-linear-gradient(-45deg, var(--fc2) 0 2px, transparent 2px 26px), var(--fc1); }
+        
         .screen-bezel { position: relative; flex: 1; min-height: 0; margin: 10px 0 14px 0; border-radius: 26px; overflow: hidden; border: 5px solid rgba(255,255,255,0.65); box-shadow: inset 0 10px 30px rgba(0,0,0,0.42), 0 12px 28px rgba(0,0,0,0.32); background: #0c4a6e; }
 
         /* ARCADE CONTROLS (4-WAY D-PAD + ACTION BUTTON) */
@@ -84,22 +81,23 @@
             touch-action: none; transition: transform 0.08s, background 0.12s;
         }
         .dpad-key:active, .dpad-key.pressed {
-            transform: scale(0.9); background: rgba(56, 189, 248, 0.65); border-color: #fff;
+            transform: scale(0.9); background: var(--fc1); border-color: #fff; box-shadow: 0 0 14px var(--fc1);
         }
         .dome-btn {
-            position: relative; border-radius: 9999px; border: 3px solid rgba(255,255,255,0.72); cursor: pointer;
+            position: relative; border-radius: 9999px; border: 3.5px solid rgba(255,255,255,0.82); cursor: pointer;
             transition: transform 0.1s ease, box-shadow 0.1s ease; touch-action: none;
             display: flex; align-items: center; justify-content: center;
         }
         .dome-btn::after {
             content: ''; position: absolute; top: 6px; left: 20%; width: 60%; height: 32%;
-            border-radius: 9999px; background: linear-gradient(180deg, rgba(255,255,255,0.68), transparent); pointer-events: none;
+            border-radius: 9999px; background: linear-gradient(180deg, rgba(255,255,255,0.65), transparent); pointer-events: none;
         }
+        /* 테마 색상(--fc1, --fc2)에 맞춰 버튼 컬러 자동 동기화! */
         .dome-btn-green {
-            background: linear-gradient(145deg, #34d399 0%, #059669 58%, #047857 100%);
-            box-shadow: 0 8px 22px rgba(5, 150, 105, 0.55), 0 5px 0 #064e3b, inset 0 2px 6px rgba(255,255,255,0.45);
+            background: linear-gradient(145deg, var(--fc1) 0%, var(--fc2) 100%);
+            box-shadow: 0 10px 26px rgba(0, 0, 0, 0.42), 0 5px 0 rgba(0, 0, 0, 0.45), inset 0 2px 8px rgba(255,255,255,0.55);
         }
-        .dome-btn-green:active, .dome-btn-green.pressed { transform: translateY(4px) scale(0.96); box-shadow: 0 2px 0 #064e3b; }
+        .dome-btn-green:active, .dome-btn-green.pressed { transform: translateY(4px) scale(0.96); box-shadow: 0 2px 0 rgba(0,0,0,0.45); }
         .dome-btn.gauge-active { animation: pulseGold 0.42s ease-in-out infinite alternate; }
         @keyframes pulseGold { 0% { box-shadow: 0 7px 0 #005712, 0 0 18px rgba(250,204,21,0.75); } 100% { box-shadow: 0 7px 0 #005712, 0 0 38px rgba(250,204,21,1); } }
         .gauge-track { position: relative; height: 28px; border-radius: 9999px; overflow: hidden; border: 3px solid #fff; background: linear-gradient(90deg, #334155 0 24%, #06b6d4 24% 41%, #facc15 41%, #f43f5e 50%, #facc15 59%, #06b6d4 59% 76%, #334155 76% 100%); }
@@ -1736,6 +1734,7 @@
             interiorRefs.sideMat.color.setHex(th.side); interiorRefs.floorMat.color.setHex(th.floor);
             interiorRefs.ceilMat.color.setHex(th.ceil); interiorRefs.ledMat.color.setHex(th.led);
             if (interiorRefs.rimLight) interiorRefs.rimLight.color.setHex(th.rim);
+            if (interiorRefs.chuteRimMat) interiorRefs.chuteRimMat.color.setHex(th.led);
             rebuild3DThemeProps(key);
         }
 
@@ -1769,16 +1768,21 @@
             [[-hw+0.26,-hd+0.22],[hw-0.26,-hd+0.22]].forEach(([lx,lz]) => { const l = new THREE.Mesh(ledGeo, ledMat); l.position.set(lx,h/2,lz); scene.add(l); });
 
             // ★ 높이 6.2로 확 높아진 좌측 전면 아크릴 배출구 타워!
+           // ★ 모던 프로스트 글래스 + 테마 컬러 연동 네온 배출구!
             const chuteH = BOX.chuteTopY, cg = new THREE.Group(); cg.position.set(BOX.chuteX, 0, BOX.chuteZ);
-            const acMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, transparent: true, opacity: 0.22, roughness: 0.06, clearcoat: 1, side: THREE.DoubleSide });
-            const sideR = new THREE.Mesh(new THREE.BoxGeometry(0.12, chuteH, 2.3), acMat); sideR.position.set(1.12, chuteH/2, 0); cg.add(sideR);
-            const sideB = new THREE.Mesh(new THREE.BoxGeometry(2.3, chuteH, 0.12), acMat); sideB.position.set(0, chuteH/2, -1.15); cg.add(sideB);
-            const pm = new THREE.MeshStandardMaterial({ color: 0xfbbf24, metalness: 0.78, roughness: 0.2 });
-            [[1.12,-1.15],[1.12,1.12]].forEach(([px,pz]) => { const p = new THREE.Mesh(new THREE.CylinderGeometry(0.055,0.055,chuteH,10), pm); p.position.set(px,chuteH/2,pz); cg.add(p); });
-            chuteRimMesh = new THREE.Mesh(new THREE.TorusGeometry(0.92,0.08,12,30), new THREE.MeshBasicMaterial({ color: 0xfbbf24 })); chuteRimMesh.rotation.x = Math.PI/2; chuteRimMesh.position.set(0,chuteH,0); cg.add(chuteRimMesh);
+            const acMat = new THREE.MeshPhysicalMaterial({ color: 0xf0f9ff, transparent: true, opacity: 0.18, roughness: 0.08, clearcoat: 1, side: THREE.DoubleSide });
+            const sideR = new THREE.Mesh(new THREE.BoxGeometry(0.08, chuteH, 2.3), acMat); sideR.position.set(1.12, chuteH/2, 0); cg.add(sideR);
+            const sideB = new THREE.Mesh(new THREE.BoxGeometry(2.3, chuteH, 0.08), acMat); sideB.position.set(0, chuteH/2, -1.15); cg.add(sideB);
+            const chuteTrimMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, metalness: 0.85, roughness: 0.15 });
+            [[1.12,-1.15],[1.12,1.12]].forEach(([px,pz]) => { const p = new THREE.Mesh(new THREE.CylinderGeometry(0.032,0.032,chuteH,10), chuteTrimMat); p.position.set(px,chuteH/2,pz); cg.add(p); });
+            const rimAccentMat = new THREE.MeshBasicMaterial({ color: 0x67e8f9 });
+            chuteRimMesh = new THREE.Mesh(new THREE.TorusGeometry(0.92,0.055,12,36), rimAccentMat); chuteRimMesh.rotation.x = Math.PI/2; chuteRimMesh.position.set(0,chuteH,0); cg.add(chuteRimMesh);
+            const outerGlassCollar = new THREE.Mesh(new THREE.CylinderGeometry(0.96,0.96,0.22,32,1,true), new THREE.MeshPhysicalMaterial({ color:0xffffff, transparent:true, opacity:0.35, side:THREE.DoubleSide }));
+            outerGlassCollar.position.set(0, chuteH - 0.11, 0); cg.add(outerGlassCollar);
+            interiorRefs.chuteRimMat = rimAccentMat;
             chuteChevrons = [];
-            [4.9, 3.6, 2.3].forEach((cy,idx) => { const c = new THREE.Mesh(new THREE.ConeGeometry(0.2,0.28,3), new THREE.MeshBasicMaterial({ color:0xffffff, transparent:true, opacity:0.6 })); c.rotation.x = Math.PI; c.position.set(0,cy,1.05); c.userData.phase = idx*1.1; cg.add(c); chuteChevrons.push(c); });
-            const pit = new THREE.Mesh(new THREE.CircleGeometry(0.9,24), new THREE.MeshBasicMaterial({ color: 0x020617 })); pit.rotation.x = -Math.PI/2; pit.position.set(0,0.04,0); cg.add(pit);
+            [4.8, 3.6, 2.4].forEach((cy,idx) => { const c = new THREE.Mesh(new THREE.RingGeometry(0.14,0.22,3), new THREE.MeshBasicMaterial({ color:0xffffff, transparent:true, opacity:0.65, side:THREE.DoubleSide })); c.rotation.z = Math.PI; c.position.set(0,cy,1.08); c.userData.phase = idx*1.1; cg.add(c); chuteChevrons.push(c); });
+            const pit = new THREE.Mesh(new THREE.CircleGeometry(0.9,28), new THREE.MeshBasicMaterial({ color: 0x050b18 })); pit.rotation.x = -Math.PI/2; pit.position.set(0,0.04,0); cg.add(pit);
             scene.add(cg);
 
             const aPos = new Float32Array(90*3);
@@ -1893,7 +1897,20 @@
             }
 
             // 상단 실제 Cannon.js 물리 캡슐 (두꺼운 커튼링 제거! 초슬림 심 + 깔끔 투톤 크리스탈 가챠폰!)
-            const clearTopMat = new THREE.MeshPhysicalMaterial({ color: 0xf8fafc, transparent: true, opacity: 0.45, roughness: 0.04, clearcoat: 1.0 });
+            // 행사명이 선명하게 인쇄된 캡슐 내부 3D 미니 카드 텍스처 생성
+            const cardCvs = document.createElement('canvas'); cardCvs.width = 256; cardCvs.height = 140;
+            const cctx = cardCvs.getContext('2d');
+            const cg2 = cctx.createLinearGradient(0,0,256,140); cg2.addColorStop(0,'#fffbeb'); cg2.addColorStop(1,'#fde68a');
+            cctx.fillStyle = cg2; cctx.fillRect(0,0,256,140);
+            cctx.strokeStyle = '#d97706'; cctx.lineWidth = 6; cctx.strokeRect(8,8,240,124);
+            cctx.fillStyle = '#0f172a'; cctx.font = '900 22px "Noto Sans KR",sans-serif'; cctx.textAlign = 'center'; cctx.textBaseline = 'middle';
+            cctx.fillText((CONFIG.footerBrand || 'CJ MEZZOMEDIA').slice(0, 14), 128, 52);
+            cctx.fillStyle = '#e11d48'; cctx.font = '900 18px "Noto Sans KR",sans-serif';
+            cctx.fillText('2026 LUCKY DRAW', 128, 94);
+            const miniCardTex = new THREE.CanvasTexture(cardCvs);
+            const miniCardMat = new THREE.MeshStandardMaterial({ map: miniCardTex, roughness: 0.35, side: THREE.DoubleSide });
+
+            const clearTopMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, transparent: true, opacity: 0.42, roughness: 0.04, clearcoat: 1.0 });
             const seamMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.2, metalness: 0.7 });
             const specialCount = Math.max(8, Math.round(activeCount * 0.22));
             for (let i = 0; i < activeCount; i++) {
@@ -1902,20 +1919,31 @@
                 const group = new THREE.Group();
                 const lower = new THREE.Mesh(
                     new THREE.SphereGeometry(radius, 18, 12, 0, Math.PI*2, Math.PI/2, Math.PI/2),
-                    new THREE.MeshPhysicalMaterial({ color: skin.hex, emissive: skin.emissive, emissiveIntensity: isSpec ? 0.45 : 0.12, roughness: 0.14, metalness: skin.metalness, clearcoat: 1 })
+                    new THREE.MeshPhysicalMaterial({ color: skin.hex, emissive: skin.emissive, emissiveIntensity: isSpec ? 0.5 : 0.14, roughness: 0.14, metalness: skin.metalness, clearcoat: 1 })
                 );
                 lower.castShadow = true; lower.receiveShadow = true; group.add(lower);
                 const upper = new THREE.Mesh(new THREE.SphereGeometry(radius, 18, 12, 0, Math.PI*2, 0, Math.PI/2), clearTopMat);
                 upper.castShadow = true; group.add(upper);
-                const thinSeam = new THREE.Mesh(new THREE.TorusGeometry(radius * 1.005, 0.016, 6, 20), seamMat); thinSeam.rotation.x = Math.PI/2; group.add(thinSeam);
+                const thinSeam = new THREE.Mesh(new THREE.TorusGeometry(radius * 1.005, 0.015, 6, 20), seamMat); thinSeam.rotation.x = Math.PI/2; group.add(thinSeam);
+
+                // ★ 캡슐 안에 떠 있는 행사명 3D 미니 카드!
+                const card3D = new THREE.Mesh(new THREE.BoxGeometry(radius * 1.15, radius * 0.62, 0.03), miniCardMat);
+                card3D.position.y = radius * 0.08; card3D.rotation.set(0.25, (Math.random()-0.5)*1.2, (Math.random()-0.5)*0.4);
+                group.add(card3D);
+
+                // ★ 스페셜 캡슐: 반짝이는 황금 후광 링(뒤쪽에 있어도 시선을 확 사로잡음!)
                 if (isSpec) {
-                    const gem = new THREE.Mesh(new THREE.OctahedronGeometry(radius * 0.42), new THREE.MeshBasicMaterial({ color: 0xfef08a }));
-                    gem.position.y = radius * 0.14; group.add(gem);
+                    const aura = new THREE.Mesh(new THREE.RingGeometry(radius * 1.08, radius * 1.28, 22), new THREE.MeshBasicMaterial({ color: 0xfde047, transparent: true, opacity: 0.55, side: THREE.DoubleSide }));
+                    aura.rotation.x = -Math.PI/2; group.add(aura);
                 }
 
+                // ★ 스페셜 캡슐 70%는 안쪽(z < 0) 상단에 배치 -> 뒤쪽을 노려 뽑는 전략적 재미!
                 let sx, sz;
-                do { sx = -3.5 + Math.random()*7.0; sz = -2.05 + Math.random()*4.1; } while (isInChute(sx, sz));
-                const sy = currentBedHeight + radius + 0.1 + Math.floor(i / 12) * 0.88;
+                do {
+                    sx = -3.5 + Math.random()*7.0;
+                    sz = (isSpec && i < Math.ceil(specialCount * 0.7)) ? (-2.05 + Math.random()*1.7) : (-2.05 + Math.random()*4.1);
+                } while (isInChute(sx, sz));
+                const sy = currentBedHeight + radius + (isSpec ? 1.5 : 0.15) + Math.floor(i / 12) * 0.85;
                 group.position.set(sx, sy, sz); scene.add(group);
                 const body = new CANNON.Body({ mass: 1.1, material: capPhysMat, shape: new CANNON.Sphere(radius), linearDamping: 0.44, angularDamping: 0.48 });
                 body.position.set(sx, sy, sz); world.addBody(body);
@@ -1950,15 +1978,17 @@
             const hx = clawPos.x + Math.sin(swayX)*dd, hz = clawPos.z + Math.sin(swayZ)*dd, hy = py - Math.cos(Math.hypot(swayX, swayZ))*dd;
             clawGroup.position.set(hx, hy, hz); clawGroup.rotation.set(-swayZ*1.15, 0, swayX*1.15);
 
-            const p0x = clawPos.x, p0y = py-0.1, p0z = clawPos.z, p2x = hx, p2y = hy+0.34, p2z = hz;
+            // ★ 위쪽(ax2-bx2, ay2-by2) 벡터로 계산해 180° 반전/줄 끊김 원천 차단!
+            const p0x = clawPos.x, p0y = py, p0z = clawPos.z, p2x = hx, p2y = hy + 0.18, p2z = hz;
             for (let i=0;i<CABLE_SEG_COUNT;i++) {
                 const tA = i/CABLE_SEG_COUNT, tB = (i+1)/CABLE_SEG_COUNT;
                 const ax2 = p0x+(p2x-p0x)*tA, ay2 = p0y+(p2y-p0y)*tA, az2 = p0z+(p2z-p0z)*tA;
                 const bx2 = p0x+(p2x-p0x)*tB, by2 = p0y+(p2y-p0y)*tB, bz2 = p0z+(p2z-p0z)*tB;
-                const s = cableSegments[i], dir = new THREE.Vector3(bx2-ax2, by2-ay2, bz2-az2);
+                const s = cableSegments[i], upDir = new THREE.Vector3(ax2-bx2, ay2-by2, az2-bz2);
+                const segLen = Math.max(0.05, upDir.length());
                 s.position.set((ax2+bx2)*0.5, (ay2+by2)*0.5, (az2+bz2)*0.5);
-                s.scale.set(1, Math.max(0.05, dir.length())*1.08, 1);
-                s.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), dir.normalize());
+                s.scale.set(1, segLen * 1.15, 1);
+                s.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), upDir.normalize());
             }
             clawOpenAngle += (targetClawOpenAngle - clawOpenAngle)*0.18;
             const jw = (STATE.phase==='CLOSING'||STATE.grabbedCapsule) ? 0.16 : 1.0;
@@ -1966,7 +1996,18 @@
 
             const showAim = (STATE.phase === 'IDLE' || STATE.phase === 'POWER_GAUGE');
             aimBeamMesh.position.set(hx, BOX.height/2, hz); aimBeamMesh.visible = showAim;
-            if (targetRingMesh) { targetRingMesh.position.set(hx, currentBedHeight + 0.55, hz); targetRingMesh.visible = showAim; }
+            if (targetRingMesh) {
+                // ★ 바로 아래 캡슐 높이에 자동 밀착 + 스페셜 캡슐 위에서 황금빛 Lock-On 펄스!
+                let hitY = currentBedHeight + 0.45, overSpecial = false;
+                for (const c of capsules) {
+                    if (Math.hypot(c.body.position.x - hx, c.body.position.z - hz) < 0.65 && c.body.position.y + 0.45 > hitY) {
+                        hitY = c.body.position.y + 0.45; overSpecial = Boolean(c.isSpecial);
+                    }
+                }
+                targetRingMesh.position.set(hx, hitY, hz); targetRingMesh.visible = showAim;
+                targetRingMesh.material.color.setHex(overSpecial ? 0xfde047 : 0xffffff);
+                targetRingMesh.scale.setScalar(overSpecial ? (1.28 + Math.sin(performance.now()*0.012)*0.14) : 1.0);
+            }
 
             const tSec = performance.now() * 0.001;
             if (themePropsGroup) {
@@ -2063,7 +2104,7 @@
                     STATE.chuteRollProgress += dt * 0.34; ServerSync.broadcastFastClaw();
                     if (STATE.chuteRollProgress >= 1.0) {
                         document.getElementById('chute-cam-banner').classList.add('hidden'); document.getElementById('chute-flash').style.opacity = '0';
-                        if (chuteRimMesh) chuteRimMesh.material.color.setHex(0xfbbf24);
+                        if (chuteRimMesh) chuteRimMesh.material.color.setHex((INTERIOR_THEMES[getActiveGameSettings().interiorTheme] || INTERIOR_THEMES.underwater).led);
                         const c = document.getElementById('canvas-container'); updateFixedCamera(c.clientWidth, c.clientHeight);
                         triggerWinFlow(pickPrizeForCapsuleType(STATE.grabbedIsSpecial), '캡슐뽑기');
                         return;
@@ -2788,7 +2829,10 @@
                 if (APP.activeGame === 'claw' && renderer && capChanged) spawnHybridCapsules(getActiveGameSettings().capsuleCount);
                 if (APP.activeGame === 'yabawi' && STATE.yabawiPhase === 'READY') initYabawiStage();
                 if (APP.activeGame === 'kuji') renderFinaleKujiUI();
-                document.getElementById('admin-modal').classList.add('hidden'); document.getElementById('admin-modal').classList.remove('flex');
+                const saveBtn = document.getElementById('btn-admin-save');
+                const origTxt = saveBtn.textContent;
+                saveBtn.textContent = '✅ 저장 및 실시간 반영 완료!';
+                setTimeout(() => { saveBtn.textContent = origTxt; }, 1600);
                 showToast('⚙️ 관리자 설정이 저장 및 실시간 반영되었습니다!', 'super');
             });
         }
