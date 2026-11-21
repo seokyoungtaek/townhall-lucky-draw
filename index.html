@@ -2560,13 +2560,21 @@
             updateStageHUD(); showToast(`🪪 ${emp.name}님 (${emp.dept}) ${STATE.playsLeft}회 시작!`, 'super'); ServerSync.broadcastState();
         }
         function updateStageHUD() {
-            const pLabel = document.getElementById('hud-player-label'), waitPill = document.getElementById('kiosk-waiting-pill'), leftSub = document.getElementById('hud-left-sub');
+            const pLabel = document.getElementById('hud-player-label');
+            const waitPill = document.getElementById('kiosk-waiting-pill');
+            const leftSub = document.getElementById('hud-left-sub');
+            if (!pLabel || !waitPill || !leftSub) return;
+
             if (APP.activeGame === 'kuji') {
-                pLabel.textContent = '🏆 FINALE ICHIBAN KUJI'; leftSub.innerHTML = `당첨 완료 <span class="text-amber-300">${STATE.finaleWinners.length}</span>명`;
+                pLabel.textContent = '🏆 FINALE ICHIBAN KUJI';
+                leftSub.innerHTML = `당첨 완료 <span class="text-amber-300">${STATE.finaleWinners.length}</span>명`;
                 waitPill.textContent = '📱 QR 스캔 시 경품 선택 & 번호 뜯기 컨트롤러 연결!';
             } else {
                 leftSub.innerHTML = `남은 횟수 <span id="hud-plays-left" class="text-cyan-300">${STATE.playsLeft}</span>회`;
-                iconst srvPrefix = APP.selectedMode === 'event' ? `${CONFIG.servers[APP.selectedServer]} (${APP.isHost ? '호스트' : '관전'})` : '자율 모드';
+                const srvPrefix = APP.selectedMode === 'event'
+                    ? `${CONFIG.servers[APP.selectedServer]} (${APP.isHost ? '호스트' : '관전'})`
+                    : '자율 모드';
+
                 if (APP.selectedMode === 'free') {
                     pLabel.textContent = '🎮 자율 체험 모드';
                     waitPill.textContent = `${srvPrefix} | 🕹️ 4방향 / 키보드 / QR 플레이!`;
@@ -2578,10 +2586,19 @@
                     waitPill.textContent = `${srvPrefix} | 📱 QR 스캔 후 스위치 패드로 플레이!`;
                 }
             }
-            const rLabel = document.getElementById('hud-right-label'), rVal = document.getElementById('hud-right-value');
-            if (APP.activeGame === 'claw') { rLabel.textContent = 'CAPSULES'; rVal.textContent = `${STATE.remainingCapsules}개`; }
-            else if (APP.activeGame === 'yabawi') { rLabel.textContent = 'DOMES'; rVal.textContent = `${STATE.yabawiOrder.length}개`; }
-            else if (APP.activeGame === 'kuji') { rLabel.textContent = '남은 쿠지'; rVal.textContent = `${STATE.finaleBoard.filter(x=>!x.opened).length}/${STATE.finaleBoard.length}장`; }
+
+            const rLabel = document.getElementById('hud-right-label');
+            const rVal = document.getElementById('hud-right-value');
+            if (APP.activeGame === 'claw') {
+                rLabel.textContent = 'CAPSULES';
+                rVal.textContent = `${STATE.remainingCapsules}개`;
+            } else if (APP.activeGame === 'yabawi') {
+                rLabel.textContent = 'DOMES';
+                rVal.textContent = `${STATE.yabawiOrder.length}개`;
+            } else if (APP.activeGame === 'kuji') {
+                rLabel.textContent = '남은 쿠지';
+                rVal.textContent = `${STATE.finaleBoard.filter(x => !x.opened).length}/${STATE.finaleBoard.length}장`;
+            }
         }
 
         // ★ Deduplicated Toast (Never shows duplicate alerts!)
