@@ -534,36 +534,62 @@
                     </section>
 
                     <!-- ★ 서버별 독립 게임 설정 + 서버별 독립 경품 목록! -->
-                    <section class="bg-white rounded-2xl p-4 border-2 border-indigo-300 space-y-3">
-                        <div class="flex flex-wrap items-center justify-between gap-2">
-                            <h3 class="font-black text-sm text-indigo-700">🎮 서버별 개별 설정 & 독립 경품 관리</h3>
-                            <div id="admin-srv-selector" class="flex gap-1.5">
-                                <button data-asrv="S1" type="button" class="px-3 py-1 rounded-lg text-xs font-black bg-indigo-600 text-white">1서버</button>
-                                <button data-asrv="S2" type="button" class="px-3 py-1 rounded-lg text-xs font-black bg-slate-200 text-slate-700">2서버</button>
-                                <button data-asrv="S3" type="button" class="px-3 py-1 rounded-lg text-xs font-black bg-slate-200 text-slate-700">3서버</button>
-                                <button data-asrv="S4" type="button" class="px-3 py-1 rounded-lg text-xs font-black bg-slate-200 text-slate-700">4서버</button>
+                   <!-- ★ 깔끔한 2단 선택: [1~4서버] × [캡슐 / 용만이 / 쿠지] 개별 설정 & 독립 경품 -->
+                    <section class="bg-white rounded-2xl p-4 border-2 border-indigo-200 space-y-3.5">
+                        <!-- Row 1: 서버 선택 + 현재 서버/게임 QR 바로 열기 -->
+                        <div class="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-slate-100">
+                            <div id="admin-srv-selector" class="flex flex-wrap gap-1.5">
+                                <button data-asrv="S1" type="button" class="px-3 py-1.5 rounded-xl text-xs font-black bg-indigo-600 text-white shadow">1서버</button>
+                                <button data-asrv="S2" type="button" class="px-3 py-1.5 rounded-xl text-xs font-black bg-slate-100 text-slate-600">2서버</button>
+                                <button data-asrv="S3" type="button" class="px-3 py-1.5 rounded-xl text-xs font-black bg-slate-100 text-slate-600">3서버</button>
+                                <button data-asrv="S4" type="button" class="px-3 py-1.5 rounded-xl text-xs font-black bg-slate-100 text-slate-600">4서버</button>
+                            </div>
+                            <div id="admin-game-selector" class="flex flex-wrap gap-1.5">
+                                <button data-agame="claw" type="button" class="px-3 py-1.5 rounded-xl text-xs font-black bg-sky-600 text-white shadow">🕹️ 캡슐 뽑기</button>
+                                <button data-agame="yabawi" type="button" class="px-3 py-1.5 rounded-xl text-xs font-black bg-slate-100 text-slate-600">🍡 떡 먹는 용만이</button>
+                                <button data-agame="kuji" type="button" class="px-3 py-1.5 rounded-xl text-xs font-black bg-slate-100 text-slate-600">🏆 피날레 쿠지</button>
                             </div>
                         </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                            <div class="bg-sky-50 p-3 rounded-xl border border-sky-200 space-y-2">
-                                <div class="font-black text-xs text-sky-900">🕹️ ① 캡슐 뽑기 (<span class="asrv-badge">1서버</span>)</div>
-                                <div class="flex justify-between text-[11px] font-bold"><span>캡슐 수량 (최대 400)</span><span id="admin-capsule-val">200개</span></div>
-                                <input id="admin-capsule-count" type="range" min="30" max="400" step="10" class="w-full accent-sky-600">
-                                <div class="flex justify-between text-[11px] font-bold"><span>기본 성공확률</span><span id="admin-winrate-val">65%</span></div>
-                                <input id="admin-win-rate" type="range" min="0" max="100" step="5" class="w-full accent-sky-600">
-                                <div class="flex justify-between text-[11px] font-bold"><span>겹침 판정 기준</span><span id="admin-overlap-val">50%</span></div>
-                                <input id="admin-overlap-threshold" type="range" min="30" max="85" step="5" class="w-full accent-sky-600">
+
+                        <!-- Row 2: 선택한 게임 전용 설정 (왼쪽) + 프레임/테마 (오른쪽) 2단 컴팩트 배치 -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <!-- 게임별 동적 설정 영역 -->
+                            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                                <!-- ① 캡슐 설정 패널 -->
+                                <div id="apnl-claw" class="space-y-2">
+                                    <div class="font-black text-xs text-sky-800">🕹️ 캡슐 뽑기 설정 (<span class="asrv-badge">1서버</span>)</div>
+                                    <div class="flex justify-between text-[11px] font-bold"><span>캡슐 수량 (최대 400)</span><span id="admin-capsule-val">60개</span></div>
+                                    <input id="admin-capsule-count" type="range" min="20" max="400" step="10" class="w-full accent-sky-600">
+                                    <div class="flex justify-between text-[11px] font-bold"><span>기본 성공확률</span><span id="admin-winrate-val">65%</span></div>
+                                    <input id="admin-win-rate" type="range" min="0" max="100" step="5" class="w-full accent-sky-600">
+                                    <div class="flex justify-between text-[11px] font-bold"><span>겹침 판정 기준</span><span id="admin-overlap-val">50%</span></div>
+                                    <input id="admin-overlap-threshold" type="range" min="30" max="85" step="5" class="w-full accent-sky-600">
+                                    <label class="flex items-center gap-2 text-[11px] font-bold text-slate-700 pt-0.5 cursor-pointer">
+                                        <input id="admin-use-gauge" type="checkbox" class="accent-indigo-600 w-4 h-4"><span>타이밍 스탑 게이지 사용 (기본: 즉시 하강)</span>
+                                    </label>
+                                </div>
+                                <!-- ② 용만이 설정 패널 -->
+                                <div id="apnl-yabawi" class="hidden space-y-2">
+                                    <div class="font-black text-xs text-rose-800">🍡 떡 먹는 용만이 설정 (<span class="asrv-badge">1서버</span>)</div>
+                                    <div class="grid grid-cols-3 gap-2">
+                                        <div><label class="block text-[10px] font-bold text-slate-500 mb-1">돔 개수</label><select id="admin-yabawi-cups" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold bg-white"><option value="3">3개</option><option value="4">4개</option><option value="5">5개</option></select></div>
+                                        <div><label class="block text-[10px] font-bold text-slate-500 mb-1">셔플 속도</label><select id="admin-yabawi-speed" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold bg-white"><option value="420">보통</option><option value="280">빠름</option><option value="180">초고속</option></select></div>
+                                        <div><label class="block text-[10px] font-bold text-slate-500 mb-1">섞기 횟수</label><input id="admin-yabawi-swaps" type="number" min="4" max="25" class="w-full px-2 py-1.5 rounded-lg border text-xs font-black bg-white"></div>
+                                    </div>
+                                </div>
+                                <!-- ③ 피날레 쿠지 설정 패널 -->
+                                <div id="apnl-kuji" class="hidden space-y-2.5">
+                                    <div class="font-black text-xs text-amber-800">🏆 피날레 이치방 쿠지 (<span class="asrv-badge">1서버</span>)</div>
+                                    <p class="text-[11px] text-slate-500 leading-relaxed">구글 시트 임직원 남은 행운권 합계만큼 번호 쿠지가 생성되며, 아래 등록된 피날레 전용 경품 목록이 컨트롤러에 표시됩니다.</p>
+                                    <button id="btn-reset-finale" type="button" class="w-full py-2 rounded-lg bg-amber-500 text-white text-xs font-black">🔄 피날레 쿠지 보드 리셋</button>
+                                </div>
                             </div>
-                            <div class="bg-rose-50 p-3 rounded-xl border border-rose-200 space-y-2">
-                                <div class="font-black text-xs text-rose-900">🍡 ② 떡 먹는 용만이 (<span class="asrv-badge">1서버</span>)</div>
-                                <label class="block text-[11px] font-bold text-slate-600">돔 개수</label><select id="admin-yabawi-cups" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold bg-white"><option value="3">3개</option><option value="4">4개</option><option value="5">5개</option></select>
-                                <label class="block text-[11px] font-bold text-slate-600">셔플 속도</label><select id="admin-yabawi-speed" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold bg-white"><option value="420">보통</option><option value="280">빠름</option><option value="180">초고속</option></select>
-                                <label class="block text-[11px] font-bold text-slate-600">섞기 횟수</label><input id="admin-yabawi-swaps" type="number" min="4" max="25" class="w-full px-2.5 py-1 rounded-lg border text-xs font-black bg-white">
-                            </div>
-                            <div class="bg-amber-50 p-3 rounded-xl border border-amber-200 space-y-2">
-                                <div class="font-black text-xs text-amber-900">🎨 패턴 프레임 & 3D 테마 (<span class="asrv-badge">1서버</span>)</div>
+
+                            <!-- 서버 프레임 패턴 & 3D 테마 + 전용 QR 바로가기 -->
+                            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-2">
+                                <div class="font-black text-xs text-indigo-800">🎨 프레임 패턴 · 컬러 · 3D 공간 (<span class="asrv-badge">1서버</span>)</div>
                                 <select id="admin-frame-theme" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold bg-white">
-                                    <option value="pat-sunburst">패턴: ☀️ 팝 선버스트 (행사 인기)</option>
+                                    <option value="pat-sunburst">패턴: ☀️ 팝 선버스트 (투톤)</option>
                                     <option value="pat-stripe">패턴: 🎪 페스티벌 스트라이프</option>
                                     <option value="pat-dots">패턴: ✨ 파티 도트</option>
                                     <option value="pat-checker">패턴: 🏁 모던 체크</option>
@@ -571,29 +597,25 @@
                                     <option value="pat-smooth">패턴: 🌊 심플 그라데이션</option>
                                 </select>
                                 <div class="grid grid-cols-2 gap-1.5">
-                                    <label class="flex items-center justify-between bg-white px-2 py-1 rounded-lg border text-[10px] font-bold"><span>메인색</span><input id="admin-frame-c1" type="color" value="#38bdf8" class="w-6 h-5 border-0 bg-transparent cursor-pointer"></label>
-                                    <label class="flex items-center justify-between bg-white px-2 py-1 rounded-lg border text-[10px] font-bold"><span>포인트색</span><input id="admin-frame-c2" type="color" value="#0369a1" class="w-6 h-5 border-0 bg-transparent cursor-pointer"></label>
+                                    <label class="flex items-center justify-between bg-white px-2 py-1 rounded-lg border text-[10px] font-bold"><span>메인색</span><input id="admin-frame-c1" type="color" value="#38bdf8" class="w-6 h-5 cursor-pointer"></label>
+                                    <label class="flex items-center justify-between bg-white px-2 py-1 rounded-lg border text-[10px] font-bold"><span>포인트색</span><input id="admin-frame-c2" type="color" value="#0369a1" class="w-6 h-5 cursor-pointer"></label>
                                 </div>
                                 <select id="admin-interior-theme" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold bg-white">
-                                    <option value="underwater">3D 공간: 🌊 물속 아쿠아리움 (기본)</option>
+                                    <option value="underwater">3D 공간: 🌊 물속 아쿠아리움</option>
                                     <option value="sky">3D 공간: ☁️ 몽글몽글 하늘</option>
                                     <option value="park">3D 공간: 🌳 햇살 가득 공원</option>
                                     <option value="galaxy">3D 공간: 🌌 드림 갤럭시</option>
                                 </select>
-                                <label class="flex items-center gap-2 text-[11px] font-bold text-slate-700 pt-1 cursor-pointer">
-                                    <input id="admin-use-gauge" type="checkbox" class="accent-indigo-600 w-4 h-4">
-                                    <span>타이밍 스탑 게이지 사용 (기본: 즉시 하강)</span>
-                                </label>
-                                <button id="btn-reset-finale" type="button" class="w-full py-1.5 rounded-lg bg-amber-500 text-white text-xs font-black">🔄 피날레 쿠지 보드 리셋</button>
+                                <button id="btn-admin-open-cur-qr" type="button" class="w-full py-1.5 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-xs font-black">📱 현재 [<span class="asrv-badge">1서버</span> · <span class="agame-badge">캡슐 뽑기</span>] 전용 QR 보기</button>
                             </div>
                         </div>
 
-                        <!-- ★ 해당 서버 전용 독립 경품 목록 -->
+                        <!-- Row 3: 선택한 [서버 × 게임] 전용 경품 목록! -->
                         <div class="pt-2 border-t border-slate-200 space-y-2">
                             <div class="flex flex-wrap items-center justify-between gap-2">
-                                <div><h4 class="font-black text-xs text-indigo-700">🎁 [<span class="asrv-badge">1서버</span>] 전용 경품 목록 · 이미지 · 가중치</h4></div>
+                                <h4 class="font-black text-xs text-indigo-700">🎁 [<span class="asrv-badge">1서버</span> · <span class="agame-badge">캡슐 뽑기</span>] 전용 경품 · 이미지 · 수량 · 가중치</h4>
                                 <div class="flex gap-1.5">
-                                    <button id="btn-copy-prizes-all" type="button" class="px-2.5 py-1 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 text-[11px] font-black">📋 모든 서버에 복사</button>
+                                    <button id="btn-copy-prizes-all" type="button" class="px-2.5 py-1 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 text-[11px] font-black">📋 이 게임 경품을 1~4서버 복사</button>
                                     <button id="btn-add-prize" type="button" class="px-3 py-1 rounded-lg bg-indigo-600 text-white text-[11px] font-black">+ 상품 추가</button>
                                 </div>
                             </div>
@@ -839,13 +861,17 @@
             capsuleCount: 60, winRate: 65, overlapThreshold: 50,
             useTimingGauge: false,
             yabawiCups: 3, yabawiSpeedMs: 320, yabawiSwaps: 10,
-            frameTheme: 'ocean_wave', interiorTheme: 'underwater',
-            prizes: JSON.parse(JSON.stringify(DEFAULT_PRIZES))
+            frameTheme: 'pat-sunburst', frameC1: '#38bdf8', frameC2: '#0369a1', interiorTheme: 'underwater',
+            prizesByGame: {
+                claw: JSON.parse(JSON.stringify(DEFAULT_PRIZES)),
+                yabawi: JSON.parse(JSON.stringify(DEFAULT_PRIZES)),
+                kuji: JSON.parse(JSON.stringify(DEFAULT_PRIZES))
+            }
         });
 
         const DEFAULT_CONFIG = {
             eventTitle: '2026 CJ메조미디어 연말 타운홀 미팅 <럭키드로우>',
-            footerBrand: 'CJ MEZZOMEDIA × DXE',
+            footerBrand: 'CJ MEZZOMEDIA\n× DXE',
             gameTitles: { claw: '3D 디지털 캡슐 뽑기', yabawi: '떡 먹는 용만이', kuji: '피날레 이치방 쿠지' },
             adminPin: '6484',
             logoLeft: 'logo_cj.png',
@@ -863,6 +889,16 @@
             { empId: '2024005', name: '정현우', dept: 'DXE전략팀', tickets: 6, used: 0 }
         ];
 
+        const ensurePrizesByGame = (srvObj) => {
+            const fb = (Array.isArray(srvObj?.prizes) && srvObj.prizes.length) ? srvObj.prizes : DEFAULT_PRIZES;
+            if (!srvObj.prizesByGame) srvObj.prizesByGame = {};
+            ['claw','yabawi','kuji'].forEach(g => {
+                if (!Array.isArray(srvObj.prizesByGame[g]) || srvObj.prizesByGame[g].length === 0)
+                    srvObj.prizesByGame[g] = JSON.parse(JSON.stringify(fb));
+            });
+            return srvObj;
+        };
+
         let CONFIG = (() => {
             try {
                 const raw = localStorage.getItem(STORAGE_KEY_CFG);
@@ -871,8 +907,7 @@
                     m.servers = { ...DEFAULT_CONFIG.servers, ...(p.servers || {}) };
                     m.gameTitles = { ...DEFAULT_CONFIG.gameTitles, ...(p.gameTitles || {}) };
                     ['S1','S2','S3','S4'].forEach(s => {
-                        m.serverSettings[s] = { ...makeDefaultServerSetting(), ...(p.serverSettings?.[s] || {}) };
-                        if (!Array.isArray(m.serverSettings[s].prizes) || m.serverSettings[s].prizes.length === 0) m.serverSettings[s].prizes = JSON.parse(JSON.stringify(DEFAULT_PRIZES));
+                        m.serverSettings[s] = ensurePrizesByGame({ ...makeDefaultServerSetting(), ...(p.serverSettings?.[s] || {}) });
                     });
                     return m;
                 }
@@ -881,9 +916,13 @@
         })();
 
         const LOCAL_DEVICE_ID = 'D' + Math.random().toString(36).slice(2, 7).toUpperCase();
-        const APP = { pendingGame:'claw', selectedServer:'S1', selectedMode:'event', activeGame:null, isHost:true, channelKey:'event_S1', lobbyStatus:{}, activeClient:null, freeSettings: makeDefaultServerSetting() };
+        const APP = { pendingGame:'claw', selectedServer:'S1', selectedMode:'event', activeGame:null, isHost:true, channelKey:'event_S1_claw', lobbyStatus:{}, activeClient:null, freeSettings: makeDefaultServerSetting() };
         const getActiveGameSettings = () => APP.selectedMode === 'free' ? APP.freeSettings : (CONFIG.serverSettings[APP.selectedServer] || CONFIG.serverSettings.S1);
-        const getActivePrizes = () => (getActiveGameSettings().prizes && getActiveGameSettings().prizes.length > 0) ? getActiveGameSettings().prizes : DEFAULT_PRIZES;
+        const getActivePrizes = (gameOverride = null) => {
+            const g = gameOverride || APP.activeGame || 'claw';
+            const gs = ensurePrizesByGame(getActiveGameSettings());
+            return gs.prizesByGame[g] || DEFAULT_PRIZES;
+        };
         const getCurrentServerLabel = () => APP.selectedMode === 'event' ? (CONFIG.servers[APP.selectedServer] || APP.selectedServer) : `자율(${LOCAL_DEVICE_ID})`;
 
         const STATE = {
@@ -1266,7 +1305,7 @@
         function renderLobbyFloatingPrizes() {
             const box = document.getElementById('lobby-floating-prizes'); if (!box) return; box.innerHTML = '';
             const pos = [{l:'2%',t:'4%',d:'0s'},{l:'48%',t:'8%',d:'0.8s'},{l:'18%',t:'39%',d:'1.5s'},{l:'0%',t:'72%',d:'0.4s'},{l:'48%',t:'70%',d:'1.1s'}];
-            const prizes = CONFIG.serverSettings.S1?.prizes || DEFAULT_PRIZES;
+            const prizes = CONFIG.serverSettings.S1?.prizesByGame?.claw || DEFAULT_PRIZES;
             prizes.slice(0,5).forEach((p,i) => {
                 const el = document.createElement('div'); el.className = 'floating-prize-card absolute px-4 py-3 rounded-2xl flex items-center gap-3 max-w-[235px]';
                 el.style.left = pos[i].l; el.style.top = pos[i].t; el.style.animationDelay = pos[i].d;
@@ -1331,16 +1370,22 @@
             initLobbyListener() {
                 Net.connect(() => {
                     const b = document.getElementById('lobby-mqtt-badge'); if (b) { b.textContent = '● 실시간 서버 연결됨'; b.className = 'text-emerald-300'; }
-                    ['S1','S2','S3','S4'].forEach(sid => { Net.sub(`${MQTT_PREFIX}/event_${sid}/lock`); Net.sub(`${MQTT_PREFIX}/event_${sid}/config`); Net.sub(`${MQTT_PREFIX}/event_${sid}/admin`); });
+                    ['S1','S2','S3','S4'].forEach(sid => {
+                        Net.sub(`${MQTT_PREFIX}/event_${sid}/config`);
+                        ['claw','yabawi','kuji'].forEach(g => {
+                            Net.sub(`${MQTT_PREFIX}/event_${sid}_${g}/lock`);
+                            Net.sub(`${MQTT_PREFIX}/event_${sid}_${g}/admin`);
+                        });
+                    });
                     if (APP.activeGame) this.attachCurrentChannel();
                 });
 
                 Net.onMessage((topic, msg) => {
-                    const lm = topic.match(new RegExp(`^${MQTT_PREFIX}/event_(S[1-4])/lock$`));
-                    if (lm) { APP.lobbyStatus[lm[1]] = msg; renderEntryServers(); renderAdminServersTab(); }
+                    const lm = topic.match(new RegExp(`^${MQTT_PREFIX}/event_(S[1-4])_(claw|yabawi|kuji)/lock$`));
+                    if (lm) { APP.lobbyStatus[`${lm[1]}_${lm[2]}`] = msg; renderEntryServers(); renderAdminServersTab(); }
 
-                    const am = topic.match(new RegExp(`^${MQTT_PREFIX}/event_(S[1-4])/admin$`));
-                    if (am && msg.type === 'FORCE_KICK' && APP.activeGame && APP.selectedMode === 'event' && APP.selectedServer === am[1] && APP.isHost) {
+                    const am = topic.match(new RegExp(`^${MQTT_PREFIX}/event_(S[1-4])_(claw|yabawi|kuji)/admin$`));
+                    if (am && msg.type === 'FORCE_KICK' && APP.selectedMode === 'event' && APP.selectedServer === am[1] && APP.activeGame === am[2] && APP.isHost) {
                         this.releaseActiveClient('관리자가 접속자를 강제 해제했습니다', true); return;
                     }
 
@@ -1434,13 +1479,14 @@
                     this.publishLock(); this.broadcastState();
                 }, 5000);
             },
-            forceKickServer(sid) {
-                const ch = `event_${sid}`;
+            forceKickServer(sid, game = 'claw') {
+                const key = `${sid}_${game}`, ch = `event_${key}`;
+                const gLabel = { claw:'캡슐뽑기', yabawi:'용만이', kuji:'피날레쿠지' }[game] || game;
                 Net.pub(`${MQTT_PREFIX}/${ch}/admin`, { type: 'FORCE_KICK', ts: Date.now() });
-                Net.pub(`${MQTT_PREFIX}/${ch}/lock`, { locked: false, clientId: null, playerName: '', playsLeft: 0, hostId: APP.lobbyStatus[sid]?.hostId || null, activeGame: APP.lobbyStatus[sid]?.activeGame || null, ts: Date.now() }, true);
-                if (APP.lobbyStatus[sid]) { APP.lobbyStatus[sid].locked = false; APP.lobbyStatus[sid].playerName = ''; }
+                Net.pub(`${MQTT_PREFIX}/${ch}/lock`, { locked: false, clientId: null, playerName: '', playsLeft: 0, hostId: APP.lobbyStatus[key]?.hostId || null, activeGame: game, ts: Date.now() }, true);
+                if (APP.lobbyStatus[key]) { APP.lobbyStatus[key].locked = false; APP.lobbyStatus[key].playerName = ''; }
                 renderEntryServers(); renderAdminServersTab();
-                showToast(`🔓 ${CONFIG.servers[sid]} 접속자를 강제 해제했습니다!`, 'super');
+                showToast(`🔓 ${CONFIG.servers[sid]} [${gLabel}] 접속자를 해제했습니다!`, 'super');
             },
             pushLiveServerConfigs(capsuleChanged = false) {
                 const ver = Date.now(); this.lastCfgVer = ver;
@@ -1551,7 +1597,7 @@
         function renderEntryServers() {
             const grid = document.getElementById('entry-server-grid'); if (!grid) return; grid.innerHTML = '';
             ['S1','S2','S3','S4'].forEach(sid => {
-                const st = APP.lobbyStatus[sid], alive = st && st.hostId && (Date.now()-(st.ts||0)<20000), playing = alive && st.locked;
+                const st = APP.lobbyStatus[`${sid}_${APP.pendingGame}`], alive = st && st.hostId && (Date.now()-(st.ts||0)<20000), playing = alive && st.locked;
                 const btn = document.createElement('button'); btn.type = 'button';
                 btn.className = `text-left p-3.5 rounded-2xl border-2 transition ${APP.selectedServer === sid ? 'border-yellow-400 bg-yellow-400/15' : 'border-white/15 bg-slate-800/80'}`;
                 btn.innerHTML = `<div class="flex items-center justify-between gap-2"><span class="font-black text-sm text-white">${CONFIG.servers[sid]}</span><span class="text-[10px] font-black px-2 py-0.5 rounded-full shrink-0 ${playing?'bg-rose-500/30 text-rose-200':(alive?'bg-emerald-500/25 text-emerald-300':'bg-slate-700 text-slate-300')}">${playing?'🔴 플레이 중':(alive?'🟢 운영 중':'⚪ 대기')}</span></div><div class="text-[11px] text-slate-400 mt-1">${playing?`${st.playerName||'참가자'}님 진행 중`:(alive?'입장 시 144fps 관전':'첫 입장 시 호스트 시작')}</div>`;
@@ -1577,8 +1623,8 @@
             STATE.currentPlayer = null; APP.activeClient = null; STATE.moveX = 0; STATE.moveZ = 0;
 
             if (APP.selectedMode === 'event') {
-                APP.channelKey = `event_${APP.selectedServer}`;
-                const st = APP.lobbyStatus[APP.selectedServer];
+                APP.channelKey = `event_${APP.selectedServer}_${APP.activeGame}`;
+                const st = APP.lobbyStatus[`${APP.selectedServer}_${APP.activeGame}`];
                 APP.isHost = !(st && st.hostId && st.hostId !== LOCAL_DEVICE_ID && (Date.now()-(st.ts||0)<15000));
                 STATE.playsLeft = 0;
             } else {
@@ -1673,7 +1719,7 @@
             scene = new THREE.Scene(); scene.background = new THREE.Color(0x064e78); scene.fog = new THREE.FogExp2(0x064e78, 0.007);
             // ★ 삐뚤어짐 없는 스튜디오 망원 화각(34°) 적용!
             camera = new THREE.PerspectiveCamera(34, Math.max(1,c.clientWidth)/Math.max(1,c.clientHeight), 0.1, 110);
-            cctvCamera = new THREE.PerspectiveCamera(28, 1, 0.3, 30);
+            cctvCamera = new THREE.PerspectiveCamera(36, 1, 0.3, 30);
             updateFixedCamera(c.clientWidth||600, c.clientHeight||850);
             renderer = new THREE.WebGLRenderer({ antialias: true }); renderer.setSize(c.clientWidth||600, c.clientHeight||850);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.8));
@@ -1906,7 +1952,7 @@
                 clawProngs.push({ pivot, angle });
             }
             aimBeamMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.025,0.025,BOX.height,8), new THREE.MeshBasicMaterial({ color:0xffffff, transparent:true, opacity:0.25, depthWrite:false })); scene.add(aimBeamMesh);
-            targetRingMesh = new THREE.Mesh(new THREE.RingGeometry(0.34,0.5,28), new THREE.MeshBasicMaterial({ color:0xfde047, transparent:true, opacity:0.85, side:THREE.DoubleSide, depthWrite:false }));
+            targetRingMesh = new THREE.Mesh(new THREE.RingGeometry(0.41, 0.455, 36), new THREE.MeshBasicMaterial({ color:0xffffff, transparent:true, opacity:0.78, side:THREE.DoubleSide, depthWrite:false }));
             targetRingMesh.rotation.x = -Math.PI/2; scene.add(targetRingMesh);
         }
 
@@ -2633,7 +2679,7 @@
         // -----------------------------
         // 9. ADMIN & FREE-MODE MODALS (PER-SERVER PRIZES!)
         // -----------------------------
-        let draftServerSettings = {}, adminEditingSrv = 'S1', draftFreePrizes = [], pinCallback = null, activeQrUrl = '', activeQrName = '';
+        let draftServerSettings = {}, adminEditingSrv = 'S1', adminEditingGame = 'claw', draftFreePrizes = [], pinCallback = null, activeQrUrl = '', activeQrName = '';
 
         function requireAdminPin(onSuccess) { pinCallback = onSuccess; document.getElementById('pin-input').value = ''; document.getElementById('pin-error').textContent = ''; const m = document.getElementById('pin-modal'); m.classList.remove('hidden'); m.classList.add('flex'); setTimeout(() => document.getElementById('pin-input').focus(), 60); }
         function saveCurrentDraftSrvFromDOM() {
@@ -2665,9 +2711,14 @@
             document.getElementById('admin-frame-c1').value = s.frameC1 || '#38bdf8';
             document.getElementById('admin-frame-c2').value = s.frameC2 || '#0369a1';
             document.getElementById('admin-interior-theme').value = s.interiorTheme;
-            document.querySelectorAll('#admin-srv-selector button').forEach(b => { b.className = `px-3 py-1 rounded-lg text-xs font-black ${b.dataset.asrv===sid ? 'bg-indigo-600 text-white shadow' : 'bg-slate-200 text-slate-700'}`; });
+            ensurePrizesByGame(s);
+            document.querySelectorAll('#admin-srv-selector button').forEach(b => { b.className = `px-3 py-1.5 rounded-xl text-xs font-black ${b.dataset.asrv===sid ? 'bg-indigo-600 text-white shadow' : 'bg-slate-100 text-slate-600'}`; });
+            document.querySelectorAll('#admin-game-selector button').forEach(b => { b.className = `px-3 py-1.5 rounded-xl text-xs font-black ${b.dataset.agame===adminEditingGame ? 'bg-sky-600 text-white shadow' : 'bg-slate-100 text-slate-600'}`; });
+            ['claw','yabawi','kuji'].forEach(g => document.getElementById(`apnl-${g}`)?.classList.toggle('hidden', g !== adminEditingGame));
             document.querySelectorAll('.asrv-badge').forEach(el => { el.textContent = `${sid.replace('S','')}서버`; });
-            renderPrizeEditor('admin-prize-list', s.prizes);
+            const gNames = { claw:'캡슐 뽑기', yabawi:'떡 먹는 용만이', kuji:'피날레 쿠지' };
+            document.querySelectorAll('.agame-badge').forEach(el => { el.textContent = gNames[adminEditingGame] || adminEditingGame; });
+            renderPrizeEditor('admin-prize-list', s.prizesByGame[adminEditingGame]);
         }
         function renderPrizeEditor(containerId, listArr) {
             const listEl = document.getElementById(containerId); if (!listEl) return; listEl.innerHTML = '';
@@ -2718,7 +2769,8 @@
             document.getElementById('free-ov-threshold').value = fs.overlapThreshold; document.getElementById('free-ov-val').textContent = `${fs.overlapThreshold}%`;
             document.getElementById('free-yabawi-cups').value = fs.yabawiCups; document.getElementById('free-yabawi-speed').value = fs.yabawiSpeedMs;
             document.getElementById('free-frame-theme').value = fs.frameTheme; document.getElementById('free-interior-theme').value = fs.interiorTheme;
-            draftFreePrizes = JSON.parse(JSON.stringify(fs.prizes || DEFAULT_PRIZES));
+            ensurePrizesByGame(fs);
+            draftFreePrizes = JSON.parse(JSON.stringify(fs.prizesByGame[APP.activeGame || 'claw'] || DEFAULT_PRIZES));
             renderPrizeEditor('free-prize-list', draftFreePrizes);
             const m = document.getElementById('free-config-modal'); m.classList.remove('hidden'); m.classList.add('flex');
         }
@@ -2740,12 +2792,27 @@
         }
         function renderAdminServersTab() {
             const box = document.getElementById('admin-servers-list'); if (!box) return; box.innerHTML = '';
+            const games = [{ id:'claw', icon:'🕹️', name:'캡슐뽑기' }, { id:'yabawi', icon:'🍡', name:'용만이' }, { id:'kuji', icon:'🏆', name:'피날레쿠지' }];
             ['S1','S2','S3','S4'].forEach(sid => {
-                const st = APP.lobbyStatus[sid] || {}, alive = st.hostId && (Date.now()-(st.ts||0)<20000), locked = alive && st.locked;
-                const card = document.createElement('div'); card.className = 'bg-white rounded-2xl p-3.5 border border-slate-200 space-y-2.5 shadow-sm';
-                card.innerHTML = `<div class="flex items-center justify-between"><span class="font-black text-sm text-slate-900">${CONFIG.servers[sid]}</span><span class="text-[11px] font-black px-2 py-0.5 rounded-full ${locked?'bg-rose-100 text-rose-700':'bg-emerald-100 text-emerald-700'}">${locked?`🔴 ${st.playerName||'접속자'} 연결 중`:'🟢 대기 중'}</span></div><div class="flex gap-2"><button data-kick="${sid}" type="button" class="flex-1 py-2 rounded-xl bg-rose-500 text-white text-xs font-black">🔓 강제 연결 끊기</button><button data-qr="${sid}" type="button" class="px-3 py-2 rounded-xl bg-sky-600 text-white text-xs font-black">📱 QR / 링크</button></div>`;
-                card.querySelector('[data-kick]').addEventListener('click', () => ServerSync.forceKickServer(sid));
-                card.querySelector('[data-qr]').addEventListener('click', () => openQrModal(`event_${sid}`, `📱 ${CONFIG.servers[sid]} 고정 QR`));
+                const card = document.createElement('div'); card.className = 'bg-white rounded-2xl p-3.5 border border-slate-200 space-y-2 shadow-sm';
+                card.innerHTML = `<div class="font-black text-sm text-slate-900 pb-1.5 border-b border-slate-100">${CONFIG.servers[sid]}</div>`;
+                games.forEach(g => {
+                    const st = APP.lobbyStatus[`${sid}_${g.id}`] || {}, alive = st.hostId && (Date.now()-(st.ts||0)<20000), locked = alive && st.locked;
+                    const row = document.createElement('div');
+                    row.className = 'flex items-center justify-between gap-2 bg-slate-50 px-2.5 py-2 rounded-xl border border-slate-100';
+                    row.innerHTML = `
+                        <div class="min-w-0">
+                            <div class="text-xs font-black text-slate-800">${g.icon} ${g.name}</div>
+                            <div class="text-[10px] font-bold ${locked ? 'text-rose-600' : 'text-emerald-600'}">${locked ? `🔴 ${st.playerName||'접속자'} 연결 중` : (alive ? '🟢 운영 중' : '⚪ 대기')}</div>
+                        </div>
+                        <div class="flex items-center gap-1 shrink-0">
+                            <button data-kick type="button" class="px-2.5 py-1.5 rounded-lg bg-rose-500 hover:bg-rose-600 text-white text-[11px] font-black">🔓 끊기</button>
+                            <button data-qr type="button" class="px-2.5 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-[11px] font-black">📱 QR</button>
+                        </div>`;
+                    row.querySelector('[data-kick]').addEventListener('click', () => ServerSync.forceKickServer(sid, g.id));
+                    row.querySelector('[data-qr]').addEventListener('click', () => openQrModal(`event_${sid}_${g.id}`, `📱 ${CONFIG.servers[sid]} · ${g.name} QR`));
+                    card.appendChild(row);
+                });
                 box.appendChild(card);
             });
         }
@@ -2791,8 +2858,10 @@
                 APP.freeSettings.yabawiSpeedMs = Number(document.getElementById('free-yabawi-speed').value) || 320;
                 APP.freeSettings.frameTheme = document.getElementById('free-frame-theme').value;
                 APP.freeSettings.interiorTheme = document.getElementById('free-interior-theme').value;
-                APP.freeSettings.prizes = draftFreePrizes.filter(p => p.name.trim() !== '');
-                if (APP.freeSettings.prizes.length === 0) APP.freeSettings.prizes = JSON.parse(JSON.stringify(DEFAULT_PRIZES));
+                ensurePrizesByGame(APP.freeSettings);
+                const gKey = APP.activeGame || 'claw';
+                APP.freeSettings.prizesByGame[gKey] = draftFreePrizes.filter(p => p.name.trim() !== '');
+                if (APP.freeSettings.prizesByGame[gKey].length === 0) APP.freeSettings.prizesByGame[gKey] = JSON.parse(JSON.stringify(DEFAULT_PRIZES));
                 applyThemeSettings();
                 if (APP.activeGame === 'claw' && renderer) spawnHybridCapsules(APP.freeSettings.capsuleCount);
                 if (APP.activeGame === 'yabawi') initYabawiStage();
@@ -2860,17 +2929,27 @@
             document.getElementById('tab-btn-servers').addEventListener('click', () => switchAdminTab('servers'));
 
             document.querySelectorAll('#admin-srv-selector button').forEach(b => b.addEventListener('click', () => { saveCurrentDraftSrvFromDOM(); loadDraftSrvToDOM(b.dataset.asrv); }));
+            document.querySelectorAll('#admin-game-selector button').forEach(b => b.addEventListener('click', () => { saveCurrentDraftSrvFromDOM(); adminEditingGame = b.dataset.agame; loadDraftSrvToDOM(adminEditingSrv); }));
+            document.getElementById('btn-admin-open-cur-qr')?.addEventListener('click', () => {
+                const gn = { claw:'캡슐 뽑기', yabawi:'떡 먹는 용만이', kuji:'피날레 쿠지' }[adminEditingGame];
+                openQrModal(`event_${adminEditingSrv}_${adminEditingGame}`, `📱 ${CONFIG.servers[adminEditingSrv]} · ${gn} QR`);
+            });
             document.getElementById('admin-capsule-count').addEventListener('input', e => { document.getElementById('admin-capsule-val').textContent = `${e.target.value}개`; });
             document.getElementById('admin-win-rate').addEventListener('input', e => { document.getElementById('admin-winrate-val').textContent = `${e.target.value}%`; });
             document.getElementById('admin-overlap-threshold').addEventListener('input', e => { document.getElementById('admin-overlap-val').textContent = `${e.target.value}%`; });
             document.getElementById('btn-save-gas-url').addEventListener('click', () => { SheetAPI.setUrl(document.getElementById('admin-gas-url').value); updateSheetBadge(); refreshAdminEmployees(); showToast('Apps Script URL 저장 완료!', 'info'); });
             document.getElementById('btn-refresh-employees').addEventListener('click', refreshAdminEmployees);
             document.getElementById('emp-search-input').addEventListener('input', renderEmployeeTable);
-            document.getElementById('btn-add-prize').addEventListener('click', () => { draftServerSettings[adminEditingSrv].prizes.push({ id:'p_'+Date.now(), tier:'F상', emoji:'🎁', image:'', name:'새 경품', desc:'당첨을 축하드립니다!', weight:10 }); renderPrizeEditor('admin-prize-list', draftServerSettings[adminEditingSrv].prizes); });
+            document.getElementById('btn-add-prize').addEventListener('click', () => {
+                ensurePrizesByGame(draftServerSettings[adminEditingSrv]);
+                const arr = draftServerSettings[adminEditingSrv].prizesByGame[adminEditingGame];
+                arr.push({ id:'p_'+Date.now(), tier:'F상', emoji:'🎁', image:'', name:'새 경품', desc:'당첨을 축하드립니다!', stock:10, weight:10 });
+                renderPrizeEditor('admin-prize-list', arr);
+            });
             document.getElementById('btn-copy-prizes-all').addEventListener('click', () => {
-                const src = JSON.parse(JSON.stringify(draftServerSettings[adminEditingSrv].prizes));
-                ['S1','S2','S3','S4'].forEach(s => { draftServerSettings[s].prizes = JSON.parse(JSON.stringify(src)); });
-                showToast(`📋 ${adminEditingSrv.replace('S','')}서버 경품 목록을 1~4서버 전체에 복사했습니다!`, 'info');
+                const src = JSON.parse(JSON.stringify(draftServerSettings[adminEditingSrv].prizesByGame[adminEditingGame]));
+                ['S1','S2','S3','S4'].forEach(s => { ensurePrizesByGame(draftServerSettings[s]); draftServerSettings[s].prizesByGame[adminEditingGame] = JSON.parse(JSON.stringify(src)); });
+                showToast(`📋 현재 게임 경품을 1~4서버 전체에 복사했습니다!`, 'info');
             });
             document.getElementById('btn-reset-finale').addEventListener('click', () => { STATE.finaleBoard = []; STATE.finaleWinners = []; initFinaleKujiBoard(true); showToast('피날레 쿠지 보드 리셋 완료!', 'info'); });
             document.getElementById('btn-admin-default').addEventListener('click', () => { CONFIG = JSON.parse(JSON.stringify(DEFAULT_CONFIG)); localStorage.removeItem(STORAGE_KEY_CFG); openAdminModal(); renderLobbyFloatingPrizes(); applyBrandLogos(); applyThemeSettings(); showToast('기본값 복원 완료!', 'info'); });
@@ -2898,8 +2977,11 @@
                 CONFIG.logoRight = document.getElementById('admin-logo-right').value.trim() || 'logo_dxe.png';
                 ['S1','S2','S3','S4'].forEach(s => {
                     CONFIG.servers[s] = document.getElementById(`admin-srv-${s}`).value.trim() || DEFAULT_CONFIG.servers[s];
-                    draftServerSettings[s].prizes = (draftServerSettings[s].prizes || []).filter(p => p.name.trim() !== '');
-                    if (draftServerSettings[s].prizes.length === 0) draftServerSettings[s].prizes = JSON.parse(JSON.stringify(DEFAULT_PRIZES));
+                    ensurePrizesByGame(draftServerSettings[s]);
+                    ['claw','yabawi','kuji'].forEach(g => {
+                        draftServerSettings[s].prizesByGame[g] = (draftServerSettings[s].prizesByGame[g] || []).filter(p => p.name.trim() !== '');
+                        if (draftServerSettings[s].prizesByGame[g].length === 0) draftServerSettings[s].prizesByGame[g] = JSON.parse(JSON.stringify(DEFAULT_PRIZES));
+                    });
                 });
                 CONFIG.serverSettings = JSON.parse(JSON.stringify(draftServerSettings));
                 localStorage.setItem(STORAGE_KEY_CFG, JSON.stringify(CONFIG));
@@ -2952,7 +3034,7 @@
 
                 // 캡슐 표면 바로 위(높이 +4.3)에서 초근접 수직 줌인 촬영!
                 const hp = getClawHeadWorldPos();
-                const camY = Math.min(BOX.height - 1.2, currentBedHeight + 4.3);
+                const camY = Math.min(BOX.height - 1.0, currentBedHeight + 5.6);
                 cctvCamera.position.set(hp.x, camY, hp.z + 0.01);
                 cctvCamera.lookAt(hp.x, currentBedHeight + 0.3, hp.z);
 
