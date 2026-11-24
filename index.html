@@ -12,9 +12,11 @@
     <script src="https://unpkg.com/mqtt@5.10.1/dist/mqtt.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Jua&family=Montserrat:wght@700;900&family=Noto+Sans+KR:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
-        button { touch-action: manipulation; }
-        input, select { user-select: text; -webkit-user-select: text; }
+        * { box-sizing: border-box; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; }
+        html, body { touch-action: manipulation; overscroll-behavior: none; }
+        img { pointer-events: none; -webkit-user-drag: none; }
+        button { touch-action: none; }
+        input, select, textarea { user-select: text; -webkit-user-select: text; touch-action: auto; }
         body { margin: 0; padding: 0; min-height: 100dvh; width: 100vw; overflow: hidden; background: #050812; font-family: 'Noto Sans KR', sans-serif; color: #fff; word-break: keep-all; }
         .title-font { font-family: 'Black Han Sans', 'Noto Sans KR', sans-serif; letter-spacing: 0.02em; }
         .pop-font { font-family: 'Jua', 'Noto Sans KR', sans-serif; }
@@ -65,13 +67,12 @@
             #kiosk-main-title { font-size: 20px !important; padding-left: 30px !important; padding-right: 30px !important; }
             .screen-bezel { margin: 2px 0 6px 0 !important; border-width: 3px !important; border-radius: 18px !important; }
             .kiosk-shell footer { padding: 2px 2px 0 !important; gap: 6px !important; }
-            .dpad-cluster { width: 88px !important; height: 88px !important; padding: 5px !important; }
-            .dpad-key svg { width: 12px !important; height: 12px !important; }
-            #btn-green-grab { width: 68px !important; height: 68px !important; border-width: 3px !important; }
-            #btn-green-grab .title-font { font-size: 15px !important; }
+            #kiosk-analog-base { width: 84px !important; height: 84px !important; }
+            #btn-green-grab { width: 84px !important; height: 84px !important; border-width: 3px !important; }
+            #btn-green-grab .title-font { font-size: 16px !important; }
             #kiosk-footer-brand { font-size: 13px !important; }
             #kiosk-waiting-pill { font-size: 9px !important; padding: 2px 8px !important; margin-top: 3px !important; }
-            #claw-cctv-frame { width: 92px !important; height: 92px !important; top: 58px !important; right: 8px !important; border-radius: 14px !important; }
+            #claw-cctv-frame { width: 128px !important; height: 128px !important; top: 58px !important; right: 8px !important; border-radius: 16px !important; }
             #hud-timer-pill { font-size: 12px !important; padding: 2px 10px !important; }
             #btn-air-shake { font-size: 10px !important; padding: 4px 10px !important; }
         }
@@ -87,20 +88,29 @@
         .glass-menu-btn:hover { background: rgba(255,255,255,0.24); transform: translateY(-1px); }
         .glass-menu-btn:active { transform: scale(0.94); }
 
-        .dpad-cluster {
-            background: rgba(15, 23, 42, 0.34); backdrop-filter: blur(14px);
-            border: 1.5px solid rgba(255,255,255,0.26); border-radius: 9999px;
-            padding: 8px; box-shadow: inset 0 4px 12px rgba(0,0,0,0.3), 0 8px 20px rgba(0,0,0,0.25);
+        /* ★ PS DualSense 스타일 360° 아날로그 조이스틱 베이스 & 노브 */
+        .analog-base {
+            position: relative; border-radius: 9999px; touch-action: none; cursor: grab;
+            background: radial-gradient(circle at 50% 50%, rgba(15,23,42,0.88) 0%, rgba(15,23,42,0.55) 68%, rgba(255,255,255,0.18) 100%);
+            border: 3px solid rgba(255,255,255,0.45);
+            box-shadow: inset 0 8px 22px rgba(0,0,0,0.65), 0 10px 24px rgba(0,0,0,0.35);
+            display: flex; align-items: center; justify-content: center;
         }
-        .dpad-key {
-            background: linear-gradient(180deg, rgba(255,255,255,0.26), rgba(255,255,255,0.08));
-            border: 1.5px solid rgba(255,255,255,0.38); color: #ffffff;
-            border-radius: 9999px; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.28), inset 0 1px 2px rgba(255,255,255,0.5);
-            touch-action: none; transition: transform 0.08s, background 0.12s;
+        .analog-base::before {
+            content: ''; position: absolute; inset: 14%; border-radius: 9999px;
+            border: 1.5px dashed rgba(255,255,255,0.22); pointer-events: none;
         }
-        .dpad-key:active, .dpad-key.pressed {
-            transform: scale(0.9); background: var(--fc1); border-color: #fff; box-shadow: 0 0 14px var(--fc1);
+        .analog-knob {
+            position: relative; width: 48%; height: 48%; border-radius: 9999px; pointer-events: none;
+            background: radial-gradient(circle at 35% 30%, #475569 0%, #1e293b 55%, #090d16 100%);
+            border: 2.5px solid rgba(255,255,255,0.68);
+            box-shadow: 0 8px 18px rgba(0,0,0,0.65), inset 0 3px 6px rgba(255,255,255,0.38);
+            transition: transform 0.08s ease-out;
+        }
+        .analog-knob.active {
+            border-color: var(--fc1);
+            box-shadow: 0 0 18px var(--fc1), 0 8px 18px rgba(0,0,0,0.65);
+            transition: none;
         }
         .dome-btn {
             position: relative; border-radius: 9999px; border: 3.5px solid rgba(255,255,255,0.82); cursor: pointer;
@@ -339,8 +349,8 @@
                 <div id="game-view-claw" class="w-full h-full relative">
                     <div id="canvas-container" class="w-full h-full"></div>
                     <!-- ★ 실시간 탑뷰 CCTV (CLAW CAM) PiP 창 (클릭 시 줌인 ↔ 전체 바닥 광각 전환!) -->
-                    <div id="claw-cctv-frame" title="클릭: 집게 줌인 ↔ 전체 바닥 광각 전환"
-                        class="absolute top-16 right-3 z-20 w-[132px] h-[132px] rounded-2xl border-2 border-cyan-300/80 shadow-[0_10px_28px_rgba(0,0,0,0.6)] pointer-events-auto cursor-pointer overflow-hidden">
+                    <div id="claw-cctv-frame" title="실시간 CLAW CAM"
+                        class="absolute top-16 right-3 z-20 w-[184px] h-[184px] sm:w-[200px] sm:h-[200px] rounded-2xl border-2 border-cyan-300/85 shadow-[0_14px_34px_rgba(0,0,0,0.65)] pointer-events-none overflow-hidden">
                         <div class="absolute top-1.5 left-1.5 flex items-center gap-1 px-1.5 py-0.5 rounded bg-black/65 text-[9px] font-black text-white">
                             <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping"></span>
                             <span id="cctv-mode-label">CLAW CAM</span>
@@ -442,17 +452,13 @@
 
             <!-- ★ UPGRADED BOTTOM DECK: 4-WAY ARCADE D-PAD (좌/우/앞/뒤) + CUSTOM BRAND + GREEN ACTION BUTTON -->
            <footer class="relative px-2 pt-2 pb-1 flex items-center justify-between gap-3 shrink-0 z-10">
-                <!-- Sleek Circular Frosted-Glass 4-Way Thumb Pad -->
-                <div class="dpad-cluster grid grid-cols-3 grid-rows-3 gap-1 w-[112px] h-[112px] shrink-0">
-                    <div></div>
-                    <button id="kiosk-pad-up" class="dpad-key" title="안쪽 (▲)"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 6l-7 9h14z"/></svg></button>
-                    <div></div>
-                    <button id="kiosk-pad-left" class="dpad-key" title="왼쪽 (◀)"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 12l9-7v14z"/></svg></button>
-                    <div class="rounded-full bg-white/15 m-2"></div>
-                    <button id="kiosk-pad-right" class="dpad-key" title="오른쪽 (▶)"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 12l-9-7v14z"/></svg></button>
-                    <div></div>
-                    <button id="kiosk-pad-down" class="dpad-key" title="앞쪽 (▼)"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 18l-7-9h14z"/></svg></button>
-                    <div></div>
+                <!-- ★ PS 스타일 360° 자유 방향 아날로그 스틱 (114px) -->
+                <div id="kiosk-analog-base" class="analog-base w-[114px] h-[114px] shrink-0" title="원하는 방향(대각선 포함)으로 드래그하세요!">
+                    <span class="absolute top-1.5 text-[9px] font-black text-white/45 pointer-events-none">▲</span>
+                    <span class="absolute bottom-1.5 text-[9px] font-black text-white/45 pointer-events-none">▼</span>
+                    <span class="absolute left-2 text-[9px] font-black text-white/45 pointer-events-none">◀</span>
+                    <span class="absolute right-2 text-[9px] font-black text-white/45 pointer-events-none">▶</span>
+                    <div id="kiosk-analog-knob" class="analog-knob"></div>
                 </div>
 
                 <div class="flex flex-col items-center justify-center text-center px-2 min-w-0">
@@ -460,10 +466,11 @@
                     <div id="kiosk-waiting-pill" class="mt-1.5 px-3 py-0.5 rounded-full bg-black/28 backdrop-blur-md border border-white/25 text-white text-[10px] font-bold truncate max-w-full">1서버 · 메인홀 A | 📱 QR 스캔 후 플레이!</div>
                 </div>
 
-                <button id="btn-green-grab" class="dome-btn dome-btn-green w-[86px] h-[86px] shrink-0" title="뽑기 (SPACE)">
+                <!-- ★ 좌측 스틱과 1:1 동일 크기(114px)의 뽑기 버튼! -->
+                <button id="btn-green-grab" class="dome-btn dome-btn-green w-[114px] h-[114px] shrink-0" title="뽑기 (SPACE)">
                     <div class="flex flex-col items-center leading-none">
-                        <span class="title-font text-white text-lg drop-shadow">뽑기</span>
-                        <span class="brand-en text-[9px] font-bold text-emerald-100 tracking-widest mt-0.5">GRAB</span>
+                        <span class="title-font text-white text-2xl drop-shadow">뽑기</span>
+                        <span class="brand-en text-[10px] font-bold text-white/80 tracking-widest mt-1">GRAB</span>
                     </div>
                 </button>
             </footer>
@@ -767,17 +774,13 @@
                 <div class="switch-body">
                     <div class="joycon-left">
                         <div class="joycon-minus"></div>
-                        <div id="jp-dpad-caption" class="text-[10px] font-black tracking-widest text-white/95 uppercase mb-1">3D 4-WAY MOVE</div>
-                        <div class="grid grid-cols-3 grid-rows-3 gap-2 w-[184px] h-[184px]">
-                            <div></div>
-                            <button id="joypad-up" oncontextmenu="return false" class="switch-dpad-btn rounded-xl flex items-center justify-center text-2xl font-black">▲</button>
-                            <div></div>
-                            <button id="joypad-left" oncontextmenu="return false" class="switch-dpad-btn rounded-xl flex items-center justify-center text-2xl font-black">◀</button>
-                            <div class="rounded-full bg-slate-900/35 m-2"></div>
-                            <button id="joypad-right" oncontextmenu="return false" class="switch-dpad-btn rounded-xl flex items-center justify-center text-2xl font-black">▶</button>
-                            <div></div>
-                            <button id="joypad-down" oncontextmenu="return false" class="switch-dpad-btn rounded-xl flex items-center justify-center text-2xl font-black">▼</button>
-                            <div></div>
+                        <div id="jp-dpad-caption" class="text-[10px] font-black tracking-widest text-white/95 uppercase mb-2">360° STICK</div>
+                        <div id="jp-analog-base" oncontextmenu="return false" class="analog-base w-[156px] h-[156px]">
+                            <span class="absolute top-2 text-[10px] font-black text-white/45 pointer-events-none">▲</span>
+                            <span class="absolute bottom-2 text-[10px] font-black text-white/45 pointer-events-none">▼</span>
+                            <span class="absolute left-2.5 text-[10px] font-black text-white/45 pointer-events-none">◀</span>
+                            <span class="absolute right-2.5 text-[10px] font-black text-white/45 pointer-events-none">▶</span>
+                            <div id="jp-analog-knob" class="analog-knob"></div>
                         </div>
                     </div>
                     <div class="switch-oled-bezel">
@@ -1263,15 +1266,36 @@
                 sendCmd('START_FREE_SESSION', { playCount: freeSelectedPlays });
                 showView('mc-joypad-view');
             });
-            // 4-Way Switch D-Pad (X & Z!)
-            const bind4Way = (id, axis, dir) => {
-                const el = document.getElementById(id); if (!el) return;
-                const start = e => { e.preventDefault(); el.classList.add('pressed'); navigator.vibrate?.(14); sendCmd(axis === 'X' ? 'MOVE_X' : 'MOVE_Z', dir); };
-                const stop  = e => { if (e) e.preventDefault(); el.classList.remove('pressed'); sendCmd(axis === 'X' ? 'MOVE_X' : 'MOVE_Z', 0); };
-                el.addEventListener('pointerdown', start); el.addEventListener('pointerup', stop); el.addEventListener('pointerleave', stop); el.addEventListener('pointercancel', stop);
-            };
-            bind4Way('joypad-left', 'X', -1); bind4Way('joypad-right', 'X', 1);
-            bind4Way('joypad-up', 'Z', -1);   bind4Way('joypad-down', 'Z', 1);
+            // ★ PS 360° 아날로그 스틱 (세로 잠금 90° 회전 시에도 화면 기준 방향 그대로 대각선·상하좌우 자유 이동!)
+            const jpBase = document.getElementById('jp-analog-base'), jpKnob = document.getElementById('jp-analog-knob');
+            if (jpBase && jpKnob) {
+                let dragging = false, lastSent = 0;
+                const updateStick = (clientX, clientY, force = false) => {
+                    const rect = jpBase.getBoundingClientRect();
+                    const cx = rect.left + rect.width / 2, cy = rect.top + rect.height / 2;
+                    const maxR = Math.max(18, rect.width * 0.34);
+                    // 화면의 실제 물리적 이동량을 계산 후, 90° 회전 상태면 스틱 좌표계를 자동 보정!
+                    let sx = clientX - cx, sy = clientY - cy;
+                    const isRotated = window.innerHeight > window.innerWidth;
+                    let lx = isRotated ? sy : sx;
+                    let ly = isRotated ? -sx : sy;
+                    const dist = Math.hypot(lx, ly);
+                    if (dist > maxR) { lx = (lx / dist) * maxR; ly = (ly / dist) * maxR; }
+                    jpKnob.style.transform = `translate(${lx}px, ${ly}px)`;
+                    const vx = Math.abs(lx) < 6 ? 0 : +(lx / maxR).toFixed(2);
+                    const vz = Math.abs(ly) < 6 ? 0 : +(ly / maxR).toFixed(2);
+                    const now = performance.now();
+                    if (force || now - lastSent > 35) { lastSent = now; sendCmd('MOVE_XY', { x: vx, z: vz }); }
+                };
+                const resetStick = () => {
+                    if (!dragging) return;
+                    dragging = false; jpKnob.classList.remove('active'); jpKnob.style.transform = 'translate(0px, 0px)';
+                    sendCmd('MOVE_XY', { x: 0, z: 0 });
+                };
+                jpBase.addEventListener('pointerdown', e => { e.preventDefault(); dragging = true; jpKnob.classList.add('active'); jpBase.setPointerCapture?.(e.pointerId); navigator.vibrate?.(14); updateStick(e.clientX, e.clientY, true); });
+                jpBase.addEventListener('pointermove', e => { if (!dragging) return; e.preventDefault(); updateStick(e.clientX, e.clientY); });
+                jpBase.addEventListener('pointerup', resetStick); jpBase.addEventListener('pointercancel', resetStick);
+            }
 
             document.getElementById('btn-jp-air-shake').addEventListener('click', () => { navigator.vibrate?.([35,20,35]); sendCmd('AIR_SHAKE', 1); });
             const grabEl = document.getElementById('joypad-grab');
@@ -1478,7 +1502,8 @@
                             document.getElementById('connect-modal').classList.add('hidden'); document.getElementById('connect-modal').classList.remove('flex');
                             updateStageHUD(); this.publishLock(); this.updateRemoteHUD(); this.broadcastState();
                             showToast(`🎮 자율 모드 ${STATE.playsLeft}회 시작!`, 'super');
-                        } else if (msg.type === 'MOVE_X') handleMoveInput(Number(msg.value)||0, null);
+                        } else if (msg.type === 'MOVE_XY' && msg.value) handleMoveInput(Number(msg.value.x)||0, Number(msg.value.z)||0);
+                        else if (msg.type === 'MOVE_X') handleMoveInput(Number(msg.value)||0, null);
                         else if (msg.type === 'MOVE_Z') handleMoveInput(null, Number(msg.value)||0);
                         else if (msg.type === 'ACTION') handlePrimaryAction();
                         else if (msg.type === 'AIR_SHAKE') triggerAirShake();
@@ -1992,11 +2017,13 @@
             const isInChute = (x, z) => (x < BOX.chuteX + 1.65 && z > BOX.chuteZ - 1.7);
 
             // 하단 대량 캡슐도 상단과 100% 똑같은 투톤 가챠폰 외형 + 개별 에어블로우 물리 데이터!
-            if (bedCount > 0) {
+           if (bedCount > 0) {
                 const lowGeo = new THREE.SphereGeometry(radius, 14, 10, 0, Math.PI*2, Math.PI/2, Math.PI/2);
                 const upGeo  = new THREE.SphereGeometry(radius, 14, 10, 0, Math.PI*2, 0, Math.PI/2);
-                bedLowerMesh = new THREE.InstancedMesh(lowGeo, new THREE.MeshStandardMaterial({ roughness: 0.16, metalness: 0.32 }), bedCount);
-                bedUpperMesh = new THREE.InstancedMesh(upGeo, new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.12, metalness: 0.05, clearcoat: 1.0, clearcoatRoughness: 0.08 }), bedCount);
+                lowGeo.scale(0.94, 1.18, 0.94); upGeo.scale(0.94, 1.18, 0.94); // ★ 귀여운 달걀형 마카롱 실루엣!
+                bedLowerMesh = new THREE.InstancedMesh(lowGeo, new THREE.MeshStandardMaterial({ roughness: 0.18, metalness: 0.15 }), bedCount);
+                bedUpperMesh = new THREE.InstancedMesh(upGeo, new THREE.MeshPhysicalMaterial({ color: 0xfffdf7, roughness: 0.14, clearcoat: 1.0 }), bedCount);
+                bedLowerMesh.castShadow = true; bedLowerMesh.receiveShadow = true;
                 bedLowerMesh.castShadow = true; bedLowerMesh.receiveShadow = true;
 
                 const col = new THREE.Color();
@@ -2032,21 +2059,33 @@
             const miniCardTex = new THREE.CanvasTexture(cardCvs);
             const miniCardMat = new THREE.MeshStandardMaterial({ map: miniCardTex, roughness: 0.35, side: THREE.DoubleSide });
 
-            const whiteTopMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.12, metalness: 0.05, clearcoat: 1.0, clearcoatRoughness: 0.08 });
-            const seamMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.3, metalness: 0.35 });
+            const creamTopMat = new THREE.MeshPhysicalMaterial({ color: 0xfffdf7, roughness: 0.14, metalness: 0.02, clearcoat: 1.0, clearcoatRoughness: 0.08 });
+            const starBadgeMat = new THREE.MeshStandardMaterial({ color: 0xfde047, emissive: 0xca8a04, emissiveIntensity: 0.35, roughness: 0.2, metalness: 0.5 });
             const specialCount = Math.max(8, Math.round(activeCount * 0.22));
             for (let i = 0; i < activeCount; i++) {
                 const isSpec = i < specialCount;
                 const skin = isSpec ? (i%2===0 ? CAPSULE_SKINS.specialGold : CAPSULE_SKINS.specialBlack) : (i%2===0 ? CAPSULE_SKINS.normalCyan : CAPSULE_SKINS.normalCoral);
                 const group = new THREE.Group();
-                const lower = new THREE.Mesh(
-                    new THREE.SphereGeometry(radius, 20, 14, 0, Math.PI*2, Math.PI/2, Math.PI/2),
-                    new THREE.MeshPhysicalMaterial({ color: skin.hex, emissive: skin.emissive, emissiveIntensity: isSpec ? 0.32 : 0.1, roughness: 0.12, metalness: skin.metalness, clearcoat: 1.0, clearcoatRoughness: 0.08 })
-                );
-                lower.castShadow = true; lower.receiveShadow = true; group.add(lower);
-                const upper = new THREE.Mesh(new THREE.SphereGeometry(radius, 20, 14, 0, Math.PI*2, 0, Math.PI/2), whiteTopMat);
-                upper.castShadow = true; upper.receiveShadow = true; group.add(upper);
-                const thinSeam = new THREE.Mesh(new THREE.TorusGeometry(radius * 1.004, 0.014, 6, 22), seamMat); thinSeam.rotation.x = Math.PI/2; group.add(thinSeam);
+                const eggGroup = new THREE.Group();
+                eggGroup.scale.set(0.94, 1.18, 0.94); // ★ 동글납작하지 않고 통통 귀여운 달걀 캡슐 비율!
+
+                const colMat = new THREE.MeshPhysicalMaterial({ color: skin.hex, emissive: skin.emissive, emissiveIntensity: isSpec ? 0.28 : 0.08, roughness: 0.14, metalness: skin.metalness, clearcoat: 1.0 });
+                const lower = new THREE.Mesh(new THREE.SphereGeometry(radius, 20, 14, 0, Math.PI*2, Math.PI/2, Math.PI/2), colMat);
+                lower.castShadow = true; lower.receiveShadow = true; eggGroup.add(lower);
+
+                const upper = new THREE.Mesh(new THREE.SphereGeometry(radius, 20, 14, 0, Math.PI*2, 0, Math.PI/2), creamTopMat);
+                upper.castShadow = true; upper.receiveShadow = true; eggGroup.add(upper);
+
+                // 귀여운 마카롱 벨트 & 스페셜 꼭지(단추) 포인트!
+                const belt = new THREE.Mesh(new THREE.CylinderGeometry(radius*1.01, radius*1.01, 0.045, 22), colMat);
+                eggGroup.add(belt);
+                const topKnob = new THREE.Mesh(new THREE.SphereGeometry(radius*0.24, 12, 10), isSpec ? starBadgeMat : colMat);
+                topKnob.position.y = radius * 0.96; eggGroup.add(topKnob);
+                if (isSpec) {
+                    const frontGem = new THREE.Mesh(new THREE.OctahedronGeometry(radius*0.22), starBadgeMat);
+                    frontGem.position.set(0, 0.02, radius*0.98); eggGroup.add(frontGem);
+                }
+                group.add(eggGroup);
 
                 // ★ 스페셜 캡슐 70%는 안쪽(z < 0) 상단에 배치 -> 뒤쪽을 노려 뽑는 전략적 재미!
                 let sx, sz;
@@ -2888,15 +2927,34 @@
                 updateStageHUD(); ServerSync.attachCurrentChannel(); showToast('👑 메인 호스트로 전환되었습니다!', 'super');
             }));
 
-            // Kiosk 4-Way D-Pad + Green Action Button
-            const bindKioskPad = (id, dx, dz) => {
-                const el = document.getElementById(id); if (!el) return;
-                const start = e => { e.preventDefault(); SoundFX.init(); el.classList.add('pressed'); handleMoveInput(dx, dz); };
-                const stop  = e => { if (e) e.preventDefault(); el.classList.remove('pressed'); if (APP.activeGame==='claw') handleMoveInput(dx!==null?0:null, dz!==null?0:null); };
-                el.addEventListener('pointerdown', start); el.addEventListener('pointerup', stop); el.addEventListener('pointerleave', stop); el.addEventListener('pointercancel', stop);
-            };
-            bindKioskPad('kiosk-pad-left', -1, null); bindKioskPad('kiosk-pad-right', 1, null);
-            bindKioskPad('kiosk-pad-up', null, -1);   bindKioskPad('kiosk-pad-down', null, 1);
+            // ★ 키오스크 PS 360° 아날로그 스틱 (대각선·상하좌우 연속 이동 + 용만이/쿠지 자동 스텝 지원!)
+            const kBase = document.getElementById('kiosk-analog-base'), kKnob = document.getElementById('kiosk-analog-knob');
+            if (kBase && kKnob) {
+                let kDrag = false, lastStepAt = 0;
+                const updateKStick = (cx, cy) => {
+                    const r = kBase.getBoundingClientRect(), maxR = Math.max(16, r.width * 0.34);
+                    let dx = cx - (r.left + r.width/2), dy = cy - (r.top + r.height/2);
+                    const dist = Math.hypot(dx, dy);
+                    if (dist > maxR) { dx = (dx/dist)*maxR; dy = (dy/dist)*maxR; }
+                    kKnob.style.transform = `translate(${dx}px, ${dy}px)`;
+                    const vx = Math.abs(dx) < 6 ? 0 : +(dx/maxR).toFixed(2);
+                    const vz = Math.abs(dy) < 6 ? 0 : +(dy/maxR).toFixed(2);
+                    if (APP.activeGame === 'claw') {
+                        handleMoveInput(vx, vz);
+                    } else if (performance.now() - lastStepAt > 220 && (Math.abs(vx) > 0.45 || Math.abs(vz) > 0.45)) {
+                        lastStepAt = performance.now();
+                        handleMoveInput(Math.abs(vx) > 0.45 ? Math.sign(vx) : 0, Math.abs(vz) > 0.45 ? Math.sign(vz) : 0);
+                    }
+                };
+                const resetKStick = () => {
+                    if (!kDrag) return;
+                    kDrag = false; kKnob.classList.remove('active'); kKnob.style.transform = 'translate(0px, 0px)';
+                    if (APP.activeGame === 'claw') handleMoveInput(0, 0);
+                };
+                kBase.addEventListener('pointerdown', e => { e.preventDefault(); SoundFX.init(); kDrag = true; kKnob.classList.add('active'); kBase.setPointerCapture?.(e.pointerId); updateKStick(e.clientX, e.clientY); });
+                kBase.addEventListener('pointermove', e => { if (!kDrag) return; e.preventDefault(); updateKStick(e.clientX, e.clientY); });
+                kBase.addEventListener('pointerup', resetKStick); kBase.addEventListener('pointercancel', resetKStick);
+            }
             document.getElementById('btn-green-grab').addEventListener('click', handlePrimaryAction);
 
             document.getElementById('btn-finale-sync-sheet').addEventListener('click', () => { initFinaleKujiBoard(true); showToast('🔄 구글 시트 잔여 행운권으로 쿠지 보드를 재구성했습니다!', 'info'); });
