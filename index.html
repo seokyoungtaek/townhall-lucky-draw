@@ -39,10 +39,10 @@
         /* 세로형 직사각형 + 상·좌·우 두꺼운 동일 테두리 + 선명한 투톤 패턴 프레임 */
         .kiosk-shell {
             --fc1: #38bdf8; --fc2: #0284c7;
-            position: relative; width: min(94vw, 66dvh); height: 96dvh; flex-shrink: 0;
+            position: relative; width: min(94vw, 68dvh); height: 97dvh; flex-shrink: 0;
             display: flex; flex-direction: column;
-            padding: clamp(26px, 3.6dvh, 42px) clamp(32px, 4.4dvh, 52px) clamp(28px, 3.8dvh, 46px);
-            border-radius: 38px; overflow: hidden;
+            padding: clamp(14px, 1.8dvh, 22px) clamp(30px, 4.2dvh, 48px) clamp(12px, 1.6dvh, 20px);
+            border-radius: 36px; overflow: hidden;
             background: linear-gradient(160deg, var(--fc1) 0%, var(--fc2) 100%);
             border: 5px solid rgba(255,255,255,0.78);
             box-shadow: 0 40px 100px rgba(0,0,0,0.82), inset 0 2px 14px rgba(255,255,255,0.5), inset 0 -6px 18px rgba(0,0,0,0.28);
@@ -55,7 +55,26 @@
         .kiosk-shell.pat-checker  { background: conic-gradient(var(--fc1) 90deg, var(--fc2) 90deg 180deg, var(--fc1) 180deg 270deg, var(--fc2) 270deg) 0 0 / 46px 46px; }
         .kiosk-shell.pat-diamond  { background: repeating-linear-gradient(45deg, var(--fc2) 0 2px, transparent 2px 26px), repeating-linear-gradient(-45deg, var(--fc2) 0 2px, transparent 2px 26px), var(--fc1); }
         
-        .screen-bezel { position: relative; flex: 1; min-height: 0; margin: 10px 0 14px 0; border-radius: 26px; overflow: hidden; border: 5px solid rgba(255,255,255,0.65); box-shadow: inset 0 10px 30px rgba(0,0,0,0.42), 0 12px 28px rgba(0,0,0,0.32); background: #0c4a6e; }
+        .screen-bezel { position: relative; flex: 1; min-height: 0; margin: 4px 0 6px 0; border-radius: 24px; overflow: hidden; border: 4px solid rgba(255,255,255,0.65); box-shadow: inset 0 10px 30px rgba(0,0,0,0.42), 0 12px 28px rgba(0,0,0,0.32); background: #0c4a6e; }
+
+        /* ★ 모바일로 직접 링크 접속 시 반응형 최적화 (테두리 축소 · 글자/버튼/CCTV 최적화!) */
+        @media (max-width: 640px) {
+            .stage-wrap { padding: 0 !important; }
+            .kiosk-shell { width: 100vw !important; height: 100dvh !important; border-radius: 0 !important; border-width: 3px !important; padding: 8px 10px 10px 10px !important; }
+            .kiosk-shell header { min-height: 32px !important; padding-bottom: 4px !important; }
+            #kiosk-main-title { font-size: 20px !important; padding-left: 30px !important; padding-right: 30px !important; }
+            .screen-bezel { margin: 2px 0 6px 0 !important; border-width: 3px !important; border-radius: 18px !important; }
+            .kiosk-shell footer { padding: 2px 2px 0 !important; gap: 6px !important; }
+            .dpad-cluster { width: 88px !important; height: 88px !important; padding: 5px !important; }
+            .dpad-key svg { width: 12px !important; height: 12px !important; }
+            #btn-green-grab { width: 68px !important; height: 68px !important; border-width: 3px !important; }
+            #btn-green-grab .title-font { font-size: 15px !important; }
+            #kiosk-footer-brand { font-size: 13px !important; }
+            #kiosk-waiting-pill { font-size: 9px !important; padding: 2px 8px !important; margin-top: 3px !important; }
+            #claw-cctv-frame { width: 92px !important; height: 92px !important; top: 58px !important; right: 8px !important; border-radius: 14px !important; }
+            #hud-timer-pill { font-size: 12px !important; padding: 2px 10px !important; }
+            #btn-air-shake { font-size: 10px !important; padding: 4px 10px !important; }
+        }
 
         /* ARCADE CONTROLS (4-WAY D-PAD + ACTION BUTTON) */
         /* MODERN GLASS NEO-ARCADE CONTROLS (세련된 PS5 / 애플 스타일) */
@@ -336,7 +355,7 @@
                     <div class="absolute bottom-3 left-3 right-3 z-20 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
                         <div class="flex flex-wrap items-center gap-1.5">
                             <span class="px-2.5 py-1 rounded-full bg-slate-950/75 border border-cyan-400/50 text-[11px] font-bold text-cyan-200">🫧 일반 (80% · 깜짝 1등!)</span>
-                            <span class="px-2.5 py-1 rounded-full bg-slate-950/80 border border-amber-400/80 text-[11px] font-black text-amber-300">✨ 스페셜 골드/블랙 (20% · 고등급 UP!)</span>
+                            <span class="px-2.5 py-1 rounded-full bg-slate-950/80 border border-amber-400/80 text-[11px] font-black text-amber-300">✨ 스페셜 골드/퍼플 (20% · 고등급 UP!)</span>
                         </div>
                         <button id="btn-air-shake" type="button" class="pointer-events-auto px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 hover:brightness-110 active:scale-95 text-slate-950 font-black text-xs shadow-lg border border-yellow-200">💨 판 띄우기 (1회 찬스)</button>
                     </div>
@@ -836,10 +855,10 @@
         const MQTT_BROKERS = ['wss://broker.emqx.io:8084/mqtt', 'wss://broker.hivemq.com:8884/mqtt'];
 
         const CAPSULE_SKINS = {
-            normalCyan:   { hex: 0x38bdf8, emissive: 0x075985, metalness: 0.25, isSpecial: false },
-            normalCoral:  { hex: 0xfb7185, emissive: 0x881337, metalness: 0.25, isSpecial: false },
-            specialGold:  { hex: 0xfbbf24, emissive: 0x92400e, metalness: 0.85, isSpecial: true  },
-            specialBlack: { hex: 0x1e1b2e, emissive: 0xb45309, metalness: 0.90, isSpecial: true  }
+            normalCyan:   { hex: 0x38bdf8, emissive: 0x0284c7, metalness: 0.12, isSpecial: false },
+            normalCoral:  { hex: 0xfb7185, emissive: 0xe11d48, metalness: 0.12, isSpecial: false },
+            specialGold:  { hex: 0xfde047, emissive: 0xeab308, metalness: 0.28, isSpecial: true  },
+            specialBlack: { hex: 0xa855f7, emissive: 0x7e22ce, metalness: 0.28, isSpecial: true  }
         };
 
         const INTERIOR_THEMES = {
@@ -1719,7 +1738,7 @@
             scene = new THREE.Scene(); scene.background = new THREE.Color(0x064e78); scene.fog = new THREE.FogExp2(0x064e78, 0.007);
             // ★ 삐뚤어짐 없는 스튜디오 망원 화각(34°) 적용!
             camera = new THREE.PerspectiveCamera(34, Math.max(1,c.clientWidth)/Math.max(1,c.clientHeight), 0.1, 110);
-            cctvCamera = new THREE.PerspectiveCamera(36, 1, 0.3, 30);
+            cctvCamera = new THREE.PerspectiveCamera(31, 1, 0.3, 30);
             updateFixedCamera(c.clientWidth||600, c.clientHeight||850);
             renderer = new THREE.WebGLRenderer({ antialias: true }); renderer.setSize(c.clientWidth||600, c.clientHeight||850);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.8));
@@ -1923,8 +1942,7 @@
             tunnelBallMesh = new THREE.Group();
             const r = 0.66, lm = new THREE.MeshPhysicalMaterial({ color:0xfbbf24, roughness:0.12, metalness:0.45, clearcoat:1 });
             tunnelBallMesh.add(new THREE.Mesh(new THREE.SphereGeometry(r,24,14,0,Math.PI*2,Math.PI/2,Math.PI/2), lm));
-            tunnelBallMesh.add(new THREE.Mesh(new THREE.SphereGeometry(r,24,14,0,Math.PI*2,0,Math.PI/2), new THREE.MeshPhysicalMaterial({ color:0xffffff, transparent:true, opacity:0.42, clearcoat:1 })));
-            tunnelBallMesh.add(new THREE.Mesh(new THREE.OctahedronGeometry(0.32), new THREE.MeshBasicMaterial({ color:0xfef08a })));
+            tunnelBallMesh.add(new THREE.Mesh(new THREE.SphereGeometry(r,24,14,0,Math.PI*2,0,Math.PI/2), new THREE.MeshPhysicalMaterial({ color:0xffffff, roughness:0.12, clearcoat:1.0 })));
             tunnelBallMesh.userData.lowerMat = lm; tunnelGroup.add(tunnelBallMesh);
         }
 
@@ -1978,7 +1996,7 @@
                 const lowGeo = new THREE.SphereGeometry(radius, 14, 10, 0, Math.PI*2, Math.PI/2, Math.PI/2);
                 const upGeo  = new THREE.SphereGeometry(radius, 14, 10, 0, Math.PI*2, 0, Math.PI/2);
                 bedLowerMesh = new THREE.InstancedMesh(lowGeo, new THREE.MeshStandardMaterial({ roughness: 0.16, metalness: 0.32 }), bedCount);
-                bedUpperMesh = new THREE.InstancedMesh(upGeo, new THREE.MeshPhysicalMaterial({ color: 0xf8fafc, transparent: true, opacity: 0.48, roughness: 0.05, clearcoat: 1 }), bedCount);
+                bedUpperMesh = new THREE.InstancedMesh(upGeo, new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.12, metalness: 0.05, clearcoat: 1.0, clearcoatRoughness: 0.08 }), bedCount);
                 bedLowerMesh.castShadow = true; bedLowerMesh.receiveShadow = true;
 
                 const col = new THREE.Color();
@@ -2014,26 +2032,21 @@
             const miniCardTex = new THREE.CanvasTexture(cardCvs);
             const miniCardMat = new THREE.MeshStandardMaterial({ map: miniCardTex, roughness: 0.35, side: THREE.DoubleSide });
 
-            const clearTopMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, transparent: true, opacity: 0.42, roughness: 0.04, clearcoat: 1.0 });
-            const seamMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.2, metalness: 0.7 });
+            const whiteTopMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.12, metalness: 0.05, clearcoat: 1.0, clearcoatRoughness: 0.08 });
+            const seamMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.3, metalness: 0.35 });
             const specialCount = Math.max(8, Math.round(activeCount * 0.22));
             for (let i = 0; i < activeCount; i++) {
                 const isSpec = i < specialCount;
                 const skin = isSpec ? (i%2===0 ? CAPSULE_SKINS.specialGold : CAPSULE_SKINS.specialBlack) : (i%2===0 ? CAPSULE_SKINS.normalCyan : CAPSULE_SKINS.normalCoral);
                 const group = new THREE.Group();
                 const lower = new THREE.Mesh(
-                    new THREE.SphereGeometry(radius, 18, 12, 0, Math.PI*2, Math.PI/2, Math.PI/2),
-                    new THREE.MeshPhysicalMaterial({ color: skin.hex, emissive: skin.emissive, emissiveIntensity: isSpec ? 0.5 : 0.14, roughness: 0.14, metalness: skin.metalness, clearcoat: 1 })
+                    new THREE.SphereGeometry(radius, 20, 14, 0, Math.PI*2, Math.PI/2, Math.PI/2),
+                    new THREE.MeshPhysicalMaterial({ color: skin.hex, emissive: skin.emissive, emissiveIntensity: isSpec ? 0.32 : 0.1, roughness: 0.12, metalness: skin.metalness, clearcoat: 1.0, clearcoatRoughness: 0.08 })
                 );
                 lower.castShadow = true; lower.receiveShadow = true; group.add(lower);
-                const upper = new THREE.Mesh(new THREE.SphereGeometry(radius, 18, 12, 0, Math.PI*2, 0, Math.PI/2), clearTopMat);
-                upper.castShadow = true; group.add(upper);
-                const thinSeam = new THREE.Mesh(new THREE.TorusGeometry(radius * 1.005, 0.015, 6, 20), seamMat); thinSeam.rotation.x = Math.PI/2; group.add(thinSeam);
-
-                // ★ 캡슐 안에 떠 있는 행사명 3D 미니 카드!
-                const card3D = new THREE.Mesh(new THREE.BoxGeometry(radius * 1.15, radius * 0.62, 0.03), miniCardMat);
-                card3D.position.y = radius * 0.08; card3D.rotation.set(0.25, (Math.random()-0.5)*1.2, (Math.random()-0.5)*0.4);
-                group.add(card3D);
+                const upper = new THREE.Mesh(new THREE.SphereGeometry(radius, 20, 14, 0, Math.PI*2, 0, Math.PI/2), whiteTopMat);
+                upper.castShadow = true; upper.receiveShadow = true; group.add(upper);
+                const thinSeam = new THREE.Mesh(new THREE.TorusGeometry(radius * 1.004, 0.014, 6, 22), seamMat); thinSeam.rotation.x = Math.PI/2; group.add(thinSeam);
 
                 // ★ 스페셜 캡슐 70%는 안쪽(z < 0) 상단에 배치 -> 뒤쪽을 노려 뽑는 전략적 재미!
                 let sx, sz;
@@ -3034,7 +3047,7 @@
 
                 // 캡슐 표면 바로 위(높이 +4.3)에서 초근접 수직 줌인 촬영!
                 const hp = getClawHeadWorldPos();
-                const camY = Math.min(BOX.height - 1.0, currentBedHeight + 5.6);
+                const camY = Math.min(BOX.height - 1.0, currentBedHeight + 4.9);
                 cctvCamera.position.set(hp.x, camY, hp.z + 0.01);
                 cctvCamera.lookAt(hp.x, currentBedHeight + 0.3, hp.z);
 
