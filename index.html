@@ -72,7 +72,7 @@
             #btn-green-grab .title-font { font-size: 16px !important; }
             #kiosk-footer-brand { font-size: 13px !important; }
             #kiosk-waiting-pill { font-size: 9px !important; padding: 2px 8px !important; margin-top: 3px !important; }
-            #claw-cctv-frame { width: 128px !important; height: 128px !important; top: 58px !important; right: 8px !important; border-radius: 16px !important; }
+            #claw-cctv-frame { top: 58px !important; right: 8px !important; border-radius: 16px !important; }
             #hud-timer-pill { font-size: 12px !important; padding: 2px 10px !important; }
             #btn-air-shake { font-size: 10px !important; padding: 4px 10px !important; }
         }
@@ -554,14 +554,18 @@
                 <div><label class="block text-[10px] font-bold text-slate-500 mb-1">피날레 쿠지 상단 타이틀</label><input id="admin-title-kuji" type="text" class="w-full px-2.5 py-1.5 rounded-lg border text-xs font-bold"></div>
                 <div><label class="block text-[10px] font-bold text-slate-500 mb-1">쿠지 잔여 계산식</label><select id="admin-kuji-formula" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold bg-white"><option value="d_minus_e">행운권(D) − 사용(E)</option><option value="d_only">잔여 행운권(D) 그대로</option></select></div>
             </div>
-            <div class="grid grid-cols-2 sm:grid-cols-6 gap-2">
-                <div><label class="block text-[10px] font-bold text-slate-500 mb-1">서버 1 이름</label><input id="admin-srv-S1" type="text" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold"></div>
-                <div><label class="block text-[10px] font-bold text-slate-500 mb-1">서버 2 이름</label><input id="admin-srv-S2" type="text" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold"></div>
-                <div><label class="block text-[10px] font-bold text-slate-500 mb-1">서버 3 이름</label><input id="admin-srv-S3" type="text" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold"></div>
-                <div><label class="block text-[10px] font-bold text-slate-500 mb-1">서버 4 이름</label><input id="admin-srv-S4" type="text" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold"></div>
-                <div class="col-span-1"><label class="block text-[10px] font-bold text-sky-700 mb-1">좌측 로고 (파일명 | 크기px)</label><div class="flex gap-1"><input id="admin-logo-left" type="text" class="w-full px-2 py-1.5 rounded-lg border border-sky-300 text-xs font-mono"><input id="admin-logo-left-sz" type="number" min="60" max="320" class="w-14 px-1 text-center rounded-lg border border-sky-300 text-[10px] font-black"></div></div>
-                <div class="col-span-1"><label class="block text-[10px] font-bold text-sky-700 mb-1">우측 로고 (파일명 | 크기px)</label><div class="flex gap-1"><input id="admin-logo-right" type="text" class="w-full px-2 py-1.5 rounded-lg border border-sky-300 text-xs font-mono"><input id="admin-logo-right-sz" type="number" min="60" max="320" class="w-14 px-1 text-center rounded-lg border border-sky-300 text-[10px] font-black"></div></div>
-            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+    <div><label class="block text-[10px] font-bold text-slate-500 mb-1">서버 1 이름</label><input id="admin-srv-S1" type="text" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold"></div>
+    <div><label class="block text-[10px] font-bold text-slate-500 mb-1">서버 2 이름</label><input id="admin-srv-S2" type="text" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold"></div>
+    <div><label class="block text-[10px] font-bold text-slate-500 mb-1">서버 3 이름</label><input id="admin-srv-S3" type="text" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold"></div>
+    <div><label class="block text-[10px] font-bold text-slate-500 mb-1">서버 4 이름</label><input id="admin-srv-S4" type="text" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold"></div>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
+    <div><label class="block text-[10px] font-bold text-sky-700 mb-1">게임 좌측 로고 (파일 | 폭px)</label><div class="flex gap-1"><input id="admin-logo-left" type="text" class="w-full px-2 py-1.5 rounded-lg border border-sky-300 text-xs font-mono"><input id="admin-logo-left-sz" type="number" min="60" max="320" class="w-14 px-1 text-center rounded-lg border border-sky-300 text-[10px] font-black"></div></div>
+    <div><label class="block text-[10px] font-bold text-sky-700 mb-1">게임 우측 로고 (파일 | 폭px)</label><div class="flex gap-1"><input id="admin-logo-right" type="text" class="w-full px-2 py-1.5 rounded-lg border border-sky-300 text-xs font-mono"><input id="admin-logo-right-sz" type="number" min="60" max="320" class="w-14 px-1 text-center rounded-lg border border-sky-300 text-[10px] font-black"></div></div>
+    <div><label class="block text-[10px] font-bold text-indigo-700 mb-1">로비 상단 좌측 로고 높이(px)</label><input id="admin-lobby-logo-left-sz" type="number" min="18" max="96" value="36" class="w-full px-2 py-1.5 rounded-lg border border-indigo-300 text-xs font-black text-center"></div>
+    <div><label class="block text-[10px] font-bold text-indigo-700 mb-1">로비 상단 우측 로고 높이(px)</label><input id="admin-lobby-logo-right-sz" type="number" min="18" max="96" value="36" class="w-full px-2 py-1.5 rounded-lg border border-indigo-300 text-xs font-black text-center"></div>
+</div>
         </section>
     </div>
 
@@ -582,7 +586,7 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
+            <div id="admin-game-panels-grid" class="grid grid-cols-1 lg:grid-cols-3 gap-3">
                 <!-- ① 게임별 운영 규칙 -->
                 <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
                     <div id="apnl-claw" class="space-y-2">
@@ -617,24 +621,34 @@
                     </div>
                 </div>
 
-                <!-- ② 3D 카메라 & CCTV 시점 제어 -->
-                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-2">
-                    <div class="font-black text-xs text-cyan-800">🎥 3D 카메라 & CLAW CAM (<span class="asrv-badge">1서버</span>)</div>
-                    <div class="flex justify-between text-[11px] font-bold"><span>메인 화각 (FOV)</span><span id="admin-cam-fov-val">34°</span></div>
-                    <input id="admin-cam-fov" type="range" min="26" max="50" step="1" value="34" class="w-full accent-cyan-600">
-                    <div class="flex justify-between text-[11px] font-bold"><span>카메라 거리</span><span id="admin-cam-dist-val">20.2</span></div>
-                    <input id="admin-cam-dist" type="range" min="15" max="28" step="0.5" value="20.2" class="w-full accent-cyan-600">
-                    <div class="flex justify-between text-[11px] font-bold"><span>카메라 높이</span><span id="admin-cam-height-val">6.7</span></div>
-                    <input id="admin-cam-height" type="range" min="4.5" max="9.5" step="0.2" value="6.7" class="w-full accent-cyan-600">
-                    <div>
-                        <label class="block text-[10px] font-bold text-slate-500 mb-1">우측 상단 CLAW CAM 모드</label>
-                        <select id="admin-cctv-mode" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold bg-white">
-                            <option value="zoom">🎯 초근접 탑뷰 (기본)</option>
-                            <option value="wide">🌐 전체 바닥 광각 뷰</option>
-                            <option value="off">🚫 CLAW CAM 숨기기</option>
-                        </select>
-                    </div>
-                </div>
+                <!-- ② 3D 카메라 & CCTV 시점 제어 (캡슐 뽑기 선택 시에만 표시) -->
+    <div id="apnl-camera" class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1.5">
+        <div class="font-black text-xs text-cyan-800">🎥 3D 카메라 & CLAW CAM (<span class="asrv-badge">1서버</span>)</div>
+        <div class="flex justify-between text-[11px] font-bold"><span>메인 화각 (FOV)</span><span id="admin-cam-fov-val">34°</span></div>
+        <input id="admin-cam-fov" type="range" min="26" max="50" step="1" value="34" class="w-full accent-cyan-600">
+        <div class="flex justify-between text-[11px] font-bold"><span>카메라 거리</span><span id="admin-cam-dist-val">20.2</span></div>
+        <input id="admin-cam-dist" type="range" min="15" max="28" step="0.5" value="20.2" class="w-full accent-cyan-600">
+        <div class="flex justify-between text-[11px] font-bold"><span>카메라 높이</span><span id="admin-cam-height-val">6.7</span></div>
+        <input id="admin-cam-height" type="range" min="4.5" max="9.5" step="0.2" value="6.7" class="w-full accent-cyan-600">
+        <div class="grid grid-cols-2 gap-2 pt-1 border-t border-slate-200">
+            <div>
+                <div class="flex justify-between text-[10px] font-bold text-cyan-800"><span>CAM 줌 배속</span><span id="admin-cctv-zoom-val">1.0x</span></div>
+                <input id="admin-cctv-zoom" type="range" min="0.6" max="2.5" step="0.1" value="1.0" class="w-full accent-cyan-600">
+            </div>
+            <div>
+                <div class="flex justify-between text-[10px] font-bold text-cyan-800"><span>CAM 크기</span><span id="admin-cctv-size-val">168px</span></div>
+                <input id="admin-cctv-size" type="range" min="100" max="260" step="4" value="168" class="w-full accent-cyan-600">
+            </div>
+        </div>
+        <div>
+            <label class="block text-[10px] font-bold text-slate-500 mb-1">우측 상단 CLAW CAM 모드</label>
+            <select id="admin-cctv-mode" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold bg-white">
+                <option value="zoom">🎯 초근접 탑뷰 (기본)</option>
+                <option value="wide">🌐 전체 바닥 광각 뷰</option>
+                <option value="off">🚫 CLAW CAM 숨기기</option>
+            </select>
+        </div>
+    </div>
 
                 <!-- ③ 서버 외관 테마 & 전용 QR -->
                 <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-2">
@@ -924,7 +938,7 @@
     capsuleCount: 220, winRate: 65, overlapThreshold: 50,
     useTimingGauge: false,
     turnTimeLimit: 30, specialRatio: 22, clawSpeed: 4.4,
-    camFov: 34, camDist: 20.2, camHeight: 6.7, cctvMode: 'zoom',
+    camFov: 34, camDist: 20.2, camHeight: 6.7, cctvMode: 'zoom', cctvZoom: 1.0, cctvSize: 168,
     yabawiCups: 3, yabawiSpeedMs: 320, yabawiSwaps: 10,
     frameTheme: 'pat-sunburst', frameC1: '#38bdf8', frameC2: '#0284c7', interiorTheme: 'underwater',
     prizesByGame: {
@@ -944,6 +958,7 @@ const DEFAULT_CONFIG = {
     adminPin: '6484',
     logoLeft: 'logo_cj.png', logoLeftSize: 170,
     logoRight: 'logo_dxe.png', logoRightSize: 170,
+    lobbyLogoLeftSize: 36, lobbyLogoRightSize: 36,
     kujiFormula: 'd_minus_e',
     servers: { S1: '1서버 · 메인홀 A', S2: '2서버 · 메인홀 B', S3: '3서버 · 라운지 C', S4: '4서버 · VIP 부스 D' },
     serverSettings: { S1: makeDefaultServerSetting(), S2: makeDefaultServerSetting(), S3: makeDefaultServerSetting(), S4: makeDefaultServerSetting() }
@@ -994,17 +1009,17 @@ const DEFAULT_CONFIG = {
         const getCurrentServerLabel = () => APP.selectedMode === 'event' ? (CONFIG.servers[APP.selectedServer] || APP.selectedServer) : `자율(${LOCAL_DEVICE_ID})`;
 
         const STATE = {
-            playsLeft: 0, remainingCapsules: 220, currentPlayer: null, soundEnabled: true, bgmEnabled: true,
-            phase: 'IDLE', phaseTimer: 0, turnTimeLeft: 30.0, turnTimerActive: false,
-            airShakeUsed: false, bedWaveTimer: 0,
-            moveX: 0, moveZ: 0,
-            gaugePos: 50, gaugeDir: 1, gaugeBonus: 0,
-            grabbedCapsule: null, grabbedIsSpecial: false, willSlip: false, slipY: 0, slipTriggered: false,
-            chuteRollProgress: 0, lastPrize: null, lastTicketCode: '',
-            yabawiOrder: [0,1,2], yabawiWinningCupId: 1, yabawiFocusSlot: 1, yabawiPhase: 'READY', yabawiPickedSlot: -1, yabawiArcPair: null,
-            finalePrizeIdx: 0, finaleBoard: [], finaleSelectedNum: 1, finalePeelOpen: false, finaleDrawing: false, finaleWinners: [], finaleCurrentWinner: null
-        };
-
+    playsLeft: 0, remainingCapsules: 220, currentPlayer: null, soundEnabled: true, bgmEnabled: true,
+    phase: 'IDLE', phaseTimer: 0, turnTimeLeft: 30.0, turnTimerActive: false,
+    airShakeUsed: false, bedWaveTimer: 0, airParticlesActive: false, introClawActive: false,
+    moveX: 0, moveZ: 0,
+    gaugePos: 50, gaugeDir: 1, gaugeBonus: 0,
+    grabbedCapsule: null, grabbedIsSpecial: false, willSlip: false, slipY: 0, slipTriggered: false,
+    slipTargetX: -1.3, slipTargetZ: 1.1,
+    chuteRollProgress: 0, lastPrize: null, lastTicketCode: '',
+    yabawiOrder: [0,1,2], yabawiWinningCupId: 1, yabawiFocusSlot: 1, yabawiPhase: 'READY', yabawiPickedSlot: -1, yabawiArcPair: null,
+    finalePrizeIdx: 0, finaleBoard: [], finaleSelectedNum: 1, finalePeelOpen: false, finaleDrawing: false, finaleWinners: [], finaleCurrentWinner: null
+};
         // 144fps Velocity-Predicted Spectator Interpolation Buffer
         const SPECTATOR_INTERP = { targetX: 1.0, targetY: 8.2, targetZ: 0.0, vx: 0, vy: 0, vz: 0, targetOpen: 0.52, gaugePos: 50, gaugeDir: 1, lastYabawiSig: '', lastFinaleSig: '', lastRevealCode: '' };
         function maskName(n) { if (!n) return '참가자'; if (n.length <= 1) return n; if (n.length === 2) return n[0]+'*'; return n[0]+'*'.repeat(n.length-2)+n[n.length-1]; }
@@ -1361,12 +1376,20 @@ const DEFAULT_CONFIG = {
     const leftSrc = resolveImgSrc(CONFIG.logoLeft || 'logo_cj.png'), rightSrc = resolveImgSrc(CONFIG.logoRight || 'logo_dxe.png');
     const lSize = Math.max(60, Math.min(320, Number(CONFIG.logoLeftSize) || 170));
     const rSize = Math.max(60, Math.min(320, Number(CONFIG.logoRightSize) || 170));
-    [['lobby-logo-cj','lobby-logo-cj-fb', leftSrc, lSize, false], ['wing-logo-cj','wing-cj-fallback', leftSrc, lSize, true],
-     ['lobby-logo-dxe','lobby-logo-dxe-fb', rightSrc, rSize, false], ['wing-logo-dxe','wing-dxe-fallback', rightSrc, rSize, true]]
+    const lobLSize = Math.max(18, Math.min(96, Number(CONFIG.lobbyLogoLeftSize) || 36));
+    const lobRSize = Math.max(18, Math.min(96, Number(CONFIG.lobbyLogoRightSize) || 36));
+    [['lobby-logo-cj','lobby-logo-cj-fb', leftSrc, lobLSize, false], ['wing-logo-cj','wing-cj-fallback', leftSrc, lSize, true],
+     ['lobby-logo-dxe','lobby-logo-dxe-fb', rightSrc, lobRSize, false], ['wing-logo-dxe','wing-dxe-fallback', rightSrc, rSize, true]]
     .forEach(([imgId, fbId, src, sz, isWing]) => {
         const img = document.getElementById(imgId), fb = document.getElementById(fbId); if (!img) return;
         img.style.display = ''; if (fb) fb.classList.add('hidden'); img.src = src;
-        if (isWing) img.style.setProperty('--wing-logo-size', `${sz}px`);
+        if (isWing) {
+            img.style.setProperty('--wing-logo-size', `${sz}px`);
+        } else {
+            img.classList.remove('h-8', 'sm:h-9');
+            img.style.height = `${sz}px`;
+            img.style.width = 'auto';
+        }
     });
 }
 
@@ -1500,8 +1523,10 @@ if (msg.global) {
     CONFIG.servers = { ...CONFIG.servers, ...(msg.global.servers || {}) };
     CONFIG.logoLeft = msg.global.logoLeft || CONFIG.logoLeft;
     CONFIG.logoRight = msg.global.logoRight || CONFIG.logoRight;
-    if (msg.global.logoLeftSize)  CONFIG.logoLeftSize  = msg.global.logoLeftSize;
-    if (msg.global.logoRightSize) CONFIG.logoRightSize = msg.global.logoRightSize;
+    if (msg.global.logoLeftSize)       CONFIG.logoLeftSize       = msg.global.logoLeftSize;
+if (msg.global.logoRightSize)      CONFIG.logoRightSize      = msg.global.logoRightSize;
+if (msg.global.lobbyLogoLeftSize)  CONFIG.lobbyLogoLeftSize  = msg.global.lobbyLogoLeftSize;
+if (msg.global.lobbyLogoRightSize) CONFIG.lobbyLogoRightSize = msg.global.lobbyLogoRightSize;
     CONFIG.kujiFormula = msg.global.kujiFormula || CONFIG.kujiFormula;
     if (msg.global.titleColor) CONFIG.titleColor = msg.global.titleColor;
     if (msg.global.titleSize)  CONFIG.titleSize  = msg.global.titleSize;
@@ -1610,7 +1635,8 @@ if (APP.activeGame && APP.selectedMode === 'event' && APP.selectedServer === sid
             eventTitle: CONFIG.eventTitle, footerBrand: CONFIG.footerBrand, gameTitles: CONFIG.gameTitles,
             servers: CONFIG.servers,
             logoLeft: CONFIG.logoLeft, logoLeftSize: CONFIG.logoLeftSize,
-            logoRight: CONFIG.logoRight, logoRightSize: CONFIG.logoRightSize,
+logoRight: CONFIG.logoRight, logoRightSize: CONFIG.logoRightSize,
+lobbyLogoLeftSize: CONFIG.lobbyLogoLeftSize, lobbyLogoRightSize: CONFIG.lobbyLogoRightSize,
             kujiFormula: CONFIG.kujiFormula,
             titleColor: CONFIG.titleColor, titleSize: CONFIG.titleSize,
             brandColor: CONFIG.brandColor, brandSize: CONFIG.brandSize,
@@ -1839,10 +1865,10 @@ function pickWeightedPrize() { return pickPrizeWithStock(false); }
 
         // ★ 바닥 더미 300개 + 상단 물리 캡슐 전부 공중으로 팡! 튀어 오르는 리얼 에어블로우!
         function triggerAirShake() {
-            if (!APP.isHost || APP.activeGame !== 'claw' || STATE.phase !== 'IDLE') return;
-            if (STATE.playsLeft <= 0) { showToast('먼저 QR 사번 인증으로 플레이를 시작하세요! 📱', 'warn'); return; }
-            if (STATE.airShakeUsed) { showToast('💨 판 띄우기 찬스는 한 게임당 1회만 가능합니다!', 'warn'); return; }
-            STATE.airShakeUsed = true; STATE.bedWaveTimer = 2.1; SoundFX.airShake();
+    if (!APP.isHost || APP.activeGame !== 'claw' || STATE.phase !== 'IDLE') return;
+    if (STATE.playsLeft <= 0) { showToast('먼저 QR 사번 인증으로 플레이를 시작하세요! 📱', 'warn'); return; }
+    if (STATE.airShakeUsed) { showToast('💨 판 띄우기 찬스는 한 게임당 1회만 가능합니다!', 'warn'); return; }
+    STATE.airShakeUsed = true; STATE.bedWaveTimer = 2.1; STATE.airParticlesActive = true; SoundFX.airShake();
             const shell = document.getElementById('kiosk-shell'); shell.classList.remove('shake-anim'); void shell.offsetWidth; shell.classList.add('shake-anim');
             capsules.forEach(c => {
                 const vy = c.isSpecial ? (19.5 + Math.random()*3.0) : (13.5 + Math.random()*5.0);
@@ -1901,6 +1927,13 @@ function pickWeightedPrize() { return pickPrizeWithStock(false); }
     cctvWideMode = gs.cctvMode === 'wide';
     const lbl = document.getElementById('cctv-mode-label');
     if (lbl) lbl.textContent = cctvWideMode ? 'WIDE CAM' : 'CLAW CAM';
+    const cctvBox = document.getElementById('claw-cctv-frame');
+    if (cctvBox) {
+        const rawSz = Math.max(100, Math.min(260, Number(gs.cctvSize) || 168));
+        const finalSz = window.innerWidth <= 640 ? Math.min(rawSz, 165) : rawSz;
+        cctvBox.style.width = `${finalSz}px`;
+        cctvBox.style.height = `${finalSz}px`;
+    }
     const c = document.getElementById('canvas-container');
     if (c && camera && STATE.phase !== 'CHUTE_ROLL') updateFixedCamera(c.clientWidth, c.clientHeight);
 }
@@ -2144,11 +2177,18 @@ bedUpperMesh.castShadow = true; bedUpperMesh.receiveShadow = true;
 
                 const col = new THREE.Color();
                 for (let i = 0; i < bedCount; i++) {
-                    let x, z;
-                    do { x = -3.7 + Math.random()*7.4; z = -2.2 + Math.random()*4.4; } while (isInChute(x, z));
-                    const baseY = radius + Math.random() * Math.max(0.2, currentBedHeight - radius * 1.15);
-                    const b = { x, baseY, y: baseY, z, vy: 0, rx: (Math.random()-0.5)*1.2, ry: Math.random()*6.28, rz: (Math.random()-0.5)*1.2, vrx: 0, vry: 0 };
-                    bedCapsData.push(b);
+    let x, z;
+    do { x = -3.7 + Math.random()*7.4; z = -2.2 + Math.random()*4.4; } while (isInChute(x, z));
+    const baseY = radius + Math.random() * Math.max(0.2, currentBedHeight - radius * 1.15);
+    // 화면 위쪽에서 아래로 자연스럽게 쏟아지도록 초기 y를 상단 밖으로 배치
+    const startY = BOX.height + 0.8 + Math.random() * 5.2;
+    const b = {
+        x, baseY, y: startY, z,
+        vy: -2.0 - Math.random() * 4.5,
+        rx: (Math.random()-0.5)*1.2, ry: Math.random()*6.28, rz: (Math.random()-0.5)*1.2,
+        vrx: (Math.random()-0.5)*5, vry: (Math.random()-0.5)*5
+    };
+    bedCapsData.push(b);
                     _bedDummy.position.set(b.x, b.y, b.z); _bedDummy.rotation.set(b.rx, b.ry, b.rz); _bedDummy.updateMatrix();
                     bedLowerMesh.setMatrixAt(i, _bedDummy.matrix); bedUpperMesh.setMatrixAt(i, _bedDummy.matrix);
                     const isSpec = Math.random() < 0.2;
@@ -2202,14 +2242,21 @@ const specialCount = specRatio > 0 ? Math.max(1, Math.round(activeCount * specRa
                     sx = -3.5 + Math.random()*7.0;
                     sz = (isSpec && i < Math.ceil(specialCount * 0.7)) ? (-2.05 + Math.random()*1.7) : (-2.05 + Math.random()*4.1);
                 } while (isInChute(sx, sz));
-                const sy = currentBedHeight + radius + (isSpec ? 1.5 : 0.15) + Math.floor(i / 12) * 0.85;
-                group.position.set(sx, sy, sz); scene.add(group);
-                const body = new CANNON.Body({ mass: 1.1, material: capPhysMat, shape: new CANNON.Sphere(radius), linearDamping: 0.44, angularDamping: 0.48 });
-                body.position.set(sx, sy, sz); world.addBody(body);
-                capsules.push({ mesh: group, body, radius, isSpecial: isSpec, colorHex: skin.hex });
-            }
-            updateStageHUD();
-        }
+                const sy = BOX.height - 0.35 + Math.floor(i / 10) * 0.68 + Math.random() * 0.45;
+group.position.set(sx, sy, sz); scene.add(group);
+const body = new CANNON.Body({ mass: 1.1, material: capPhysMat, shape: new CANNON.Sphere(radius), linearDamping: 0.44, angularDamping: 0.48 });
+body.position.set(sx, sy, sz);
+body.velocity.set((Math.random()-0.5)*0.6, -2.5 - Math.random()*2.5, (Math.random()-0.5)*0.6);
+world.addBody(body);
+capsules.push({ mesh: group, body, radius, isSpecial: isSpec, colorHex: skin.hex });
+}
+STATE.bedWaveTimer = 2.6;
+STATE.airParticlesActive = false;
+clawPos.x = BOX.chuteX; clawPos.y = BOX.height - 0.55; clawPos.z = BOX.chuteZ;
+clawPrevX = clawPos.x; clawPrevZ = clawPos.z;
+STATE.introClawActive = true;
+updateStageHUD();
+}
 
         function resetTurnTimer() {
     const limit = Math.max(10, Math.min(120, Number(getActiveGameSettings().turnTimeLimit) || 30));
@@ -2302,12 +2349,19 @@ const specialCount = specRatio > 0 ? Math.max(1, Math.round(activeCount * specRa
                     bedLowerMesh.instanceMatrix.needsUpdate = true; bedUpperMesh.instanceMatrix.needsUpdate = true;
                 }
                 if (airParticles) {
-                    airParticles.material.opacity = Math.min(1, STATE.bedWaveTimer) * 0.9;
-                    const arr = airParticles.geometry.attributes.position.array;
-                    for (let i=1;i<arr.length;i+=3) { arr[i] += dt * 19; if (arr[i] > 10.5) arr[i] = 0.5; }
-                    airParticles.geometry.attributes.position.needsUpdate = true;
-                }
-            } else if (airParticles) { airParticles.material.opacity = 0; }
+    if (STATE.airParticlesActive) {
+        airParticles.material.opacity = Math.min(1, STATE.bedWaveTimer) * 0.9;
+        const arr = airParticles.geometry.attributes.position.array;
+        for (let i=1;i<arr.length;i+=3) { arr[i] += dt * 19; if (arr[i] > 10.5) arr[i] = 0.5; }
+        airParticles.geometry.attributes.position.needsUpdate = true;
+    } else {
+        airParticles.material.opacity = 0;
+    }
+}
+} else {
+    STATE.airParticlesActive = false;
+    if (airParticles) airParticles.material.opacity = 0;
+}
         }
         function updateChuteCameraRoll(dt) {
             if (!tunnelBallMesh || !camera) return;
@@ -2344,8 +2398,11 @@ const specialCount = specRatio > 0 ? Math.max(1, Math.round(activeCount * specRa
                 ServerSync.broadcastFastClaw(); ServerSync.broadcastState(); return;
             }
             if (STATE.phase !== 'IDLE') return;
-            if (STATE.playsLeft <= 0) { showToast('현장 QR 스캔 후 사번 인증을 진행해주세요! 📱', 'warn'); return; }
-            if (capsules.length === 0) spawnHybridCapsules(gs.capsuleCount);
+if (STATE.playsLeft <= 0) { showToast('현장 QR 스캔 후 사번 인증을 진행해주세요! 📱', 'warn'); return; }
+if (clawPos.x < BOX.chuteX + 1.35 && clawPos.z > BOX.chuteZ - 1.45) {
+    showToast('먼저 조이스틱으로 캡슐 쪽으로 이동해 주세요! 🕹️', 'warn'); return;
+}
+if (capsules.length === 0) spawnHybridCapsules(gs.capsuleCount);
 
             if (gs.useTimingGauge) {
                 STATE.phase = 'POWER_GAUGE'; STATE.gaugePos = 15; STATE.gaugeDir = 1; STATE.gaugeBonus = 0; STATE.turnTimerActive = false;
@@ -2410,19 +2467,41 @@ const specialCount = specRatio > 0 ? Math.max(1, Math.round(activeCount * specRa
                         STATE.gaugeBonus = 0; STATE.phase = 'DROPPING'; SoundFX.drop(); targetClawOpenAngle = 0.72; ServerSync.broadcastState();
                     }
                 }
-                if (STATE.moveX !== 0 || STATE.moveZ !== 0) {
+                if (STATE.introClawActive) {
+    if (STATE.moveX !== 0 || STATE.moveZ !== 0) {
+        STATE.introClawActive = false;
+    } else {
+        const dx = BOX.chuteX - clawPos.x, dy = BOX.clawTopY - clawPos.y, dz = BOX.chuteZ - clawPos.z;
+        const d = Math.hypot(dx, dy, dz);
+        if (d <= 0.04) {
+            clawPos.x = BOX.chuteX; clawPos.y = BOX.clawTopY; clawPos.z = BOX.chuteZ;
+            STATE.introClawActive = false;
+        } else {
+            const ease = 1 - Math.exp(-4.8 * dt);
+            clawPos.x += dx * ease; clawPos.y += dy * ease; clawPos.z += dz * ease;
+            activeMotion = true;
+        }
+    }
+}
+if (STATE.moveX !== 0 || STATE.moveZ !== 0) {
     const spdX = Math.max(2, Math.min(8, Number(getActiveGameSettings().clawSpeed) || 4.4));
     const spdZ = spdX * 0.86;
     const nx = Math.max(BOX.clawMinX, Math.min(BOX.clawMaxX, clawPos.x + STATE.moveX * spdX * dt));
     const nz = Math.max(BOX.clawMinZ, Math.min(BOX.clawMaxZ, clawPos.z + STATE.moveZ * spdZ * dt));
-                    // Prevent aiming directly over the empty corner drop chute before grabbing
-                    if (!(nx < BOX.chuteX + 1.55 && nz > BOX.chuteZ - 1.65)) { clawPos.x = nx; clawPos.z = nz; }
-                    else {
-                        if (!(nx < BOX.chuteX + 1.55 && clawPos.z > BOX.chuteZ - 1.65)) clawPos.x = nx;
-                        if (!(clawPos.x < BOX.chuteX + 1.55 && nz > BOX.chuteZ - 1.65)) clawPos.z = nz;
-                    }
-                    activeMotion = true; SoundFX.tick();
-                }
+    const isInChuteZone = (x, z) => (x < BOX.chuteX + 1.55 && z > BOX.chuteZ - 1.65);
+    const wasInChute = isInChuteZone(clawPos.x, clawPos.z);
+    if (!isInChuteZone(nx, nz)) {
+        clawPos.x = nx; clawPos.z = nz;
+    } else if (wasInChute) {
+        // 배출구 위에서 시작했을 때는 배출구 바깥(+X, -Z)으로 빠져나갈 수 있도록 허용
+        if (nx >= clawPos.x) clawPos.x = nx;
+        if (nz <= clawPos.z) clawPos.z = nz;
+    } else {
+        if (!isInChuteZone(nx, clawPos.z)) clawPos.x = nx;
+        if (!isInChuteZone(clawPos.x, nz)) clawPos.z = nz;
+    }
+    activeMotion = true; SoundFX.tick();
+}
                 targetClawOpenAngle = 0.52;
             } else if (STATE.phase === 'POWER_GAUGE') {
                 STATE.gaugePos += STATE.gaugeDir * 152 * dt;
@@ -2441,44 +2520,62 @@ const specialCount = specRatio > 0 ? Math.max(1, Math.round(activeCount * specRa
                 STATE.phaseTimer -= dt; holdGrabbedCapsule(); activeMotion = true;
                 if (STATE.phaseTimer <= 0) STATE.phase = 'LIFTING';
             } else if (STATE.phase === 'LIFTING') {
-                clawPos.y += 4.2 * dt; activeMotion = true;
-                if (STATE.grabbedCapsule && STATE.willSlip && !STATE.slipTriggered && clawPos.y >= STATE.slipY) {
-                    STATE.slipTriggered = true; const cap = STATE.grabbedCapsule; cap.body.collisionResponse = true;
-                    cap.body.velocity.set((Math.random()-0.5)*1.8, -1.6, (Math.random()-0.5)*1.4); STATE.grabbedCapsule = null;
-                    SoundFX.fail(); showToast('앗! 캡슐이 아쉽게 미끄러졌어요! 💦', 'warn');
-                }
-                holdGrabbedCapsule();
-                if (clawPos.y >= BOX.clawTopY) {
-                    clawPos.y = BOX.clawTopY;
-                    if (STATE.grabbedCapsule) {
-                        STATE.phase = 'MOVING_TO_CHUTE';
-                        showToast(STATE.grabbedCapsule.isSpecial ? '✨ 스페셜 캡슐을 잡았습니다!' : '🎁 캡슐을 잡았습니다! 배출구로 이동합니다', 'super');
-                    } else {
-                        SoundFX.setTension(false); STATE.phase = 'IDLE';
-                        SheetAPI.logResult(STATE.currentPlayer, null, '-', '캡슐뽑기');
-                        if (STATE.playsLeft > 0) resetTurnTimer();
-                        ServerSync.broadcastState();
-                    }
-                    updateStageHUD();
-                }
-            } else if (STATE.phase === 'MOVING_TO_CHUTE') {
-                // Smoothly glide in BOTH X and Z to the left-front corner drop chute!
-                const dx = BOX.chuteX - clawPos.x, dz = BOX.chuteZ - clawPos.z, dist = Math.hypot(dx, dz);
-                const step = 4.8 * dt; activeMotion = true;
-                if (dist <= step + 0.05) {
-                    clawPos.x = BOX.chuteX; clawPos.z = BOX.chuteZ;
-                    STATE.phase = 'RELEASING_CHUTE'; STATE.phaseTimer = 0.14; targetClawOpenAngle = 0.84;
-                    if (STATE.grabbedCapsule) {
-                        STATE.grabbedIsSpecial = Boolean(STATE.grabbedCapsule.isSpecial);
-                        tunnelBallMesh.userData.lowerMat.color.setHex(STATE.grabbedCapsule.colorHex);
-                        STATE.grabbedCapsule.body.collisionResponse = false;
-                        chuteDropState = { vx: (Math.random()-0.5)*1.3, vy: -0.5, vz: (Math.random()-0.5)*1.3, rx: 3.5, rz: (Math.random()-0.5)*5.0, passedRing: false, bounceCount: 0 };
-                    }
-                    SoundFX.drop();
-                } else {
-                    clawPos.x += (dx / dist) * step; clawPos.z += (dz / dist) * step;
-                }
-                holdGrabbedCapsule();
+    clawPos.y += 4.2 * dt; activeMotion = true;
+    holdGrabbedCapsule();
+    if (clawPos.y >= BOX.clawTopY) {
+        clawPos.y = BOX.clawTopY;
+        if (STATE.grabbedCapsule) {
+            STATE.phase = 'MOVING_TO_CHUTE';
+            showToast(STATE.grabbedCapsule.isSpecial ? '✨ 스페셜 캡슐을 잡았습니다!' : '🎁 캡슐을 잡았습니다! 배출구로 이동합니다', 'super');
+        } else {
+            SoundFX.setTension(false); STATE.phase = 'IDLE';
+            clawPos.x = clawPos.x; STATE.introClawActive = true;
+            SheetAPI.logResult(STATE.currentPlayer, null, '-', '캡슐뽑기');
+            if (STATE.playsLeft > 0) resetTurnTimer();
+            ServerSync.broadcastState();
+        }
+        updateStageHUD();
+    }
+} else if (STATE.phase === 'MOVING_TO_CHUTE') {
+    const destX = (STATE.willSlip && !STATE.slipTriggered) ? STATE.slipTargetX : BOX.chuteX;
+    const destZ = (STATE.willSlip && !STATE.slipTriggered) ? STATE.slipTargetZ : BOX.chuteZ;
+    const dx = destX - clawPos.x, dz = destZ - clawPos.z, dist = Math.hypot(dx, dz);
+    const step = 4.8 * dt; activeMotion = true;
+    if (dist <= step + 0.05) {
+        clawPos.x = destX; clawPos.z = destZ;
+        if (STATE.willSlip && !STATE.slipTriggered) {
+            // 배출구 벽 바로 옆에서 힘없이 풀리며 떨어져 주변에 탑이 쌓이도록 처리
+            STATE.slipTriggered = true;
+            targetClawOpenAngle = 0.72;
+            const cap = STATE.grabbedCapsule;
+            if (cap) {
+                cap.body.collisionResponse = true;
+                cap.body.velocity.set((Math.random()-0.5)*0.9, -2.4, (Math.random()-0.5)*0.9);
+                cap.body.angularVelocity.set((Math.random()-0.5)*4, (Math.random()-0.5)*4, (Math.random()-0.5)*4);
+                STATE.grabbedCapsule = null;
+            }
+            SoundFX.setTension(false); SoundFX.fail();
+            showToast('앗! 배출구 코앞에서 캡슐이 떨어졌어요! 💦', 'warn');
+            SheetAPI.logResult(STATE.currentPlayer, null, '-', '캡슐뽑기');
+            STATE.phase = 'IDLE';
+            STATE.introClawActive = true;
+            if (STATE.playsLeft > 0) resetTurnTimer();
+            updateStageHUD();
+            ServerSync.broadcastFastClaw(); ServerSync.broadcastState();
+            return;
+        }
+        STATE.phase = 'RELEASING_CHUTE'; STATE.phaseTimer = 0.14; targetClawOpenAngle = 0.84;
+        if (STATE.grabbedCapsule) {
+            STATE.grabbedIsSpecial = Boolean(STATE.grabbedCapsule.isSpecial);
+            tunnelBallMesh.userData.lowerMat.color.setHex(STATE.grabbedCapsule.colorHex);
+            STATE.grabbedCapsule.body.collisionResponse = false;
+            chuteDropState = { vx: (Math.random()-0.5)*1.3, vy: -0.5, vz: (Math.random()-0.5)*1.3, rx: 3.5, rz: (Math.random()-0.5)*5.0, passedRing: false, bounceCount: 0 };
+        }
+        SoundFX.drop();
+    } else {
+        clawPos.x += (dx / dist) * step; clawPos.z += (dz / dist) * step;
+    }
+    holdGrabbedCapsule();
             } else if (STATE.phase === 'RELEASING_CHUTE') {
                 activeMotion = true; if (STATE.phaseTimer > 0) STATE.phaseTimer -= dt;
                 const cap = STATE.grabbedCapsule;
@@ -2529,11 +2626,15 @@ ServerSync.broadcastFastClaw(); ServerSync.broadcastState();
                 }
             }
             if (bestCap && bestOv >= (gs.overlapThreshold || 50) / 100) {
-                STATE.grabbedCapsule = bestCap; bestCap.body.velocity.set(0,0,0); bestCap.body.collisionResponse = false;
-                if (Math.random() * 100 >= Math.min(100, (gs.winRate ?? 65) + STATE.gaugeBonus)) {
-                    STATE.willSlip = true; STATE.slipY = Math.min(BOX.clawTopY - 0.8, clawPos.y + 1.5 + Math.random() * 2.0);
-                }
-            } else {
+    STATE.grabbedCapsule = bestCap; bestCap.body.velocity.set(0,0,0); bestCap.body.collisionResponse = false;
+    if (Math.random() * 100 >= Math.min(100, (gs.winRate ?? 65) + STATE.gaugeBonus)) {
+        STATE.willSlip = true;
+        // 배출구 아크릴 벽 바로 바깥쪽(우측 또는 뒤쪽)에 떨어지도록 목표 좌표 설정
+        const dropRightSide = Math.random() < 0.65;
+        STATE.slipTargetX = dropRightSide ? (BOX.chuteX + 1.65 + Math.random() * 0.55) : (BOX.chuteX + 0.35 + Math.random() * 1.35);
+        STATE.slipTargetZ = dropRightSide ? (BOX.chuteZ - 0.55 + Math.random() * 0.85) : (BOX.chuteZ - 1.65 - Math.random() * 0.45);
+    }
+} else {
                 if (bestCap && bestOv > 0.12) showToast(`조준 빗나감! (겹침 ${Math.round(bestOv*100)}% / 기준 ${gs.overlapThreshold}%)`, 'warn');
                 for (const cap of capsules) {
                     const dx = cap.body.position.x - hp.x, dz = cap.body.position.z - hp.z;
@@ -2771,17 +2872,19 @@ ServerSync.broadcastFastClaw(); ServerSync.broadcastState();
             const ov = document.getElementById('prize-overlay'); ov.classList.remove('hidden'); ov.classList.add('flex');
         }
         function closePrizeReveal() {
-            const ov = document.getElementById('prize-overlay'); ov.classList.add('hidden'); ov.classList.remove('flex');
-            document.getElementById('chute-flash').style.opacity = '0'; document.getElementById('chute-cam-banner').classList.add('hidden');
-            STATE.phase = 'IDLE'; STATE.chuteRollProgress = 0;
-            if (APP.activeGame === 'claw') {
-                clawPos.x = 1.0; clawPos.y = BOX.clawTopY; clawPos.z = 0.0;
-                const c = document.getElementById('canvas-container'); if (c) updateFixedCamera(c.clientWidth, c.clientHeight);
-                if (capsules.length <= 4) spawnHybridCapsules(getActiveGameSettings().capsuleCount);
-                if (STATE.playsLeft > 0) resetTurnTimer();
-            } else if (APP.activeGame === 'yabawi') { STATE.yabawiPhase = 'READY'; renderYabawiStage(); }
-            updateStageHUD(); ServerSync.broadcastState();
-        }
+    const ov = document.getElementById('prize-overlay'); ov.classList.add('hidden'); ov.classList.remove('flex');
+    document.getElementById('chute-flash').style.opacity = '0'; document.getElementById('chute-cam-banner').classList.add('hidden');
+    STATE.phase = 'IDLE'; STATE.chuteRollProgress = 0;
+    if (APP.activeGame === 'claw') {
+        clawPos.x = BOX.chuteX; clawPos.y = BOX.height - 0.55; clawPos.z = BOX.chuteZ;
+        clawPrevX = clawPos.x; clawPrevZ = clawPos.z;
+        STATE.introClawActive = true;
+        const c = document.getElementById('canvas-container'); if (c) updateFixedCamera(c.clientWidth, c.clientHeight);
+        if (capsules.length <= 4) spawnHybridCapsules(getActiveGameSettings().capsuleCount);
+        if (STATE.playsLeft > 0) resetTurnTimer();
+    } else if (APP.activeGame === 'yabawi') { STATE.yabawiPhase = 'READY'; renderYabawiStage(); }
+    updateStageHUD(); ServerSync.broadcastState();
+}
         function startPlayerSession(emp, playCount) {
             STATE.currentPlayer = { empId: emp.empId, name: emp.name, dept: emp.dept };
             STATE.playsLeft = Math.max(1, Number(playCount) || 1);
@@ -2860,10 +2963,12 @@ ServerSync.broadcastFastClaw(); ServerSync.broadcastState();
         turnTimeLimit: Math.max(10, Math.min(120, Number(document.getElementById('admin-turn-time').value) || 30)),
         specialRatio: Math.max(0, Math.min(80, Number(document.getElementById('admin-special-ratio').value) ?? 22)),
         clawSpeed: Math.max(2, Math.min(8, Number(document.getElementById('admin-claw-speed').value) || 4.4)),
-        camFov: Math.max(26, Math.min(50, Number(document.getElementById('admin-cam-fov').value) || 34)),
-        camDist: Math.max(15, Math.min(28, Number(document.getElementById('admin-cam-dist').value) || 20.2)),
-        camHeight: Math.max(4.5, Math.min(9.5, Number(document.getElementById('admin-cam-height').value) || 6.7)),
-        cctvMode: document.getElementById('admin-cctv-mode').value || 'zoom',
+        ccamFov: Math.max(26, Math.min(50, Number(document.getElementById('admin-cam-fov').value) || 34)),
+camDist: Math.max(15, Math.min(28, Number(document.getElementById('admin-cam-dist').value) || 20.2)),
+camHeight: Math.max(4.5, Math.min(9.5, Number(document.getElementById('admin-cam-height').value) || 6.7)),
+cctvMode: document.getElementById('admin-cctv-mode').value || 'zoom',
+cctvZoom: Math.max(0.6, Math.min(2.5, Number(document.getElementById('admin-cctv-zoom').value) || 1.0)),
+cctvSize: Math.max(100, Math.min(260, Number(document.getElementById('admin-cctv-size').value) || 168)),
         yabawiCups: Number(document.getElementById('admin-yabawi-cups').value) || 3,
         yabawiSpeedMs: Number(document.getElementById('admin-yabawi-speed').value) || 320,
         yabawiSwaps: Math.max(4, Number(document.getElementById('admin-yabawi-swaps').value) || 10),
@@ -2884,9 +2989,11 @@ function loadDraftSrvToDOM(sid) {
     document.getElementById('admin-special-ratio').value = s.specialRatio;
     document.getElementById('admin-claw-speed').value = s.clawSpeed;
     document.getElementById('admin-cam-fov').value = s.camFov; document.getElementById('admin-cam-fov-val').textContent = `${s.camFov}°`;
-    document.getElementById('admin-cam-dist').value = s.camDist; document.getElementById('admin-cam-dist-val').textContent = s.camDist;
-    document.getElementById('admin-cam-height').value = s.camHeight; document.getElementById('admin-cam-height-val').textContent = s.camHeight;
-    document.getElementById('admin-cctv-mode').value = s.cctvMode || 'zoom';
+document.getElementById('admin-cam-dist').value = s.camDist; document.getElementById('admin-cam-dist-val').textContent = s.camDist;
+document.getElementById('admin-cam-height').value = s.camHeight; document.getElementById('admin-cam-height-val').textContent = s.camHeight;
+document.getElementById('admin-cctv-mode').value = s.cctvMode || 'zoom';
+document.getElementById('admin-cctv-zoom').value = s.cctvZoom || 1.0; document.getElementById('admin-cctv-zoom-val').textContent = `${Number(s.cctvZoom || 1.0).toFixed(1)}x`;
+document.getElementById('admin-cctv-size').value = s.cctvSize || 168; document.getElementById('admin-cctv-size-val').textContent = `${s.cctvSize || 168}px`;
     document.getElementById('admin-yabawi-cups').value = s.yabawiCups; document.getElementById('admin-yabawi-speed').value = s.yabawiSpeedMs;
     document.getElementById('admin-yabawi-swaps').value = s.yabawiSwaps;
     document.getElementById('admin-frame-theme').value = s.frameTheme && s.frameTheme.startsWith('pat-') ? s.frameTheme : 'pat-sunburst';
@@ -2897,6 +3004,10 @@ function loadDraftSrvToDOM(sid) {
     document.querySelectorAll('#admin-srv-selector button').forEach(b => { b.className = `px-3 py-1.5 rounded-xl text-xs font-black ${b.dataset.asrv===sid ? 'bg-indigo-600 text-white shadow' : 'bg-slate-100 text-slate-600'}`; });
     document.querySelectorAll('#admin-game-selector button').forEach(b => { b.className = `px-3 py-1.5 rounded-xl text-xs font-black ${b.dataset.agame===adminEditingGame ? 'bg-sky-600 text-white shadow' : 'bg-slate-100 text-slate-600'}`; });
     ['claw','yabawi','kuji'].forEach(g => document.getElementById(`apnl-${g}`)?.classList.toggle('hidden', g !== adminEditingGame));
+const showCam = adminEditingGame === 'claw';
+document.getElementById('apnl-camera')?.classList.toggle('hidden', !showCam);
+const pGrid = document.getElementById('admin-game-panels-grid');
+if (pGrid) pGrid.className = `grid grid-cols-1 ${showCam ? 'lg:grid-cols-3' : 'lg:grid-cols-2'} gap-3`;
     document.querySelectorAll('.asrv-badge').forEach(el => { el.textContent = `${sid.replace('S','')}서버`; });
     const gNames = { claw:'캡슐 뽑기', yabawi:'떡 먹는 용만이', kuji:'피날레 쿠지' };
     document.querySelectorAll('.agame-badge').forEach(el => { el.textContent = gNames[adminEditingGame] || adminEditingGame; });
@@ -2960,9 +3071,11 @@ function renderPrizeEditor(containerId, listArr) {
             document.getElementById('admin-title-claw').value = CONFIG.gameTitles.claw; document.getElementById('admin-title-yabawi').value = CONFIG.gameTitles.yabawi; document.getElementById('admin-title-kuji').value = CONFIG.gameTitles.kuji;
             document.getElementById('admin-pin-new').value = ''; document.getElementById('admin-kuji-formula').value = CONFIG.kujiFormula || 'd_minus_e';
             document.getElementById('admin-logo-left').value = CONFIG.logoLeft || 'logo_cj.png';
-            document.getElementById('admin-logo-left-sz').value = CONFIG.logoLeftSize || 170;
-            document.getElementById('admin-logo-right').value = CONFIG.logoRight || 'logo_dxe.png';
-            document.getElementById('admin-logo-right-sz').value = CONFIG.logoRightSize || 170;
+document.getElementById('admin-logo-left-sz').value = CONFIG.logoLeftSize || 170;
+document.getElementById('admin-logo-right').value = CONFIG.logoRight || 'logo_dxe.png';
+document.getElementById('admin-logo-right-sz').value = CONFIG.logoRightSize || 170;
+document.getElementById('admin-lobby-logo-left-sz').value = CONFIG.lobbyLogoLeftSize || 36;
+document.getElementById('admin-lobby-logo-right-sz').value = CONFIG.lobbyLogoRightSize || 36;
             ['S1','S2','S3','S4'].forEach(s => { document.getElementById(`admin-srv-${s}`).value = CONFIG.servers[s] || s; });
             document.getElementById('admin-gas-url').value = SheetAPI.gasUrl || '';
             draftServerSettings = JSON.parse(JSON.stringify(CONFIG.serverSettings));
@@ -3194,6 +3307,8 @@ document.getElementById('tab-btn-global')?.addEventListener('click', () => switc
 document.getElementById('admin-cam-fov')?.addEventListener('input', e => { document.getElementById('admin-cam-fov-val').textContent = `${e.target.value}°`; });
 document.getElementById('admin-cam-dist')?.addEventListener('input', e => { document.getElementById('admin-cam-dist-val').textContent = e.target.value; });
 document.getElementById('admin-cam-height')?.addEventListener('input', e => { document.getElementById('admin-cam-height-val').textContent = e.target.value; });
+document.getElementById('admin-cctv-zoom')?.addEventListener('input', e => { document.getElementById('admin-cctv-zoom-val').textContent = `${Number(e.target.value).toFixed(1)}x`; });
+document.getElementById('admin-cctv-size')?.addEventListener('input', e => { document.getElementById('admin-cctv-size-val').textContent = `${e.target.value}px`; });
 document.getElementById('claw-cctv-frame')?.addEventListener('click', () => {
     cctvWideMode = !cctvWideMode;
     const lbl = document.getElementById('cctv-mode-label');
@@ -3223,9 +3338,11 @@ document.getElementById('btn-admin-save').addEventListener('click', () => {
     const newPin = document.getElementById('admin-pin-new').value.trim(); if (newPin) CONFIG.adminPin = newPin;
     CONFIG.kujiFormula = document.getElementById('admin-kuji-formula').value;
     CONFIG.logoLeft = document.getElementById('admin-logo-left').value.trim() || 'logo_cj.png';
-    CONFIG.logoLeftSize = Number(document.getElementById('admin-logo-left-sz').value) || 170;
-    CONFIG.logoRight = document.getElementById('admin-logo-right').value.trim() || 'logo_dxe.png';
-    CONFIG.logoRightSize = Number(document.getElementById('admin-logo-right-sz').value) || 170;
+CONFIG.logoLeftSize = Number(document.getElementById('admin-logo-left-sz').value) || 170;
+CONFIG.logoRight = document.getElementById('admin-logo-right').value.trim() || 'logo_dxe.png';
+CONFIG.logoRightSize = Number(document.getElementById('admin-logo-right-sz').value) || 170;
+CONFIG.lobbyLogoLeftSize = Math.max(18, Math.min(96, Number(document.getElementById('admin-lobby-logo-left-sz').value) || 36));
+CONFIG.lobbyLogoRightSize = Math.max(18, Math.min(96, Number(document.getElementById('admin-lobby-logo-right-sz').value) || 36));
 
     const changedServers = {};
     ['S1','S2','S3','S4'].forEach(s => {
@@ -3297,16 +3414,19 @@ if (cctvEnabled && cctvCamera && cctvBox && STATE.phase !== 'CHUTE_ROLL' && STAT
     const vw = Math.max(10, pRect.width), vh = Math.max(10, pRect.height);
 
     const hp = getClawHeadWorldPos();
-    if (cctvWideMode) {
-        cctvCamera.fov = 56; cctvCamera.updateProjectionMatrix();
-        cctvCamera.position.set(0, BOX.height - 0.6, 0.01);
-        cctvCamera.lookAt(0, currentBedHeight, 0);
-    } else {
-        cctvCamera.fov = 34; cctvCamera.updateProjectionMatrix();
-        const camY = Math.min(BOX.height - 1.0, currentBedHeight + 4.9);
-        cctvCamera.position.set(hp.x, camY, hp.z + 0.01);
-        cctvCamera.lookAt(hp.x, currentBedHeight + 0.3, hp.z);
-    }
+    const zoom = Math.max(0.6, Math.min(2.5, Number(getActiveGameSettings().cctvZoom) || 1.0));
+if (cctvWideMode) {
+    cctvCamera.fov = Math.max(18, Math.min(76, 56 / zoom));
+    cctvCamera.updateProjectionMatrix();
+    cctvCamera.position.set(0, BOX.height - 0.6, 0.01);
+    cctvCamera.lookAt(0, currentBedHeight, 0);
+} else {
+    cctvCamera.fov = Math.max(12, Math.min(62, 34 / zoom));
+    cctvCamera.updateProjectionMatrix();
+    const camY = Math.min(BOX.height - 1.0, currentBedHeight + 4.9);
+    cctvCamera.position.set(hp.x, camY, hp.z + 0.01);
+    cctvCamera.lookAt(hp.x, currentBedHeight + 0.3, hp.z);
+}
 
     const prevAimVis = aimBeamMesh ? aimBeamMesh.visible : false;
     if (gantryBeamMesh) gantryBeamMesh.visible = false;
