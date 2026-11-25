@@ -35,7 +35,7 @@
         .stage-wrap { position: fixed; inset: 0; z-index: 20; display: flex; align-items: center; justify-content: center; padding: 12px 16px; }
         .floating-side-logo { display: none; flex: 1; height: 100%; align-items: center; justify-content: center; padding: 0 16px; pointer-events: none; }
         @media (min-width: 1180px) { .floating-side-logo { display: flex; } }
-        .floating-side-logo img { max-width: min(190px, 11vw); max-height: 130px; object-fit: contain; filter: drop-shadow(0 10px 26px rgba(0,0,0,0.55)); }
+        .floating-side-logo img { width: var(--wing-logo-size, 170px); max-width: min(var(--wing-logo-size, 170px), 15vw); max-height: calc(var(--wing-logo-size, 170px) * 0.85); height: auto; object-fit: contain; filter: drop-shadow(0 10px 26px rgba(0,0,0,0.55)); }
 
         /* No height cap on large QHD/4K monitors! Fills 96dvh cleanly! */
         /* 세로형 직사각형 + 상·좌·우 두꺼운 동일 테두리 + 선명한 투톤 패턴 프레임 */
@@ -348,9 +348,9 @@
                 <!-- GAME 1: TRUE 3D X-Z CLAW -->
                 <div id="game-view-claw" class="w-full h-full relative">
                     <div id="canvas-container" class="w-full h-full"></div>
-                    <!-- ★ 실시간 탑뷰 CCTV (CLAW CAM) PiP 창 (클릭 시 줌인 ↔ 전체 바닥 광각 전환!) -->
-                    <div id="claw-cctv-frame" title="실시간 CLAW CAM"
-                        class="absolute top-16 right-3 z-20 w-[156px] h-[156px] sm:w-[168px] sm:h-[168px] rounded-2xl border-2 border-cyan-300/85 shadow-[0_14px_34px_rgba(0,0,0,0.65)] pointer-events-none overflow-hidden">
+                    <<!-- ★ 실시간 탑뷰 CCTV (CLAW CAM) PiP 창 (클릭 시 줌인 ↔ 전체 바닥 광각 전환!) -->
+<div id="claw-cctv-frame" title="클릭하여 줌인/광각 전환"
+    class="absolute top-16 right-3 z-20 w-[156px] h-[156px] sm:w-[168px] sm:h-[168px] rounded-2xl border-2 border-cyan-300/85 shadow-[0_14px_34px_rgba(0,0,0,0.65)] pointer-events-auto cursor-pointer overflow-hidden">
                         <div class="absolute top-1.5 left-1.5 flex items-center gap-1 px-1.5 py-0.5 rounded bg-black/65 text-[9px] font-black text-white">
                             <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping"></span>
                             <span id="cctv-mode-label">CLAW CAM</span>
@@ -521,134 +521,162 @@
                 <button id="btn-close-admin" class="w-9 h-9 rounded-full bg-white/15 font-bold">✕</button>
             </div>
             <div class="bg-slate-100 px-4 pt-3 flex gap-1.5 border-b border-slate-200 shrink-0 overflow-x-auto">
-                <button id="tab-btn-game" type="button" class="px-3.5 py-2.5 rounded-t-2xl text-xs sm:text-sm font-black bg-white text-indigo-600 border-t-2 border-x border-indigo-400 -mb-px whitespace-nowrap">🎛️ 공통 & 서버별 설정·경품</button>
-                <button id="tab-btn-tickets" type="button" class="px-3.5 py-2.5 rounded-t-2xl text-xs sm:text-sm font-black bg-slate-200/70 text-slate-600 whitespace-nowrap">🎟️ 행운권 관리 (구글 시트)</button>
-                <button id="tab-btn-servers" type="button" class="px-3.5 py-2.5 rounded-t-2xl text-xs sm:text-sm font-black bg-slate-200/70 text-slate-600 whitespace-nowrap">📡 서버 접속자 & QR 관리</button>
+    <button id="tab-btn-global" type="button" class="px-3.5 py-2.5 rounded-t-2xl text-xs sm:text-sm font-black bg-white text-indigo-600 border-t-2 border-x border-indigo-400 -mb-px whitespace-nowrap">🏢 공통 브랜딩 · 오디오</button>
+    <button id="tab-btn-game" type="button" class="px-3.5 py-2.5 rounded-t-2xl text-xs sm:text-sm font-black bg-slate-200/70 text-slate-600 whitespace-nowrap">🎛️ 서버별 게임 · 카메라 · 경품</button>
+    <button id="tab-btn-tickets" type="button" class="px-3.5 py-2.5 rounded-t-2xl text-xs sm:text-sm font-black bg-slate-200/70 text-slate-600 whitespace-nowrap">🎟️ 행운권 관리 (구글 시트)</button>
+    <button id="tab-btn-servers" type="button" class="px-3.5 py-2.5 rounded-t-2xl text-xs sm:text-sm font-black bg-slate-200/70 text-slate-600 whitespace-nowrap">📡 서버 접속자 & QR 관리</button>
+</div>
+<div class="p-4 sm:p-5 overflow-y-auto custom-scroll flex-1 bg-slate-50">
+    <!-- TAB 1: 공통 설정 (모든 서버에 공통 적용) -->
+    <div id="admin-tab-global" class="space-y-4">
+        <section class="bg-white rounded-2xl p-4 border border-slate-200 space-y-3">
+            <div class="flex items-center justify-between">
+                <h3 class="font-black text-sm text-indigo-700">🏢 공통 브랜딩 · 타이틀 커스터마이징 · PIN 변경</h3>
+                <span class="px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 text-[10px] font-black">전 서버 공통 적용</span>
             </div>
-            <div class="p-4 sm:p-5 overflow-y-auto custom-scroll flex-1 bg-slate-50">
-                <div id="admin-tab-game" class="space-y-4">
-                    <section class="bg-white rounded-2xl p-4 border border-slate-200 space-y-3">
-                        <h3 class="font-black text-sm text-indigo-700">🏢 공통 브랜딩 · 타이틀 커스터마이징 · PIN 변경</h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-4 gap-2.5">
-                            <div class="sm:col-span-2"><label class="block text-xs font-bold text-slate-600 mb-1">로비 메인 행사명</label><input id="admin-title" type="text" class="w-full px-3 py-1.5 rounded-xl border text-xs font-bold"></div>
-                            <div><label class="block text-xs font-bold text-slate-600 mb-1">하단 회사/브랜드명 (2줄 엔터 가능)</label><textarea id="admin-footer-brand" rows="2" class="w-full px-2.5 py-1 rounded-xl border text-xs font-bold leading-tight resize-none"></textarea></div>
-                            <div><label class="block text-xs font-bold text-rose-700 mb-1">새 PIN 변경 (비워두면 유지)</label><input id="admin-pin-new" type="password" maxlength="10" autocomplete="new-password" placeholder="변경 시에만 입력" class="w-full px-3 py-1.5 rounded-xl border border-rose-300 text-xs font-black text-center"></div>
-                        </div>
-                        <!-- 상단 타이틀 / 하단 브랜드명 글자색·크기 + 오디오 제어 -->
-                        <div class="grid grid-cols-2 sm:grid-cols-6 gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-200 items-center">
-                            <label class="flex items-center justify-between bg-white px-2 py-1 rounded-lg border text-[10px] font-bold"><span>게임명 색</span><input id="admin-title-color" type="color" value="#ffffff" class="w-6 h-5 cursor-pointer"></label>
-                            <label class="flex items-center justify-between bg-white px-2 py-1 rounded-lg border text-[10px] font-bold"><span>크기px</span><input id="admin-title-size" type="number" min="16" max="54" value="30" class="w-11 text-center font-black border-0"></label>
-                            <label class="flex items-center justify-between bg-white px-2 py-1 rounded-lg border text-[10px] font-bold"><span>회사명 색</span><input id="admin-brand-color" type="color" value="#ffffff" class="w-6 h-5 cursor-pointer"></label>
-                            <label class="flex items-center justify-between bg-white px-2 py-1 rounded-lg border text-[10px] font-bold"><span>크기px</span><input id="admin-brand-size" type="number" min="12" max="42" value="20" class="w-11 text-center font-black border-0"></label>
-                            <label class="flex items-center gap-1.5 bg-white px-2 py-1.5 rounded-lg border text-[10px] font-black cursor-pointer"><input id="admin-bgm-on" type="checkbox" checked class="accent-indigo-600"><span>🎵 BGM 켜기</span></label>
-                            <label class="flex items-center gap-1.5 bg-white px-2 py-1.5 rounded-lg border text-[10px] font-black cursor-pointer"><input id="admin-sfx-on" type="checkbox" checked class="accent-indigo-600"><span>🔊 효과음 켜기</span></label>
-                        </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-4 gap-2">
-                            <div><label class="block text-[10px] font-bold text-slate-500 mb-1">캡슐 뽑기 상단 타이틀</label><input id="admin-title-claw" type="text" class="w-full px-2.5 py-1.5 rounded-lg border text-xs font-bold"></div>
-                            <div><label class="block text-[10px] font-bold text-slate-500 mb-1">용만이 상단 타이틀</label><input id="admin-title-yabawi" type="text" class="w-full px-2.5 py-1.5 rounded-lg border text-xs font-bold"></div>
-                            <div><label class="block text-[10px] font-bold text-slate-500 mb-1">피날레 쿠지 상단 타이틀</label><input id="admin-title-kuji" type="text" class="w-full px-2.5 py-1.5 rounded-lg border text-xs font-bold"></div>
-                            <div><label class="block text-[10px] font-bold text-slate-500 mb-1">쿠지 잔여 계산식</label><select id="admin-kuji-formula" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold bg-white"><option value="d_minus_e">행운권(D) − 사용(E)</option><option value="d_only">잔여 행운권(D) 그대로</option></select></div>
-                        </div>
-                        <div class="grid grid-cols-2 sm:grid-cols-6 gap-2">
-                            <div><label class="block text-[10px] font-bold text-slate-500 mb-1">서버 1 이름</label><input id="admin-srv-S1" type="text" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold"></div>
-                            <div><label class="block text-[10px] font-bold text-slate-500 mb-1">서버 2 이름</label><input id="admin-srv-S2" type="text" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold"></div>
-                            <div><label class="block text-[10px] font-bold text-slate-500 mb-1">서버 3 이름</label><input id="admin-srv-S3" type="text" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold"></div>
-                            <div><label class="block text-[10px] font-bold text-slate-500 mb-1">서버 4 이름</label><input id="admin-srv-S4" type="text" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold"></div>
-                            <div class="col-span-1"><label class="block text-[10px] font-bold text-sky-700 mb-1">좌측 로고 (파일명 | 크기px)</label><div class="flex gap-1"><input id="admin-logo-left" type="text" class="w-full px-2 py-1.5 rounded-lg border border-sky-300 text-xs font-mono"><input id="admin-logo-left-sz" type="number" class="w-12 px-1 text-center rounded-lg border border-sky-300 text-[10px] font-black"></div></div>
-                            <div class="col-span-1"><label class="block text-[10px] font-bold text-sky-700 mb-1">우측 로고 (파일명 | 크기px)</label><div class="flex gap-1"><input id="admin-logo-right" type="text" class="w-full px-2 py-1.5 rounded-lg border border-sky-300 text-xs font-mono"><input id="admin-logo-right-sz" type="number" class="w-12 px-1 text-center rounded-lg border border-sky-300 text-[10px] font-black"></div></div>
-                        </div>
-                    </section>
+            <!-- (기존 공통 브랜딩/타이틀/오디오/서버명/로고 입력 필드 그대로 유지) -->
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-2.5">
+                <div class="sm:col-span-2"><label class="block text-xs font-bold text-slate-600 mb-1">로비 메인 행사명</label><input id="admin-title" type="text" class="w-full px-3 py-1.5 rounded-xl border text-xs font-bold"></div>
+                <div><label class="block text-xs font-bold text-slate-600 mb-1">하단 회사/브랜드명 (2줄 엔터 가능)</label><textarea id="admin-footer-brand" rows="2" class="w-full px-2.5 py-1 rounded-xl border text-xs font-bold leading-tight resize-none"></textarea></div>
+                <div><label class="block text-xs font-bold text-rose-700 mb-1">새 PIN 변경 (비워두면 유지)</label><input id="admin-pin-new" type="password" maxlength="10" autocomplete="new-password" placeholder="변경 시에만 입력" class="w-full px-3 py-1.5 rounded-xl border border-rose-300 text-xs font-black text-center"></div>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-6 gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-200 items-center">
+                <label class="flex items-center justify-between bg-white px-2 py-1 rounded-lg border text-[10px] font-bold"><span>게임명 색</span><input id="admin-title-color" type="color" value="#ffffff" class="w-6 h-5 cursor-pointer"></label>
+                <label class="flex items-center justify-between bg-white px-2 py-1 rounded-lg border text-[10px] font-bold"><span>크기px</span><input id="admin-title-size" type="number" min="16" max="54" value="30" class="w-11 text-center font-black border-0"></label>
+                <label class="flex items-center justify-between bg-white px-2 py-1 rounded-lg border text-[10px] font-bold"><span>회사명 색</span><input id="admin-brand-color" type="color" value="#ffffff" class="w-6 h-5 cursor-pointer"></label>
+                <label class="flex items-center justify-between bg-white px-2 py-1 rounded-lg border text-[10px] font-bold"><span>크기px</span><input id="admin-brand-size" type="number" min="12" max="42" value="20" class="w-11 text-center font-black border-0"></label>
+                <label class="flex items-center gap-1.5 bg-white px-2 py-1.5 rounded-lg border text-[10px] font-black cursor-pointer"><input id="admin-bgm-on" type="checkbox" checked class="accent-indigo-600"><span>🎵 BGM 켜기</span></label>
+                <label class="flex items-center gap-1.5 bg-white px-2 py-1.5 rounded-lg border text-[10px] font-black cursor-pointer"><input id="admin-sfx-on" type="checkbox" checked class="accent-indigo-600"><span>🔊 효과음 켜기</span></label>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-2">
+                <div><label class="block text-[10px] font-bold text-slate-500 mb-1">캡슐 뽑기 상단 타이틀</label><input id="admin-title-claw" type="text" class="w-full px-2.5 py-1.5 rounded-lg border text-xs font-bold"></div>
+                <div><label class="block text-[10px] font-bold text-slate-500 mb-1">용만이 상단 타이틀</label><input id="admin-title-yabawi" type="text" class="w-full px-2.5 py-1.5 rounded-lg border text-xs font-bold"></div>
+                <div><label class="block text-[10px] font-bold text-slate-500 mb-1">피날레 쿠지 상단 타이틀</label><input id="admin-title-kuji" type="text" class="w-full px-2.5 py-1.5 rounded-lg border text-xs font-bold"></div>
+                <div><label class="block text-[10px] font-bold text-slate-500 mb-1">쿠지 잔여 계산식</label><select id="admin-kuji-formula" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold bg-white"><option value="d_minus_e">행운권(D) − 사용(E)</option><option value="d_only">잔여 행운권(D) 그대로</option></select></div>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-6 gap-2">
+                <div><label class="block text-[10px] font-bold text-slate-500 mb-1">서버 1 이름</label><input id="admin-srv-S1" type="text" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold"></div>
+                <div><label class="block text-[10px] font-bold text-slate-500 mb-1">서버 2 이름</label><input id="admin-srv-S2" type="text" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold"></div>
+                <div><label class="block text-[10px] font-bold text-slate-500 mb-1">서버 3 이름</label><input id="admin-srv-S3" type="text" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold"></div>
+                <div><label class="block text-[10px] font-bold text-slate-500 mb-1">서버 4 이름</label><input id="admin-srv-S4" type="text" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold"></div>
+                <div class="col-span-1"><label class="block text-[10px] font-bold text-sky-700 mb-1">좌측 로고 (파일명 | 크기px)</label><div class="flex gap-1"><input id="admin-logo-left" type="text" class="w-full px-2 py-1.5 rounded-lg border border-sky-300 text-xs font-mono"><input id="admin-logo-left-sz" type="number" min="60" max="320" class="w-14 px-1 text-center rounded-lg border border-sky-300 text-[10px] font-black"></div></div>
+                <div class="col-span-1"><label class="block text-[10px] font-bold text-sky-700 mb-1">우측 로고 (파일명 | 크기px)</label><div class="flex gap-1"><input id="admin-logo-right" type="text" class="w-full px-2 py-1.5 rounded-lg border border-sky-300 text-xs font-mono"><input id="admin-logo-right-sz" type="number" min="60" max="320" class="w-14 px-1 text-center rounded-lg border border-sky-300 text-[10px] font-black"></div></div>
+            </div>
+        </section>
+    </div>
 
-                    <!-- ★ 서버별 독립 게임 설정 + 서버별 독립 경품 목록! -->
-                   <!-- ★ 깔끔한 2단 선택: [1~4서버] × [캡슐 / 용만이 / 쿠지] 개별 설정 & 독립 경품 -->
-                    <section class="bg-white rounded-2xl p-4 border-2 border-indigo-200 space-y-3.5">
-                        <!-- Row 1: 서버 선택 + 현재 서버/게임 QR 바로 열기 -->
-                        <div class="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-slate-100">
-                            <div id="admin-srv-selector" class="flex flex-wrap gap-1.5">
-                                <button data-asrv="S1" type="button" class="px-3 py-1.5 rounded-xl text-xs font-black bg-indigo-600 text-white shadow">1서버</button>
-                                <button data-asrv="S2" type="button" class="px-3 py-1.5 rounded-xl text-xs font-black bg-slate-100 text-slate-600">2서버</button>
-                                <button data-asrv="S3" type="button" class="px-3 py-1.5 rounded-xl text-xs font-black bg-slate-100 text-slate-600">3서버</button>
-                                <button data-asrv="S4" type="button" class="px-3 py-1.5 rounded-xl text-xs font-black bg-slate-100 text-slate-600">4서버</button>
-                            </div>
-                            <div id="admin-game-selector" class="flex flex-wrap gap-1.5">
-                                <button data-agame="claw" type="button" class="px-3 py-1.5 rounded-xl text-xs font-black bg-sky-600 text-white shadow">🕹️ 캡슐 뽑기</button>
-                                <button data-agame="yabawi" type="button" class="px-3 py-1.5 rounded-xl text-xs font-black bg-slate-100 text-slate-600">🍡 떡 먹는 용만이</button>
-                                <button data-agame="kuji" type="button" class="px-3 py-1.5 rounded-xl text-xs font-black bg-slate-100 text-slate-600">🏆 피날레 쿠지</button>
-                            </div>
-                        </div>
-
-                        <!-- Row 2: 선택한 게임 전용 설정 (왼쪽) + 프레임/테마 (오른쪽) 2단 컴팩트 배치 -->
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <!-- 게임별 동적 설정 영역 -->
-                            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
-                                <!-- ① 캡슐 설정 패널 -->
-                                <div id="apnl-claw" class="space-y-2">
-                                    <div class="font-black text-xs text-sky-800">🕹️ 캡슐 뽑기 설정 (<span class="asrv-badge">1서버</span>)</div>
-                                    <div class="flex justify-between text-[11px] font-bold"><span>캡슐 수량 (최대 400)</span><span id="admin-capsule-val">60개</span></div>
-                                    <input id="admin-capsule-count" type="range" min="20" max="400" step="10" class="w-full accent-sky-600">
-                                    <div class="flex justify-between text-[11px] font-bold"><span>기본 성공확률</span><span id="admin-winrate-val">65%</span></div>
-                                    <input id="admin-win-rate" type="range" min="0" max="100" step="5" class="w-full accent-sky-600">
-                                    <div class="flex justify-between text-[11px] font-bold"><span>겹침 판정 기준</span><span id="admin-overlap-val">50%</span></div>
-                                    <input id="admin-overlap-threshold" type="range" min="30" max="85" step="5" class="w-full accent-sky-600">
-                                    <label class="flex items-center gap-2 text-[11px] font-bold text-slate-700 pt-0.5 cursor-pointer">
-                                        <input id="admin-use-gauge" type="checkbox" class="accent-indigo-600 w-4 h-4"><span>타이밍 스탑 게이지 사용 (기본: 즉시 하강)</span>
-                                    </label>
-                                </div>
-                                <!-- ② 용만이 설정 패널 -->
-                                <div id="apnl-yabawi" class="hidden space-y-2">
-                                    <div class="font-black text-xs text-rose-800">🍡 떡 먹는 용만이 설정 (<span class="asrv-badge">1서버</span>)</div>
-                                    <div class="grid grid-cols-3 gap-2">
-                                        <div><label class="block text-[10px] font-bold text-slate-500 mb-1">돔 개수</label><select id="admin-yabawi-cups" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold bg-white"><option value="3">3개</option><option value="4">4개</option><option value="5">5개</option></select></div>
-                                        <div><label class="block text-[10px] font-bold text-slate-500 mb-1">셔플 속도</label><select id="admin-yabawi-speed" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold bg-white"><option value="420">보통</option><option value="280">빠름</option><option value="180">초고속</option></select></div>
-                                        <div><label class="block text-[10px] font-bold text-slate-500 mb-1">섞기 횟수</label><input id="admin-yabawi-swaps" type="number" min="4" max="25" class="w-full px-2 py-1.5 rounded-lg border text-xs font-black bg-white"></div>
-                                    </div>
-                                </div>
-                                <!-- ③ 피날레 쿠지 설정 패널 -->
-                                <div id="apnl-kuji" class="hidden space-y-2.5">
-                                    <div class="font-black text-xs text-amber-800">🏆 피날레 이치방 쿠지 (<span class="asrv-badge">1서버</span>)</div>
-                                    <p class="text-[11px] text-slate-500 leading-relaxed">구글 시트 임직원 남은 행운권 합계만큼 번호 쿠지가 생성되며, 아래 등록된 피날레 전용 경품 목록이 컨트롤러에 표시됩니다.</p>
-                                    <button id="btn-reset-finale" type="button" class="w-full py-2 rounded-lg bg-amber-500 text-white text-xs font-black">🔄 피날레 쿠지 보드 리셋</button>
-                                </div>
-                            </div>
-
-                            <!-- 서버 프레임 패턴 & 3D 테마 + 전용 QR 바로가기 -->
-                            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-2">
-                                <div class="font-black text-xs text-indigo-800">🎨 프레임 패턴 · 컬러 · 3D 공간 (<span class="asrv-badge">1서버</span>)</div>
-                                <select id="admin-frame-theme" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold bg-white">
-                                    <option value="pat-sunburst">패턴: ☀️ 팝 선버스트 (투톤)</option>
-                                    <option value="pat-stripe">패턴: 🎪 페스티벌 스트라이프</option>
-                                    <option value="pat-dots">패턴: ✨ 파티 도트</option>
-                                    <option value="pat-checker">패턴: 🏁 모던 체크</option>
-                                    <option value="pat-diamond">패턴: 💎 럭셔리 다이아</option>
-                                    <option value="pat-smooth">패턴: 🌊 심플 그라데이션</option>
-                                </select>
-                                <div class="grid grid-cols-2 gap-1.5">
-                                    <label class="flex items-center justify-between bg-white px-2 py-1 rounded-lg border text-[10px] font-bold"><span>메인색</span><input id="admin-frame-c1" type="color" value="#38bdf8" class="w-6 h-5 cursor-pointer"></label>
-                                    <label class="flex items-center justify-between bg-white px-2 py-1 rounded-lg border text-[10px] font-bold"><span>포인트색</span><input id="admin-frame-c2" type="color" value="#0369a1" class="w-6 h-5 cursor-pointer"></label>
-                                </div>
-                                <select id="admin-interior-theme" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold bg-white">
-                                    <option value="underwater">3D 공간: 🌊 물속 아쿠아리움</option>
-                                    <option value="sky">3D 공간: ☁️ 몽글몽글 하늘</option>
-                                    <option value="park">3D 공간: 🌳 햇살 가득 공원</option>
-                                    <option value="galaxy">3D 공간: 🌌 드림 갤럭시</option>
-                                </select>
-                                <button id="btn-admin-open-cur-qr" type="button" class="w-full py-1.5 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-xs font-black">📱 현재 [<span class="asrv-badge">1서버</span> · <span class="agame-badge">캡슐 뽑기</span>] 전용 QR 보기</button>
-                            </div>
-                        </div>
-
-                        <!-- Row 3: 선택한 [서버 × 게임] 전용 경품 목록! -->
-                        <div class="pt-2 border-t border-slate-200 space-y-2">
-                            <div class="flex flex-wrap items-center justify-between gap-2">
-                                <h4 class="font-black text-xs text-indigo-700">🎁 [<span class="asrv-badge">1서버</span> · <span class="agame-badge">캡슐 뽑기</span>] 전용 경품 · 이미지 · 수량 · 가중치</h4>
-                                <div class="flex gap-1.5">
-                                    <button id="btn-copy-prizes-all" type="button" class="px-2.5 py-1 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 text-[11px] font-black">📋 이 게임 경품을 1~4서버 복사</button>
-                                    <button id="btn-add-prize" type="button" class="px-3 py-1 rounded-lg bg-indigo-600 text-white text-[11px] font-black">+ 상품 추가</button>
-                                </div>
-                            </div>
-                            <div id="admin-prize-list" class="space-y-1.5"></div>
-                        </div>
-                    </section>
+    <!-- TAB 2: 서버별 독립 설정 · 3D 카메라 · 게임별 경품 -->
+    <div id="admin-tab-game" class="hidden space-y-4">
+        <section class="bg-white rounded-2xl p-4 border-2 border-indigo-200 space-y-3.5">
+            <div class="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-slate-100">
+                <div id="admin-srv-selector" class="flex flex-wrap gap-1.5">
+                    <button data-asrv="S1" type="button" class="px-3 py-1.5 rounded-xl text-xs font-black bg-indigo-600 text-white shadow">1서버</button>
+                    <button data-asrv="S2" type="button" class="px-3 py-1.5 rounded-xl text-xs font-black bg-slate-100 text-slate-600">2서버</button>
+                    <button data-asrv="S3" type="button" class="px-3 py-1.5 rounded-xl text-xs font-black bg-slate-100 text-slate-600">3서버</button>
+                    <button data-asrv="S4" type="button" class="px-3 py-1.5 rounded-xl text-xs font-black bg-slate-100 text-slate-600">4서버</button>
                 </div>
+                <div id="admin-game-selector" class="flex flex-wrap gap-1.5">
+                    <button data-agame="claw" type="button" class="px-3 py-1.5 rounded-xl text-xs font-black bg-sky-600 text-white shadow">🕹️ 캡슐 뽑기</button>
+                    <button data-agame="yabawi" type="button" class="px-3 py-1.5 rounded-xl text-xs font-black bg-slate-100 text-slate-600">🍡 떡 먹는 용만이</button>
+                    <button data-agame="kuji" type="button" class="px-3 py-1.5 rounded-xl text-xs font-black bg-slate-100 text-slate-600">🏆 피날레 쿠지</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
+                <!-- ① 게임별 운영 규칙 -->
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <div id="apnl-claw" class="space-y-2">
+                        <div class="font-black text-xs text-sky-800">🕹️ 캡슐 뽑기 운영 규칙 (<span class="asrv-badge">1서버</span>)</div>
+                        <div class="flex justify-between text-[11px] font-bold"><span>캡슐 수량 (최대 400)</span><span id="admin-capsule-val">220개</span></div>
+                        <input id="admin-capsule-count" type="range" min="20" max="400" step="10" class="w-full accent-sky-600">
+                        <div class="flex justify-between text-[11px] font-bold"><span>기본 성공확률</span><span id="admin-winrate-val">65%</span></div>
+                        <input id="admin-win-rate" type="range" min="0" max="100" step="5" class="w-full accent-sky-600">
+                        <div class="flex justify-between text-[11px] font-bold"><span>겹침 판정 기준</span><span id="admin-overlap-val">50%</span></div>
+                        <input id="admin-overlap-threshold" type="range" min="30" max="85" step="5" class="w-full accent-sky-600">
+                        <div class="grid grid-cols-3 gap-1.5 pt-1">
+                            <div><label class="block text-[10px] font-bold text-slate-500">제한시간(초)</label><input id="admin-turn-time" type="number" min="10" max="120" value="30" class="w-full px-1.5 py-1 rounded-lg border text-xs font-black bg-white text-center"></div>
+                            <div><label class="block text-[10px] font-bold text-slate-500">스페셜(%)</label><input id="admin-special-ratio" type="number" min="0" max="80" value="22" class="w-full px-1.5 py-1 rounded-lg border text-xs font-black bg-white text-center"></div>
+                            <div><label class="block text-[10px] font-bold text-slate-500">집게속도</label><input id="admin-claw-speed" type="number" min="2" max="8" step="0.2" value="4.4" class="w-full px-1.5 py-1 rounded-lg border text-xs font-black bg-white text-center"></div>
+                        </div>
+                        <label class="flex items-center gap-2 text-[11px] font-bold text-slate-700 pt-0.5 cursor-pointer">
+                            <input id="admin-use-gauge" type="checkbox" class="accent-indigo-600 w-4 h-4"><span>타이밍 스탑 게이지 사용</span>
+                        </label>
+                    </div>
+                    <div id="apnl-yabawi" class="hidden space-y-2">
+                        <div class="font-black text-xs text-rose-800">🍡 떡 먹는 용만이 설정 (<span class="asrv-badge">1서버</span>)</div>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div><label class="block text-[10px] font-bold text-slate-500 mb-1">돔 개수</label><select id="admin-yabawi-cups" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold bg-white"><option value="3">3개</option><option value="4">4개</option><option value="5">5개</option></select></div>
+                            <div><label class="block text-[10px] font-bold text-slate-500 mb-1">셔플 속도</label><select id="admin-yabawi-speed" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold bg-white"><option value="420">보통</option><option value="280">빠름</option><option value="180">초고속</option></select></div>
+                            <div><label class="block text-[10px] font-bold text-slate-500 mb-1">섞기 횟수</label><input id="admin-yabawi-swaps" type="number" min="4" max="25" class="w-full px-2 py-1.5 rounded-lg border text-xs font-black bg-white"></div>
+                        </div>
+                    </div>
+                    <div id="apnl-kuji" class="hidden space-y-2.5">
+                        <div class="font-black text-xs text-amber-800">🏆 피날레 이치방 쿠지 (<span class="asrv-badge">1서버</span>)</div>
+                        <p class="text-[11px] text-slate-500 leading-relaxed">구글 시트 임직원 남은 행운권 합계만큼 번호 쿠지가 생성되며, 아래 등록된 피날레 전용 경품 목록이 컨트롤러에 표시됩니다.</p>
+                        <button id="btn-reset-finale" type="button" class="w-full py-2 rounded-lg bg-amber-500 text-white text-xs font-black">🔄 피날레 쿠지 보드 리셋</button>
+                    </div>
+                </div>
+
+                <!-- ② 3D 카메라 & CCTV 시점 제어 -->
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-2">
+                    <div class="font-black text-xs text-cyan-800">🎥 3D 카메라 & CLAW CAM (<span class="asrv-badge">1서버</span>)</div>
+                    <div class="flex justify-between text-[11px] font-bold"><span>메인 화각 (FOV)</span><span id="admin-cam-fov-val">34°</span></div>
+                    <input id="admin-cam-fov" type="range" min="26" max="50" step="1" value="34" class="w-full accent-cyan-600">
+                    <div class="flex justify-between text-[11px] font-bold"><span>카메라 거리</span><span id="admin-cam-dist-val">20.2</span></div>
+                    <input id="admin-cam-dist" type="range" min="15" max="28" step="0.5" value="20.2" class="w-full accent-cyan-600">
+                    <div class="flex justify-between text-[11px] font-bold"><span>카메라 높이</span><span id="admin-cam-height-val">6.7</span></div>
+                    <input id="admin-cam-height" type="range" min="4.5" max="9.5" step="0.2" value="6.7" class="w-full accent-cyan-600">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 mb-1">우측 상단 CLAW CAM 모드</label>
+                        <select id="admin-cctv-mode" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold bg-white">
+                            <option value="zoom">🎯 초근접 탑뷰 (기본)</option>
+                            <option value="wide">🌐 전체 바닥 광각 뷰</option>
+                            <option value="off">🚫 CLAW CAM 숨기기</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- ③ 서버 외관 테마 & 전용 QR -->
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-2">
+                    <div class="font-black text-xs text-indigo-800">🎨 프레임 패턴 · 컬러 · 3D 공간 (<span class="asrv-badge">1서버</span>)</div>
+                    <select id="admin-frame-theme" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold bg-white">
+                        <option value="pat-sunburst">패턴: ☀️ 팝 선버스트 (투톤)</option>
+                        <option value="pat-stripe">패턴: 🎪 페스티벌 스트라이프</option>
+                        <option value="pat-dots">패턴: ✨ 파티 도트</option>
+                        <option value="pat-checker">패턴: 🏁 모던 체크</option>
+                        <option value="pat-diamond">패턴: 💎 럭셔리 다이아</option>
+                        <option value="pat-smooth">패턴: 🌊 심플 그라데이션</option>
+                    </select>
+                    <div class="grid grid-cols-2 gap-1.5">
+                        <label class="flex items-center justify-between bg-white px-2 py-1 rounded-lg border text-[10px] font-bold"><span>메인색</span><input id="admin-frame-c1" type="color" value="#38bdf8" class="w-6 h-5 cursor-pointer"></label>
+                        <label class="flex items-center justify-between bg-white px-2 py-1 rounded-lg border text-[10px] font-bold"><span>포인트색</span><input id="admin-frame-c2" type="color" value="#0369a1" class="w-6 h-5 cursor-pointer"></label>
+                    </div>
+                    <select id="admin-interior-theme" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold bg-white">
+                        <option value="underwater">3D 공간: 🌊 물속 아쿠아리움</option>
+                        <option value="sky">3D 공간: ☁️ 몽글몽글 하늘</option>
+                        <option value="park">3D 공간: 🌳 햇살 가득 공원</option>
+                        <option value="galaxy">3D 공간: 🌌 드림 갤럭시</option>
+                    </select>
+                    <button id="btn-admin-open-cur-qr" type="button" class="w-full py-1.5 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-xs font-black">📱 현재 [<span class="asrv-badge">1서버</span> · <span class="agame-badge">캡슐 뽑기</span>] 전용 QR 보기</button>
+                </div>
+            </div>
+
+            <!-- Row 3: 경품 테이블 + 정합성 요약 바 -->
+            <div class="pt-2 border-t border-slate-200 space-y-2">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                    <div class="flex flex-wrap items-center gap-2">
+                        <h4 class="font-black text-xs text-indigo-700">🎁 [<span class="asrv-badge">1서버</span> · <span class="agame-badge">캡슐 뽑기</span>] 전용 경품 · 재고 · 확률</h4>
+                        <span id="admin-prize-summary" class="px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 text-[11px] font-black">총 7종 · 재고 226개 · 가중치 100</span>
+                    </div>
+                    <div class="flex gap-1.5">
+                        <button id="btn-copy-prizes-all" type="button" class="px-2.5 py-1 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 text-[11px] font-black">📋 이 게임 경품을 1~4서버 복사</button>
+                        <button id="btn-add-prize" type="button" class="px-3 py-1 rounded-lg bg-indigo-600 text-white text-[11px] font-black">+ 상품 추가</button>
+                    </div>
+                </div>
+                <div id="admin-prize-list" class="space-y-1.5"></div>
+            </div>
+        </section>
+    </div>
 
                 <div id="admin-tab-tickets" class="hidden space-y-4">
                     <section class="bg-white rounded-2xl p-4 border border-emerald-200 space-y-3">
@@ -728,7 +756,7 @@
             </div>
         </div>
 
-        <<div id="mc-auth-view" class="hidden w-full h-full flex flex-col items-center justify-center p-4 overflow-y-auto">
+        <div id="mc-auth-view" class="hidden w-full h-full flex flex-col items-center justify-center p-4 overflow-y-auto">
             <div class="w-full max-w-sm bg-white/10 backdrop-blur-md border border-cyan-400/40 rounded-3xl p-5 space-y-4 shadow-2xl">
                 <div class="flex items-center justify-between">
                     <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/25 border border-emerald-400/50 text-emerald-300 text-[11px] font-black"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span><span id="mc-conn-server-label">1:1 연결 완료</span></span>
@@ -893,28 +921,33 @@
         ];
 
         const makeDefaultServerSetting = () => ({
-            capsuleCount: 220, winRate: 65, overlapThreshold: 50,
-            useTimingGauge: false,
-            yabawiCups: 3, yabawiSpeedMs: 320, yabawiSwaps: 10,
-            frameTheme: 'pat-sunburst', frameC1: '#38bdf8', frameC2: '#0284c7', interiorTheme: 'underwater',
-            prizesByGame: {
-                claw: JSON.parse(JSON.stringify(DEFAULT_PRIZES)),
-                yabawi: JSON.parse(JSON.stringify(DEFAULT_PRIZES)),
-                kuji: JSON.parse(JSON.stringify(DEFAULT_PRIZES))
-            }
-        });
+    capsuleCount: 220, winRate: 65, overlapThreshold: 50,
+    useTimingGauge: false,
+    turnTimeLimit: 30, specialRatio: 22, clawSpeed: 4.4,
+    camFov: 34, camDist: 20.2, camHeight: 6.7, cctvMode: 'zoom',
+    yabawiCups: 3, yabawiSpeedMs: 320, yabawiSwaps: 10,
+    frameTheme: 'pat-sunburst', frameC1: '#38bdf8', frameC2: '#0284c7', interiorTheme: 'underwater',
+    prizesByGame: {
+        claw: JSON.parse(JSON.stringify(DEFAULT_PRIZES)),
+        yabawi: JSON.parse(JSON.stringify(DEFAULT_PRIZES)),
+        kuji: JSON.parse(JSON.stringify(DEFAULT_PRIZES))
+    }
+});
 
-        const DEFAULT_CONFIG = {
-            eventTitle: '2026 CJ메조미디어 연말 타운홀 미팅 <럭키드로우>',
-            footerBrand: 'CJ MEZZOMEDIA\n× DXE',
-            gameTitles: { claw: '3D 디지털 캡슐 뽑기', yabawi: '떡 먹는 용만이', kuji: '피날레 이치방 쿠지' },
-            adminPin: '6484',
-            logoLeft: 'logo_cj.png', logoLeftSize: 170,
-            logoRight: 'logo_dxe.png', logoRightSize: 170,
-            kujiFormula: 'd_minus_e',
-            servers: { S1: '1서버 · 메인홀 A', S2: '2서버 · 메인홀 B', S3: '3서버 · 라운지 C', S4: '4서버 · VIP 부스 D' },
-            serverSettings: { S1: makeDefaultServerSetting(), S2: makeDefaultServerSetting(), S3: makeDefaultServerSetting(), S4: makeDefaultServerSetting() }
-        };
+const DEFAULT_CONFIG = {
+    eventTitle: '2026 CJ메조미디어 연말 타운홀 미팅 <럭키드로우>',
+    footerBrand: 'CJ MEZZOMEDIA\n× DXE',
+    titleColor: '#ffffff', titleSize: 30,
+    brandColor: '#ffffff', brandSize: 20,
+    bgmOn: true, sfxOn: true,
+    gameTitles: { claw: '3D 디지털 캡슐 뽑기', yabawi: '떡 먹는 용만이', kuji: '피날레 이치방 쿠지' },
+    adminPin: '6484',
+    logoLeft: 'logo_cj.png', logoLeftSize: 170,
+    logoRight: 'logo_dxe.png', logoRightSize: 170,
+    kujiFormula: 'd_minus_e',
+    servers: { S1: '1서버 · 메인홀 A', S2: '2서버 · 메인홀 B', S3: '3서버 · 라운지 C', S4: '4서버 · VIP 부스 D' },
+    serverSettings: { S1: makeDefaultServerSetting(), S2: makeDefaultServerSetting(), S3: makeDefaultServerSetting(), S4: makeDefaultServerSetting() }
+};
 
         const DEMO_EMPLOYEES = [
             { empId: '2024001', name: '김민수', dept: '경영기획팀', tickets: 5, used: 0 },
@@ -1325,14 +1358,24 @@
         // BRANCH B: DESKTOP HERO LOBBY + 144FPS TRUE-3D STAGE ENGINE
         // =====================================================================
         function applyBrandLogos() {
-            const leftSrc = resolveImgSrc(CONFIG.logoLeft || 'logo_cj.png'), rightSrc = resolveImgSrc(CONFIG.logoRight || 'logo_dxe.png');
-            const lSize = Number(CONFIG.logoLeftSize) || 170, rSize = Number(CONFIG.logoRightSize) || 170;
-            [['lobby-logo-cj','lobby-logo-cj-fb', leftSrc, lSize], ['wing-logo-cj','wing-cj-fallback', leftSrc, lSize], ['lobby-logo-dxe','lobby-logo-dxe-fb', rightSrc, rSize], ['wing-logo-dxe','wing-dxe-fallback', rightSrc, rSize]].forEach(([imgId, fbId, src, sz]) => {
-                const img = document.getElementById(imgId), fb = document.getElementById(fbId); if (!img) return;
-                img.style.display = ''; if (fb) fb.classList.add('hidden'); img.src = src;
-                img.style.maxWidth = `${sz}px`;
-            });
-        }
+    const leftSrc = resolveImgSrc(CONFIG.logoLeft || 'logo_cj.png'), rightSrc = resolveImgSrc(CONFIG.logoRight || 'logo_dxe.png');
+    const lSize = Math.max(60, Math.min(320, Number(CONFIG.logoLeftSize) || 170));
+    const rSize = Math.max(60, Math.min(320, Number(CONFIG.logoRightSize) || 170));
+    [['lobby-logo-cj','lobby-logo-cj-fb', leftSrc, lSize, false], ['wing-logo-cj','wing-cj-fallback', leftSrc, lSize, true],
+     ['lobby-logo-dxe','lobby-logo-dxe-fb', rightSrc, rSize, false], ['wing-logo-dxe','wing-dxe-fallback', rightSrc, rSize, true]]
+    .forEach(([imgId, fbId, src, sz, isWing]) => {
+        const img = document.getElementById(imgId), fb = document.getElementById(fbId); if (!img) return;
+        img.style.display = ''; if (fb) fb.classList.add('hidden'); img.src = src;
+        if (isWing) img.style.setProperty('--wing-logo-size', `${sz}px`);
+    });
+}
+
+function hydrateSavedGlobalConfig() {
+    const titleEl = document.getElementById('lobby-event-title');
+    if (titleEl && CONFIG.eventTitle) titleEl.textContent = CONFIG.eventTitle;
+    if (typeof CONFIG.bgmOn === 'boolean') STATE.bgmEnabled = CONFIG.bgmOn;
+    if (typeof CONFIG.sfxOn === 'boolean') STATE.soundEnabled = CONFIG.sfxOn;
+}
 
         let lobbyRenderer, lobbyScene, lobbyCamera, lobbyMeshes = [], lobbyMouse = { x: 0, y: 0 };
         function initLobby3D() {
@@ -1449,30 +1492,42 @@
                     const cm = topic.match(new RegExp(`^${MQTT_PREFIX}/event_(S[1-4])/config$`));
                     if (cm && msg.ver && msg.ver > this.lastCfgVer && msg.sender !== LOCAL_DEVICE_ID) {
                         const sid = cm[1]; this.lastCfgVer = msg.ver;
-                        if (msg.global) {
-                            CONFIG.eventTitle = msg.global.eventTitle || CONFIG.eventTitle;
-                            CONFIG.footerBrand = msg.global.footerBrand || CONFIG.footerBrand;
-                            CONFIG.gameTitles = { ...CONFIG.gameTitles, ...(msg.global.gameTitles || {}) };
-                            CONFIG.servers = { ...CONFIG.servers, ...(msg.global.servers || {}) };
-                            CONFIG.logoLeft = msg.global.logoLeft || CONFIG.logoLeft; CONFIG.logoRight = msg.global.logoRight || CONFIG.logoRight;
-                            CONFIG.kujiFormula = msg.global.kujiFormula || CONFIG.kujiFormula;
-                            if (msg.global.titleColor) CONFIG.titleColor = msg.global.titleColor;
-                            if (msg.global.titleSize)  CONFIG.titleSize  = msg.global.titleSize;
-                            if (msg.global.brandColor) CONFIG.brandColor = msg.global.brandColor;
-                            if (msg.global.brandSize)  CONFIG.brandSize  = msg.global.brandSize;
-                            if (typeof msg.global.bgmOn === 'boolean') {
-                                STATE.bgmEnabled = msg.global.bgmOn;
-                                if (STATE.bgmEnabled) { SoundFX.init(); SoundFX.startBGM(); } else { SoundFX.stopBGM(); }
-                            }
-                            if (typeof msg.global.sfxOn === 'boolean') STATE.soundEnabled = msg.global.sfxOn;
-                        }
-                        if (msg.srvCfg) CONFIG.serverSettings[sid] = { ...CONFIG.serverSettings[sid], ...msg.srvCfg };
-                        localStorage.setItem(STORAGE_KEY_CFG, JSON.stringify(CONFIG));
-                        applyBrandLogos(); renderLobbyFloatingPrizes();
-                        if (APP.activeGame && APP.selectedMode === 'event' && APP.selectedServer === sid) {
-                            applyThemeSettings(); updateStageTitles();
-                            showToast(`⚙️ 관리자 설정이 실시간 반영되었습니다! (확률 ${getActiveGameSettings().winRate}% / 겹침 ${getActiveGameSettings().overlapThreshold}%)`, 'super');
-                        }
+                        const prevSrv = CONFIG.serverSettings[sid] || makeDefaultServerSetting();
+if (msg.global) {
+    CONFIG.eventTitle = msg.global.eventTitle || CONFIG.eventTitle;
+    CONFIG.footerBrand = msg.global.footerBrand || CONFIG.footerBrand;
+    CONFIG.gameTitles = { ...CONFIG.gameTitles, ...(msg.global.gameTitles || {}) };
+    CONFIG.servers = { ...CONFIG.servers, ...(msg.global.servers || {}) };
+    CONFIG.logoLeft = msg.global.logoLeft || CONFIG.logoLeft;
+    CONFIG.logoRight = msg.global.logoRight || CONFIG.logoRight;
+    if (msg.global.logoLeftSize)  CONFIG.logoLeftSize  = msg.global.logoLeftSize;
+    if (msg.global.logoRightSize) CONFIG.logoRightSize = msg.global.logoRightSize;
+    CONFIG.kujiFormula = msg.global.kujiFormula || CONFIG.kujiFormula;
+    if (msg.global.titleColor) CONFIG.titleColor = msg.global.titleColor;
+    if (msg.global.titleSize)  CONFIG.titleSize  = msg.global.titleSize;
+    if (msg.global.brandColor) CONFIG.brandColor = msg.global.brandColor;
+    if (msg.global.brandSize)  CONFIG.brandSize  = msg.global.brandSize;
+    if (typeof msg.global.bgmOn === 'boolean') {
+        CONFIG.bgmOn = msg.global.bgmOn; STATE.bgmEnabled = msg.global.bgmOn;
+        if (STATE.bgmEnabled) { SoundFX.init(); SoundFX.startBGM(); } else { SoundFX.stopBGM(); }
+    }
+    if (typeof msg.global.sfxOn === 'boolean') { CONFIG.sfxOn = msg.global.sfxOn; STATE.soundEnabled = msg.global.sfxOn; }
+}
+if (msg.srvCfg) CONFIG.serverSettings[sid] = ensurePrizesByGame({ ...makeDefaultServerSetting(), ...prevSrv, ...msg.srvCfg });
+localStorage.setItem(STORAGE_KEY_CFG, JSON.stringify(CONFIG));
+hydrateSavedGlobalConfig(); applyBrandLogos(); renderLobbyFloatingPrizes();
+if (APP.activeGame && APP.selectedMode === 'event' && APP.selectedServer === sid) {
+    const gs = getActiveGameSettings();
+    applyThemeSettings(); updateStageTitles(); applyCameraSettingsFromConfig();
+    if (APP.activeGame === 'claw' && renderer && (msg.capsuleChanged || prevSrv.capsuleCount !== gs.capsuleCount || prevSrv.specialRatio !== gs.specialRatio) && STATE.phase === 'IDLE') {
+        spawnHybridCapsules(gs.capsuleCount);
+    }
+    if (APP.activeGame === 'yabawi' && prevSrv.yabawiCups !== gs.yabawiCups && STATE.yabawiPhase === 'READY') {
+        initYabawiStage();
+    }
+    if (APP.activeGame === 'kuji') renderFinaleKujiUI();
+    showToast(`⚙️ 관리자 설정 실시간 반영! (확률 ${gs.winRate}% / 겹침 ${gs.overlapThreshold}%)`, 'super');
+}
                         return;
                     }
 
@@ -1546,19 +1601,24 @@
                 renderEntryServers(); renderAdminServersTab();
                 showToast(`🔓 ${CONFIG.servers[sid]} [${gLabel}] 접속자를 해제했습니다!`, 'super');
             },
-            pushLiveServerConfigs(capsuleChanged = false) {
-                const ver = Date.now(); this.lastCfgVer = ver;
-                ['S1','S2','S3','S4'].forEach(sid => Net.pub(`${MQTT_PREFIX}/event_${sid}/config`, {
-                    ver, sender: LOCAL_DEVICE_ID, capsuleChanged,
-                    global: {
-                        eventTitle: CONFIG.eventTitle, footerBrand: CONFIG.footerBrand, gameTitles: CONFIG.gameTitles,
-                        servers: CONFIG.servers, logoLeft: CONFIG.logoLeft, logoRight: CONFIG.logoRight, kujiFormula: CONFIG.kujiFormula,
-                        titleColor: CONFIG.titleColor, titleSize: CONFIG.titleSize, brandColor: CONFIG.brandColor, brandSize: CONFIG.brandSize,
-                        bgmOn: STATE.bgmEnabled, sfxOn: STATE.soundEnabled
-                    },
-                    srvCfg: CONFIG.serverSettings[sid]
-                }, true));
-            },
+            pushLiveServerConfigs(changedServers = {}) {
+    const ver = Date.now(); this.lastCfgVer = ver;
+    ['S1','S2','S3','S4'].forEach(sid => Net.pub(`${MQTT_PREFIX}/event_${sid}/config`, {
+        ver, sender: LOCAL_DEVICE_ID,
+        capsuleChanged: Boolean(changedServers[sid]?.capsule),
+        global: {
+            eventTitle: CONFIG.eventTitle, footerBrand: CONFIG.footerBrand, gameTitles: CONFIG.gameTitles,
+            servers: CONFIG.servers,
+            logoLeft: CONFIG.logoLeft, logoLeftSize: CONFIG.logoLeftSize,
+            logoRight: CONFIG.logoRight, logoRightSize: CONFIG.logoRightSize,
+            kujiFormula: CONFIG.kujiFormula,
+            titleColor: CONFIG.titleColor, titleSize: CONFIG.titleSize,
+            brandColor: CONFIG.brandColor, brandSize: CONFIG.brandSize,
+            bgmOn: CONFIG.bgmOn, sfxOn: CONFIG.sfxOn
+        },
+        srvCfg: CONFIG.serverSettings[sid]
+    }, true));
+},
             attachCurrentChannel() { const T = this.topics(APP.channelKey); Net.sub(T.lock); Net.sub(T.state); Net.sub(T.fast); Net.sub(T.cfg); Net.sub(T.admin); if (APP.isHost) { Net.sub(T.req); Net.sub(T.cmd); this.publishLock(); this.broadcastState(); } },
             detachCurrentChannel() { if (!APP.channelKey) return; const T = this.topics(APP.channelKey); if (APP.isHost && APP.selectedMode === 'event') Net.pub(T.lock, { locked: false, hostId: null, ts: 0 }, true); Net.unsub(T.req); Net.unsub(T.cmd); Net.unsub(T.state); Net.unsub(T.fast); APP.activeClient = null; },
             publishLock() { const T = this.topics(APP.channelKey); Net.pub(T.lock, { locked: Boolean(APP.activeClient), clientId: APP.activeClient?.clientId||null, playerName: APP.activeClient?.player?maskName(APP.activeClient.player.name):'', playsLeft: STATE.playsLeft, hostId: LOCAL_DEVICE_ID, activeGame: APP.activeGame, ts: Date.now() }, true); },
@@ -1697,7 +1757,7 @@
             document.getElementById('hud-spectator-badge').classList.toggle('hidden', APP.isHost);
             document.getElementById('btn-take-host').classList.toggle('hidden', APP.isHost);
 
-            switchVisibleGameView(APP.activeGame); applyThemeSettings(); ServerSync.attachCurrentChannel();
+            switchVisibleGameView(APP.activeGame); applyThemeSettings(); applyCameraSettingsFromConfig(); ServerSync.attachCurrentChannel();
             if (APP.selectedMode === 'free' && APP.activeGame === 'claw') resetTurnTimer();
             updateStageHUD();
         }
@@ -1730,22 +1790,52 @@
         let gantryBeamMesh, clawCarriageMesh, clawGroup, aimBeamMesh, targetRingMesh, cableSegments = [], clawProngs = [];
         let chuteRimMesh = null, chuteChevrons = [], tunnelGroup = null, tunnelBallMesh = null, tunnelFlapPivot = null;
         let chuteDropState = { vx: 0, vy: 0, vz: 0, rx: 0, rz: 0, passedRing: false, bounceCount: 0 };
+let lastTubeBounceStage = 0;
         const CABLE_SEG_COUNT = 8, clawPos = { x: 0.9, y: BOX.clawTopY, z: 0.0 };
         let clawPrevX = 0.9, clawPrevZ = 0.0, clawVelX = 0, clawVelZ = 0, swayX = 0, swayVelX = 0, swayZ = 0, swayVelZ = 0, prongJig = 0, prongJigVel = 0, clawOpenAngle = 0.52, targetClawOpenAngle = 0.52;
         let currentBedHeight = 0;
         const _bedDummy = new THREE.Object3D();
 
-        function pickPrizeForCapsuleType(isSpecial) {
-            const all = getActivePrizes(), avail = all.filter(p => p.stock === undefined || p.stock > 0);
-            const list = avail.length > 0 ? avail : all, len = list.length;
-            if (len <= 1) { if (list[0]?.stock > 0) list[0].stock--; return list[0]; }
-            const r = Math.random() * 100; let idx = len - 1;
-            if (isSpecial) { if (r<24) idx=0; else if (r<56) idx=1; else if (r<82) idx=2; else if (r<93) idx=3; else idx=4; }
-            else { if (r<3) idx=0; else if (r<12) idx=1; else if (r<36) idx=2; else if (r<68) idx=3; else idx=4; }
-            const chosen = list[Math.min(idx, len - 1)];
-            if (typeof chosen.stock === 'number' && chosen.stock > 0) chosen.stock -= 1;
-            return chosen;
+        function consumePrizeStock(prize) {
+    if (!prize) return;
+    if (typeof prize.stock === 'number' && prize.stock > 0) {
+        prize.stock = Math.max(0, prize.stock - 1);
+        if (APP.selectedMode === 'event') {
+            localStorage.setItem(STORAGE_KEY_CFG, JSON.stringify(CONFIG));
         }
+    }
+}
+
+function pickPrizeWithStock(isSpecial = false) {
+    const all = getActivePrizes();
+    if (!all.length) return DEFAULT_PRIZES[0];
+    // 1순위: 재고 > 0 && 가중치 > 0, 2순위: 재고 > 0, 3순위: 전체 폴백
+    let pool = all.filter(p => (p.stock === undefined || Number(p.stock) > 0) && Number(p.weight) > 0);
+    if (!pool.length) pool = all.filter(p => p.stock === undefined || Number(p.stock) > 0);
+    if (!pool.length) pool = all;
+
+    // 스페셜 캡슐은 상위 등급(리스트 앞쪽) 가중치에 부드러운 보너스 배율(최대 2.4배) 부여
+    const weighted = pool.map((p, idx) => {
+        const baseW = Math.max(0.01, Number(p.weight) || 1);
+        const rankFactor = pool.length > 1 ? (1 - idx / (pool.length - 1)) : 1;
+        const mult = isSpecial ? (0.7 + rankFactor * 1.7) : 1.0;
+        return { prize: p, w: baseW * mult };
+    });
+
+    const totalW = weighted.reduce((s, item) => s + item.w, 0);
+    let r = Math.random() * totalW;
+    let chosen = weighted[weighted.length - 1].prize;
+    for (const item of weighted) {
+        r -= item.w;
+        if (r <= 0) { chosen = item.prize; break; }
+    }
+    consumePrizeStock(chosen);
+    return chosen;
+}
+
+// 기존 호출부 호환 래퍼
+function pickPrizeForCapsuleType(isSpecial) { return pickPrizeWithStock(Boolean(isSpecial)); }
+function pickWeightedPrize() { return pickPrizeWithStock(false); }
 
         // ★ 바닥 더미 300개 + 상단 물리 캡슐 전부 공중으로 팡! 튀어 오르는 리얼 에어블로우!
         function triggerAirShake() {
@@ -1806,15 +1896,27 @@
         }
 
         // ★ 좌우 벽이 삐뚤어지지 않고 반듯하면서 깊이감이 선명한 건축적 3/4 구도!
-        function updateFixedCamera(w, h) {
-            if (!camera) return;
-            const aspect = Math.max(0.45, (w||600)/Math.max(1,h||850));
-            camera.aspect = aspect;
-            const zDist = Math.max(20.2, 15.8 / aspect);
-            camera.position.set(0, 6.7, zDist);
-            camera.lookAt(0, 5.55, 0.0);
-            camera.updateProjectionMatrix();
-        }
+        function applyCameraSettingsFromConfig() {
+    const gs = getActiveGameSettings();
+    cctvWideMode = gs.cctvMode === 'wide';
+    const lbl = document.getElementById('cctv-mode-label');
+    if (lbl) lbl.textContent = cctvWideMode ? 'WIDE CAM' : 'CLAW CAM';
+    const c = document.getElementById('canvas-container');
+    if (c && camera && STATE.phase !== 'CHUTE_ROLL') updateFixedCamera(c.clientWidth, c.clientHeight);
+}
+
+function updateFixedCamera(w, h) {
+    if (!camera) return;
+    const gs = getActiveGameSettings();
+    const aspect = Math.max(0.45, (w || 600) / Math.max(1, h || 850));
+    camera.fov = Number(gs.camFov) || 34;
+    camera.aspect = aspect;
+    const baseDist = Number(gs.camDist) || 20.2;
+    const zDist = Math.max(baseDist, 15.8 / aspect);
+    camera.position.set(0, Number(gs.camHeight) || 6.7, zDist);
+    camera.lookAt(0, 5.55, 0.0);
+    camera.updateProjectionMatrix();
+}
 
         function createBackWallTexture(key = 'underwater') {
             const th = INTERIOR_THEMES[key] || INTERIOR_THEMES.underwater;
@@ -2038,7 +2140,7 @@
                 bedLowerMesh = new THREE.InstancedMesh(lowGeo, new THREE.MeshPhongMaterial({ shininess: 130, specular: 0xffffff }), bedCount);
                 bedUpperMesh = new THREE.InstancedMesh(upGeo, new THREE.MeshPhongMaterial({ color: 0xffffff, shininess: 150, specular: 0xffffff }), bedCount);
                 bedLowerMesh.castShadow = true; bedLowerMesh.receiveShadow = true;
-                bedLowerMesh.castShadow = true; bedLowerMesh.receiveShadow = true;
+bedUpperMesh.castShadow = true; bedUpperMesh.receiveShadow = true;
 
                 const col = new THREE.Color();
                 for (let i = 0; i < bedCount; i++) {
@@ -2062,7 +2164,8 @@
             // ★ 뿌연 안개 현상 ZERO! 유리알처럼 쨍한 고광택 에나멜 가챠 캡슐 재질!
             const creamTopMat = new THREE.MeshPhongMaterial({ color: 0xffffff, shininess: 160, specular: 0xffffff });
             const starBadgeMat = new THREE.MeshPhongMaterial({ color: 0xfde047, emissive: 0xca8a04, emissiveIntensity: 0.35, shininess: 150, specular: 0xffffff });
-            const specialCount = Math.max(8, Math.round(activeCount * 0.22));
+            const specRatio = Math.max(0, Math.min(80, Number(getActiveGameSettings().specialRatio) ?? 22)) / 100;
+const specialCount = specRatio > 0 ? Math.max(1, Math.round(activeCount * specRatio)) : 0;
             for (let i = 0; i < activeCount; i++) {
                 const isSpec = i < specialCount;
                 const skin = isSpec ? (i%2===0 ? CAPSULE_SKINS.specialGold : CAPSULE_SKINS.specialBlack) : (i%2===0 ? CAPSULE_SKINS.normalCyan : CAPSULE_SKINS.normalCoral);
@@ -2108,7 +2211,13 @@
             updateStageHUD();
         }
 
-        function resetTurnTimer() { STATE.turnTimeLeft = 30.0; STATE.turnTimerActive = STATE.playsLeft > 0; STATE.airShakeUsed = false; updateAirShakeBtn(); updateTimerUI(); }
+        function resetTurnTimer() {
+    const limit = Math.max(10, Math.min(120, Number(getActiveGameSettings().turnTimeLimit) || 30));
+    STATE.turnTimeLeft = limit;
+    STATE.turnTimerActive = STATE.playsLeft > 0;
+    STATE.airShakeUsed = false;
+    updateAirShakeBtn(); updateTimerUI();
+}
         function updateTimerUI() {
             const p = document.getElementById('hud-timer-pill'), v = document.getElementById('hud-timer-val'); if (!p || !v) return;
             v.textContent = Math.max(0, STATE.turnTimeLeft).toFixed(1);
@@ -2294,15 +2403,18 @@
                     const sec = Math.ceil(STATE.turnTimeLeft);
                     if (sec <= 5 && sec > 0 && sec < lastWarnSec) { lastWarnSec = sec; SoundFX.beepWarn(); }
                     if (STATE.turnTimeLeft <= 0) {
-                        STATE.turnTimeLeft = 0; STATE.turnTimerActive = false; lastWarnSec = 6;
-                        showToast('⏱️ 30초 제한 시간 종료! 집게 자동 하강!', 'warn');
+    const limit = Math.max(10, Number(getActiveGameSettings().turnTimeLimit) || 30);
+    STATE.turnTimeLeft = 0; STATE.turnTimerActive = false; lastWarnSec = 6;
+    showToast(`⏱️ ${limit}초 제한 시간 종료! 집게 자동 하강!`, 'warn');
                         STATE.playsLeft = Math.max(0, STATE.playsLeft - 1); updateStageHUD();
                         STATE.gaugeBonus = 0; STATE.phase = 'DROPPING'; SoundFX.drop(); targetClawOpenAngle = 0.72; ServerSync.broadcastState();
                     }
                 }
                 if (STATE.moveX !== 0 || STATE.moveZ !== 0) {
-                    const nx = Math.max(BOX.clawMinX, Math.min(BOX.clawMaxX, clawPos.x + STATE.moveX * 4.4 * dt));
-                    const nz = Math.max(BOX.clawMinZ, Math.min(BOX.clawMaxZ, clawPos.z + STATE.moveZ * 3.8 * dt));
+    const spdX = Math.max(2, Math.min(8, Number(getActiveGameSettings().clawSpeed) || 4.4));
+    const spdZ = spdX * 0.86;
+    const nx = Math.max(BOX.clawMinX, Math.min(BOX.clawMaxX, clawPos.x + STATE.moveX * spdX * dt));
+    const nz = Math.max(BOX.clawMinZ, Math.min(BOX.clawMaxZ, clawPos.z + STATE.moveZ * spdZ * dt));
                     // Prevent aiming directly over the empty corner drop chute before grabbing
                     if (!(nx < BOX.chuteX + 1.55 && nz > BOX.chuteZ - 1.65)) { clawPos.x = nx; clawPos.z = nz; }
                     else {
@@ -2397,8 +2509,9 @@
                         STATE.remainingCapsules = Math.max(0, STATE.remainingCapsules - 1);
                         updateStageHUD();
                         SoundFX.setTension(false); SoundFX.chuteRoll();
-                        STATE.phase = 'CHUTE_ROLL'; STATE.chuteRollProgress = 0; lastTubeBounceStage = 0;
-                        ServerSync.broadcastFastClaw(); ServerSync.broadcastState();
+STATE.phase = 'CHUTE_ROLL'; STATE.chuteRollProgress = 0; lastTubeBounceStage = 0;
+document.getElementById('chute-cam-banner')?.classList.remove('hidden');
+ServerSync.broadcastFastClaw(); ServerSync.broadcastState();
                     }
                 }
             }
@@ -2481,12 +2594,7 @@
             else { stEl.textContent='결과 공개!'; hEl.textContent='두근두근!!'; }
             updateStageHUD();
         }
-        function pickWeightedPrize() {
-            const list = getActivePrizes(), totalW = list.reduce((s, p) => s + Math.max(1, Number(p.weight)||1), 0);
-            let r = Math.random() * totalW;
-            for (const p of list) { r -= Math.max(1, Number(p.weight)||1); if (r <= 0) return p; }
-            return list[0];
-        }
+        
         function handleYabawiAction() {
             const gs = getActiveGameSettings();
             if (STATE.yabawiPhase === 'READY') {
@@ -2581,28 +2689,29 @@
             if (src) { pImg.src = src; pImg.classList.remove('hidden'); pImg.onerror = () => pImg.classList.add('hidden'); } else pImg.classList.add('hidden');
         }
         function triggerFinalePeelSelected() {
-            if (!APP.isHost || STATE.finaleDrawing) return;
-            const target = STATE.finaleBoard[STATE.finaleSelectedNum - 1];
-            if (!target) { showToast('유효한 쿠지 번호를 선택하세요!', 'warn'); return; }
-            if (target.opened) { showToast(`#${target.num}번 쿠지는 이미 개봉되었습니다!`, 'warn'); return; }
-            SoundFX.init(); STATE.finaleDrawing = true; STATE.finalePeelOpen = true;
-            const prizes = getActivePrizes(), curPrize = prizes[STATE.finalePrizeIdx] || prizes[0], ticketCode = `#KUJI-${String(target.num).padStart(3,'0')}`;
-            const winObj = { num:target.num, empId:target.empId, name:target.name, dept:target.dept, prizeName:curPrize.name, prizeEmoji:curPrize.emoji||'🎁', prizeImage:curPrize.image||'', tier:curPrize.tier||'FINALE' };
-            const ov = document.getElementById('finale-peel-overlay'), card = document.getElementById('kuji-peel-card');
-            card.classList.remove('tearing'); populateFinalePeelOverlay(winObj);
-            ov.classList.remove('hidden'); ov.classList.add('flex'); SoundFX.setTension(true); SoundFX.gaugeStart();
-            setTimeout(() => {
-                target.opened = true; target.wonPrizeName = curPrize.name; target.wonEmoji = curPrize.emoji||'🎁';
-                STATE.finaleCurrentWinner = winObj; STATE.finaleWinners.unshift(winObj);
-                SoundFX.setTension(false); SoundFX.tear(); card.classList.add('tearing'); renderFinaleKujiUI();
-                setTimeout(() => {
-                    SoundFX.win(); spawnFinaleConfetti();
-                    showToast(`🎉 #${String(target.num).padStart(3,'0')} ${target.name}님 (${target.dept}) — ${curPrize.name} 당첨!!`, 'super');
-                    SheetAPI.logResult(target, curPrize, ticketCode, '피날레쿠지');
-                    STATE.finaleDrawing = false; ServerSync.broadcastState(`${target.name}님 · ${curPrize.name}`);
-                }, 420);
-            }, 650);
-        }
+    if (!APP.isHost || STATE.finaleDrawing) return;
+    const target = STATE.finaleBoard[STATE.finaleSelectedNum - 1];
+    if (!target) { showToast('유효한 쿠지 번호를 선택하세요!', 'warn'); return; }
+    if (target.opened) { showToast(`#${target.num}번 쿠지는 이미 개봉되었습니다!`, 'warn'); return; }
+    SoundFX.init(); STATE.finaleDrawing = true; STATE.finalePeelOpen = true;
+    const prizes = getActivePrizes(), curPrize = prizes[STATE.finalePrizeIdx] || prizes[0], ticketCode = `#KUJI-${String(target.num).padStart(3,'0')}`;
+    const winObj = { num:target.num, empId:target.empId, name:target.name, dept:target.dept, prizeName:curPrize.name, prizeEmoji:curPrize.emoji||'🎁', prizeImage:curPrize.image||'', tier:curPrize.tier||'FINALE' };
+    const ov = document.getElementById('finale-peel-overlay'), card = document.getElementById('kuji-peel-card');
+    card.classList.remove('tearing'); populateFinalePeelOverlay(winObj);
+    ov.classList.remove('hidden'); ov.classList.add('flex'); SoundFX.setTension(true); SoundFX.gaugeStart();
+    setTimeout(() => {
+        target.opened = true; target.wonPrizeName = curPrize.name; target.wonEmoji = curPrize.emoji||'🎁';
+        consumePrizeStock(curPrize);
+        STATE.finaleCurrentWinner = winObj; STATE.finaleWinners.unshift(winObj);
+        SoundFX.setTension(false); SoundFX.tear(); card.classList.add('tearing'); renderFinaleKujiUI();
+        setTimeout(() => {
+            SoundFX.win(); spawnFinaleConfetti();
+            showToast(`🎉 #${String(target.num).padStart(3,'0')} ${target.name}님 (${target.dept}) — ${curPrize.name} 당첨!!`, 'super');
+            SheetAPI.logResult(target, curPrize, ticketCode, '피날레쿠지');
+            STATE.finaleDrawing = false; ServerSync.broadcastState(`${target.name}님 · ${curPrize.name}`);
+        }, 420);
+    }, 650);
+}
         function closeFinalePeelModal() { document.getElementById('finale-peel-overlay').classList.add('hidden'); document.getElementById('finale-peel-overlay').classList.remove('flex'); document.getElementById('kuji-peel-card').classList.remove('tearing'); STATE.finalePeelOpen = false; ServerSync.broadcastState(); }
         function spawnFinaleConfetti() { const l = document.getElementById('finale-confetti-layer'); if (!l) return; l.innerHTML = ''; const c = ['#facc15','#38bdf8','#f43f5e','#4ade80','#a855f7']; for(let i=0;i<36;i++){const d=document.createElement('div');d.className='confetti-piece';const sz=8+Math.random()*9;d.style.width=`${sz}px`;d.style.height=`${sz*1.5}px`;d.style.left=`${Math.random()*100}%`;d.style.top='-12px';d.style.background=c[i%c.length];d.style.animationDuration=`${1.8+Math.random()*1.8}s`;l.appendChild(d);} }
 
@@ -2741,68 +2850,105 @@
 
         function requireAdminPin(onSuccess) { pinCallback = onSuccess; document.getElementById('pin-input').value = ''; document.getElementById('pin-error').textContent = ''; const m = document.getElementById('pin-modal'); m.classList.remove('hidden'); m.classList.add('flex'); setTimeout(() => document.getElementById('pin-input').focus(), 60); }
         function saveCurrentDraftSrvFromDOM() {
-            const cur = draftServerSettings[adminEditingSrv] || makeDefaultServerSetting();
-            draftServerSettings[adminEditingSrv] = {
-                ...cur,
-                capsuleCount: Number(document.getElementById('admin-capsule-count').value) || 60,
-                winRate: Number(document.getElementById('admin-win-rate').value),
-                overlapThreshold: Number(document.getElementById('admin-overlap-threshold').value) || 50,
-                useTimingGauge: document.getElementById('admin-use-gauge').checked,
-                yabawiCups: Number(document.getElementById('admin-yabawi-cups').value) || 3,
-                yabawiSpeedMs: Number(document.getElementById('admin-yabawi-speed').value) || 320,
-                yabawiSwaps: Math.max(4, Number(document.getElementById('admin-yabawi-swaps').value) || 10),
-                frameTheme: document.getElementById('admin-frame-theme').value,
-                frameC1: document.getElementById('admin-frame-c1').value || '#38bdf8',
-                frameC2: document.getElementById('admin-frame-c2').value || '#0369a1',
-                interiorTheme: document.getElementById('admin-interior-theme').value
-            };
+    const cur = draftServerSettings[adminEditingSrv] || makeDefaultServerSetting();
+    draftServerSettings[adminEditingSrv] = {
+        ...cur,
+        capsuleCount: Number(document.getElementById('admin-capsule-count').value) || 220,
+        winRate: Number(document.getElementById('admin-win-rate').value),
+        overlapThreshold: Number(document.getElementById('admin-overlap-threshold').value) || 50,
+        useTimingGauge: document.getElementById('admin-use-gauge').checked,
+        turnTimeLimit: Math.max(10, Math.min(120, Number(document.getElementById('admin-turn-time').value) || 30)),
+        specialRatio: Math.max(0, Math.min(80, Number(document.getElementById('admin-special-ratio').value) ?? 22)),
+        clawSpeed: Math.max(2, Math.min(8, Number(document.getElementById('admin-claw-speed').value) || 4.4)),
+        camFov: Math.max(26, Math.min(50, Number(document.getElementById('admin-cam-fov').value) || 34)),
+        camDist: Math.max(15, Math.min(28, Number(document.getElementById('admin-cam-dist').value) || 20.2)),
+        camHeight: Math.max(4.5, Math.min(9.5, Number(document.getElementById('admin-cam-height').value) || 6.7)),
+        cctvMode: document.getElementById('admin-cctv-mode').value || 'zoom',
+        yabawiCups: Number(document.getElementById('admin-yabawi-cups').value) || 3,
+        yabawiSpeedMs: Number(document.getElementById('admin-yabawi-speed').value) || 320,
+        yabawiSwaps: Math.max(4, Number(document.getElementById('admin-yabawi-swaps').value) || 10),
+        frameTheme: document.getElementById('admin-frame-theme').value,
+        frameC1: document.getElementById('admin-frame-c1').value || '#38bdf8',
+        frameC2: document.getElementById('admin-frame-c2').value || '#0369a1',
+        interiorTheme: document.getElementById('admin-interior-theme').value
+    };
+}
+function loadDraftSrvToDOM(sid) {
+    adminEditingSrv = sid; const s = { ...makeDefaultServerSetting(), ...(draftServerSettings[sid] || {}) };
+    draftServerSettings[sid] = s;
+    document.getElementById('admin-capsule-count').value = s.capsuleCount; document.getElementById('admin-capsule-val').textContent = `${s.capsuleCount}개`;
+    document.getElementById('admin-win-rate').value = s.winRate; document.getElementById('admin-winrate-val').textContent = `${s.winRate}%`;
+    document.getElementById('admin-overlap-threshold').value = s.overlapThreshold; document.getElementById('admin-overlap-val').textContent = `${s.overlapThreshold}%`;
+    document.getElementById('admin-use-gauge').checked = Boolean(s.useTimingGauge);
+    document.getElementById('admin-turn-time').value = s.turnTimeLimit;
+    document.getElementById('admin-special-ratio').value = s.specialRatio;
+    document.getElementById('admin-claw-speed').value = s.clawSpeed;
+    document.getElementById('admin-cam-fov').value = s.camFov; document.getElementById('admin-cam-fov-val').textContent = `${s.camFov}°`;
+    document.getElementById('admin-cam-dist').value = s.camDist; document.getElementById('admin-cam-dist-val').textContent = s.camDist;
+    document.getElementById('admin-cam-height').value = s.camHeight; document.getElementById('admin-cam-height-val').textContent = s.camHeight;
+    document.getElementById('admin-cctv-mode').value = s.cctvMode || 'zoom';
+    document.getElementById('admin-yabawi-cups').value = s.yabawiCups; document.getElementById('admin-yabawi-speed').value = s.yabawiSpeedMs;
+    document.getElementById('admin-yabawi-swaps').value = s.yabawiSwaps;
+    document.getElementById('admin-frame-theme').value = s.frameTheme && s.frameTheme.startsWith('pat-') ? s.frameTheme : 'pat-sunburst';
+    document.getElementById('admin-frame-c1').value = s.frameC1 || '#38bdf8';
+    document.getElementById('admin-frame-c2').value = s.frameC2 || '#0369a1';
+    document.getElementById('admin-interior-theme').value = s.interiorTheme;
+    ensurePrizesByGame(s);
+    document.querySelectorAll('#admin-srv-selector button').forEach(b => { b.className = `px-3 py-1.5 rounded-xl text-xs font-black ${b.dataset.asrv===sid ? 'bg-indigo-600 text-white shadow' : 'bg-slate-100 text-slate-600'}`; });
+    document.querySelectorAll('#admin-game-selector button').forEach(b => { b.className = `px-3 py-1.5 rounded-xl text-xs font-black ${b.dataset.agame===adminEditingGame ? 'bg-sky-600 text-white shadow' : 'bg-slate-100 text-slate-600'}`; });
+    ['claw','yabawi','kuji'].forEach(g => document.getElementById(`apnl-${g}`)?.classList.toggle('hidden', g !== adminEditingGame));
+    document.querySelectorAll('.asrv-badge').forEach(el => { el.textContent = `${sid.replace('S','')}서버`; });
+    const gNames = { claw:'캡슐 뽑기', yabawi:'떡 먹는 용만이', kuji:'피날레 쿠지' };
+    document.querySelectorAll('.agame-badge').forEach(el => { el.textContent = gNames[adminEditingGame] || adminEditingGame; });
+    renderPrizeEditor('admin-prize-list', s.prizesByGame[adminEditingGame]);
+}
+        function updatePrizeMetrics(containerId, listArr) {
+    const listEl = document.getElementById(containerId); if (!listEl) return;
+    const totalW = listArr.reduce((s, p) => s + Math.max(0, Number(p.weight) || 0), 0);
+    const totalStock = listArr.reduce((s, p) => s + Math.max(0, Number(p.stock) || 0), 0);
+    listEl.querySelectorAll('[data-pct-btn]').forEach((btn, idx) => {
+        const w = Math.max(0, Number(listArr[idx]?.weight) || 0);
+        const pct = totalW > 0 ? ((w / totalW) * 100).toFixed(1) : '0.0';
+        btn.textContent = `${pct}% ✕`;
+    });
+    if (containerId === 'admin-prize-list') {
+        const sumEl = document.getElementById('admin-prize-summary');
+        if (sumEl) {
+            const warn = totalStock === 0 || totalW === 0;
+            sumEl.className = warn
+                ? 'px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-700 text-[11px] font-black'
+                : 'px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 text-[11px] font-black';
+            sumEl.textContent = warn
+                ? `⚠️ 확인 필요 · 총 ${listArr.length}종 · 재고 ${totalStock}개 · 가중치 ${totalW}`
+                : `총 ${listArr.length}종 · 잔여 재고 ${totalStock}개 · 가중치 합계 ${totalW}`;
         }
-        function loadDraftSrvToDOM(sid) {
-            adminEditingSrv = sid; const s = draftServerSettings[sid] || makeDefaultServerSetting();
-            document.getElementById('admin-capsule-count').value = s.capsuleCount; document.getElementById('admin-capsule-val').textContent = `${s.capsuleCount}개`;
-            document.getElementById('admin-win-rate').value = s.winRate; document.getElementById('admin-winrate-val').textContent = `${s.winRate}%`;
-            document.getElementById('admin-overlap-threshold').value = s.overlapThreshold; document.getElementById('admin-overlap-val').textContent = `${s.overlapThreshold}%`;
-            document.getElementById('admin-use-gauge').checked = Boolean(s.useTimingGauge);
-            document.getElementById('admin-yabawi-cups').value = s.yabawiCups; document.getElementById('admin-yabawi-speed').value = s.yabawiSpeedMs;
-            document.getElementById('admin-yabawi-swaps').value = s.yabawiSwaps;
-            document.getElementById('admin-frame-theme').value = s.frameTheme && s.frameTheme.startsWith('pat-') ? s.frameTheme : 'pat-sunburst';
-            document.getElementById('admin-frame-c1').value = s.frameC1 || '#38bdf8';
-            document.getElementById('admin-frame-c2').value = s.frameC2 || '#0369a1';
-            document.getElementById('admin-interior-theme').value = s.interiorTheme;
-            ensurePrizesByGame(s);
-            document.querySelectorAll('#admin-srv-selector button').forEach(b => { b.className = `px-3 py-1.5 rounded-xl text-xs font-black ${b.dataset.asrv===sid ? 'bg-indigo-600 text-white shadow' : 'bg-slate-100 text-slate-600'}`; });
-            document.querySelectorAll('#admin-game-selector button').forEach(b => { b.className = `px-3 py-1.5 rounded-xl text-xs font-black ${b.dataset.agame===adminEditingGame ? 'bg-sky-600 text-white shadow' : 'bg-slate-100 text-slate-600'}`; });
-            ['claw','yabawi','kuji'].forEach(g => document.getElementById(`apnl-${g}`)?.classList.toggle('hidden', g !== adminEditingGame));
-            document.querySelectorAll('.asrv-badge').forEach(el => { el.textContent = `${sid.replace('S','')}서버`; });
-            const gNames = { claw:'캡슐 뽑기', yabawi:'떡 먹는 용만이', kuji:'피날레 쿠지' };
-            document.querySelectorAll('.agame-badge').forEach(el => { el.textContent = gNames[adminEditingGame] || adminEditingGame; });
-            renderPrizeEditor('admin-prize-list', s.prizesByGame[adminEditingGame]);
-        }
-        function renderPrizeEditor(containerId, listArr) {
-            const listEl = document.getElementById(containerId); if (!listEl) return; listEl.innerHTML = '';
-            const totalW = listArr.reduce((s, p) => s + Math.max(0, Number(p.weight)||0), 0);
-            listArr.forEach((p, i) => {
-                const pct = totalW > 0 ? ((Math.max(0, Number(p.weight)||0) / totalW) * 100).toFixed(1) : '0.0';
-                if (typeof p.stock !== 'number') p.stock = 10;
-                const row = document.createElement('div'); row.className = 'grid grid-cols-12 gap-1.5 items-center bg-slate-50 p-2 rounded-xl border border-slate-200';
-                row.innerHTML = `
-                    <input data-f="tier" value="${p.tier||'A상'}" title="등급" class="col-span-2 sm:col-span-1 px-1 py-1 rounded-lg border text-xs font-black text-center bg-white">
-                    <input data-f="emoji" value="${p.emoji||'🎁'}" title="이모지" class="col-span-2 sm:col-span-1 px-1 py-1 rounded-lg border text-center bg-white">
-                    <input data-f="name" value="${p.name||''}" placeholder="상품명" class="col-span-8 sm:col-span-3 px-2 py-1 rounded-lg border text-xs font-bold bg-white">
-                    <input data-f="image" value="${p.image||''}" placeholder="이미지 파일/URL" class="col-span-12 sm:col-span-2 px-2 py-1 rounded-lg border border-sky-200 text-xs font-mono bg-white">
-                    <input data-f="desc" value="${p.desc||''}" placeholder="당첨 문구" class="col-span-5 sm:col-span-2 px-2 py-1 rounded-lg border text-xs bg-white">
-                    <input type="number" min="0" data-f="stock" value="${p.stock}" title="경품 수량(재고)" placeholder="수량" class="col-span-3 sm:col-span-1 px-1 py-1 rounded-lg border border-emerald-300 text-xs font-black text-center bg-white">
-                    <input type="number" min="0" data-f="weight" value="${p.weight}" title="확률 가중치" placeholder="가중치" class="col-span-2 sm:col-span-1 px-1 py-1 rounded-lg border border-indigo-300 text-xs font-black text-center bg-white">
-                    <button type="button" class="col-span-2 sm:col-span-1 py-1 rounded-lg bg-rose-100 text-rose-600 text-[10px] font-black">${pct}% ✕</button>`;
-                row.querySelectorAll('input').forEach(inp => inp.addEventListener('input', e => {
-                    const f = e.target.dataset.f;
-                    listArr[i][f] = (f==='weight' || f==='stock') ? Math.max(0, Number(e.target.value)||0) : e.target.value;
-                    if (f==='weight') renderPrizeEditor(containerId, listArr);
-                }));
-                row.querySelector('button').addEventListener('click', () => { listArr.splice(i, 1); renderPrizeEditor(containerId, listArr); });
-                listEl.appendChild(row);
-            });
-        }
+    }
+}
+
+function renderPrizeEditor(containerId, listArr) {
+    const listEl = document.getElementById(containerId); if (!listEl) return; listEl.innerHTML = '';
+    listArr.forEach((p, i) => {
+        if (typeof p.stock !== 'number') p.stock = 10;
+        const row = document.createElement('div'); row.className = 'grid grid-cols-12 gap-1.5 items-center bg-slate-50 p-2 rounded-xl border border-slate-200';
+        row.innerHTML = `
+            <input data-f="tier" value="${p.tier||'A상'}" title="등급" class="col-span-2 sm:col-span-1 px-1 py-1 rounded-lg border text-xs font-black text-center bg-white">
+            <input data-f="emoji" value="${p.emoji||'🎁'}" title="이모지" class="col-span-2 sm:col-span-1 px-1 py-1 rounded-lg border text-center bg-white">
+            <input data-f="name" value="${p.name||''}" placeholder="상품명" class="col-span-8 sm:col-span-3 px-2 py-1 rounded-lg border text-xs font-bold bg-white">
+            <input data-f="image" value="${p.image||''}" placeholder="이미지 파일/URL" class="col-span-12 sm:col-span-2 px-2 py-1 rounded-lg border border-sky-200 text-xs font-mono bg-white">
+            <input data-f="desc" value="${p.desc||''}" placeholder="당첨 문구" class="col-span-5 sm:col-span-2 px-2 py-1 rounded-lg border text-xs bg-white">
+            <input type="number" min="0" data-f="stock" value="${p.stock}" title="경품 수량(재고)" placeholder="수량" class="col-span-3 sm:col-span-1 px-1 py-1 rounded-lg border border-emerald-300 text-xs font-black text-center bg-white">
+            <input type="number" min="0" data-f="weight" value="${p.weight}" title="확률 가중치" placeholder="가중치" class="col-span-2 sm:col-span-1 px-1 py-1 rounded-lg border border-indigo-300 text-xs font-black text-center bg-white">
+            <button data-pct-btn type="button" class="col-span-2 sm:col-span-1 py-1 rounded-lg bg-rose-100 text-rose-600 text-[10px] font-black">0.0% ✕</button>`;
+        row.querySelectorAll('input').forEach(inp => inp.addEventListener('input', e => {
+            const f = e.target.dataset.f;
+            listArr[i][f] = (f === 'weight' || f === 'stock') ? Math.max(0, Number(e.target.value) || 0) : e.target.value;
+            if (f === 'weight' || f === 'stock') updatePrizeMetrics(containerId, listArr);
+        }));
+        row.querySelector('[data-pct-btn]').addEventListener('click', () => { listArr.splice(i, 1); renderPrizeEditor(containerId, listArr); });
+        listEl.appendChild(row);
+    });
+    updatePrizeMetrics(containerId, listArr);
+}
         function openAdminModal() {
             document.getElementById('admin-title').value = CONFIG.eventTitle; document.getElementById('admin-footer-brand').value = CONFIG.footerBrand || 'CJ MEZZOMEDIA\n× DXE';
             document.getElementById('admin-title-color').value = CONFIG.titleColor || '#ffffff';
@@ -2839,12 +2985,16 @@
             const m = document.getElementById('free-config-modal'); m.classList.remove('hidden'); m.classList.add('flex');
         }
         function switchAdminTab(tab) {
-            ['game','tickets','servers'].forEach(t => {
-                document.getElementById(`admin-tab-${t}`).classList.toggle('hidden', t !== tab);
-                document.getElementById(`tab-btn-${t}`).className = t === tab ? 'px-3.5 py-2.5 rounded-t-2xl text-xs sm:text-sm font-black bg-white text-indigo-600 border-t-2 border-x border-indigo-400 -mb-px whitespace-nowrap' : 'px-3.5 py-2.5 rounded-t-2xl text-xs sm:text-sm font-black bg-slate-200/70 text-slate-600 whitespace-nowrap';
-            });
-            if (tab === 'tickets') refreshAdminEmployees(); if (tab === 'servers') renderAdminServersTab();
-        }
+    ['global','game','tickets','servers'].forEach(t => {
+        document.getElementById(`admin-tab-${t}`)?.classList.toggle('hidden', t !== tab);
+        const btn = document.getElementById(`tab-btn-${t}`);
+        if (btn) btn.className = t === tab
+            ? 'px-3.5 py-2.5 rounded-t-2xl text-xs sm:text-sm font-black bg-white text-indigo-600 border-t-2 border-x border-indigo-400 -mb-px whitespace-nowrap'
+            : 'px-3.5 py-2.5 rounded-t-2xl text-xs sm:text-sm font-black bg-slate-200/70 text-slate-600 whitespace-nowrap';
+    });
+    if (tab === 'tickets') refreshAdminEmployees();
+    if (tab === 'servers') renderAdminServersTab();
+}
         function openQrModal(overrideCh = null, overrideTitle = null) {
             const ch = overrideCh || APP.channelKey; activeQrUrl = ServerSync.getQrUrlForChannel(ch); activeQrName = ch;
             const qrEl = document.getElementById('qr-code-container'); qrEl.innerHTML = '';
@@ -3039,50 +3189,78 @@
             document.getElementById('btn-reset-finale').addEventListener('click', () => { STATE.finaleBoard = []; STATE.finaleWinners = []; initFinaleKujiBoard(true); showToast('피날레 쿠지 보드 리셋 완료!', 'info'); });
             document.getElementById('btn-admin-default').addEventListener('click', () => { CONFIG = JSON.parse(JSON.stringify(DEFAULT_CONFIG)); localStorage.removeItem(STORAGE_KEY_CFG); openAdminModal(); renderLobbyFloatingPrizes(); applyBrandLogos(); applyThemeSettings(); showToast('기본값 복원 완료!', 'info'); });
 
-            document.getElementById('btn-admin-save').addEventListener('click', () => {
-                saveCurrentDraftSrvFromDOM();
-                const prevCap = CONFIG.serverSettings[APP.selectedServer]?.capsuleCount;
-                CONFIG.eventTitle = document.getElementById('admin-title').value.trim() || DEFAULT_CONFIG.eventTitle;
-                CONFIG.footerBrand = document.getElementById('admin-footer-brand').value.trim() || 'CJ MEZZOMEDIA\n× DXE';
-                CONFIG.titleColor = document.getElementById('admin-title-color').value || '#ffffff';
-                CONFIG.titleSize = Math.max(16, Math.min(54, Number(document.getElementById('admin-title-size').value) || 30));
-                CONFIG.brandColor = document.getElementById('admin-brand-color').value || '#ffffff';
-                CONFIG.brandSize = Math.max(12, Math.min(42, Number(document.getElementById('admin-brand-size').value) || 20));
-                STATE.bgmEnabled = document.getElementById('admin-bgm-on').checked;
-                STATE.soundEnabled = document.getElementById('admin-sfx-on').checked;
-                if (STATE.bgmEnabled) { SoundFX.init(); SoundFX.startBGM(); } else { SoundFX.stopBGM(); }
-                CONFIG.gameTitles = {
-                    claw: document.getElementById('admin-title-claw').value.trim() || '3D 디지털 캡슐 뽑기',
-                    yabawi: document.getElementById('admin-title-yabawi').value.trim() || '떡 먹는 용만이',
-                    kuji: document.getElementById('admin-title-kuji').value.trim() || '피날레 이치방 쿠지'
-                };
-                const newPin = document.getElementById('admin-pin-new').value.trim(); if (newPin) CONFIG.adminPin = newPin;
-                CONFIG.kujiFormula = document.getElementById('admin-kuji-formula').value;
-                CONFIG.logoLeft = document.getElementById('admin-logo-left').value.trim() || 'logo_cj.png';
-                CONFIG.logoLeftSize = Number(document.getElementById('admin-logo-left-sz').value) || 170;
-                CONFIG.logoRight = document.getElementById('admin-logo-right').value.trim() || 'logo_dxe.png';
-                CONFIG.logoRightSize = Number(document.getElementById('admin-logo-right-sz').value) || 170;
-                ['S1','S2','S3','S4'].forEach(s => {
-                    CONFIG.servers[s] = document.getElementById(`admin-srv-${s}`).value.trim() || DEFAULT_CONFIG.servers[s];
-                    ensurePrizesByGame(draftServerSettings[s]);
-                    ['claw','yabawi','kuji'].forEach(g => {
-                        draftServerSettings[s].prizesByGame[g] = (draftServerSettings[s].prizesByGame[g] || []).filter(p => p.name.trim() !== '');
-                        if (draftServerSettings[s].prizesByGame[g].length === 0) draftServerSettings[s].prizesByGame[g] = JSON.parse(JSON.stringify(DEFAULT_PRIZES));
-                    });
-                });
-                CONFIG.serverSettings = JSON.parse(JSON.stringify(draftServerSettings));
-                localStorage.setItem(STORAGE_KEY_CFG, JSON.stringify(CONFIG));
-                document.getElementById('lobby-event-title').innerHTML = CONFIG.eventTitle;
-                applyBrandLogos(); renderLobbyFloatingPrizes(); renderEntryServers(); applyThemeSettings(); updateStageTitles();
+            // bindDesktopEvents() 내부에 추가:
+document.getElementById('tab-btn-global')?.addEventListener('click', () => switchAdminTab('global'));
+document.getElementById('admin-cam-fov')?.addEventListener('input', e => { document.getElementById('admin-cam-fov-val').textContent = `${e.target.value}°`; });
+document.getElementById('admin-cam-dist')?.addEventListener('input', e => { document.getElementById('admin-cam-dist-val').textContent = e.target.value; });
+document.getElementById('admin-cam-height')?.addEventListener('input', e => { document.getElementById('admin-cam-height-val').textContent = e.target.value; });
+document.getElementById('claw-cctv-frame')?.addEventListener('click', () => {
+    cctvWideMode = !cctvWideMode;
+    const lbl = document.getElementById('cctv-mode-label');
+    if (lbl) lbl.textContent = cctvWideMode ? 'WIDE CAM' : 'CLAW CAM';
+});
 
-                ServerSync.pushLiveServerConfigs(false);
-                if (APP.activeGame === 'kuji') renderFinaleKujiUI();
-                const saveBtn = document.getElementById('btn-admin-save');
-                const origTxt = saveBtn.textContent;
-                saveBtn.textContent = '✅ 저장 및 실시간 반영 완료!';
-                setTimeout(() => { saveBtn.textContent = origTxt; }, 1600);
-                showToast('⚙️ 관리자 설정이 저장 및 실시간 반영되었습니다!', 'super');
-            });
+// btn-admin-save 핸들러 교체:
+document.getElementById('btn-admin-save').addEventListener('click', () => {
+    saveCurrentDraftSrvFromDOM();
+    const prevSettings = JSON.parse(JSON.stringify(CONFIG.serverSettings));
+    CONFIG.eventTitle = document.getElementById('admin-title').value.trim() || DEFAULT_CONFIG.eventTitle;
+    CONFIG.footerBrand = document.getElementById('admin-footer-brand').value.trim() || 'CJ MEZZOMEDIA\n× DXE';
+    CONFIG.titleColor = document.getElementById('admin-title-color').value || '#ffffff';
+    CONFIG.titleSize = Math.max(16, Math.min(54, Number(document.getElementById('admin-title-size').value) || 30));
+    CONFIG.brandColor = document.getElementById('admin-brand-color').value || '#ffffff';
+    CONFIG.brandSize = Math.max(12, Math.min(42, Number(document.getElementById('admin-brand-size').value) || 20));
+    CONFIG.bgmOn = document.getElementById('admin-bgm-on').checked;
+    CONFIG.sfxOn = document.getElementById('admin-sfx-on').checked;
+    STATE.bgmEnabled = CONFIG.bgmOn;
+    STATE.soundEnabled = CONFIG.sfxOn;
+    if (STATE.bgmEnabled) { SoundFX.init(); SoundFX.startBGM(); } else { SoundFX.stopBGM(); }
+    CONFIG.gameTitles = {
+        claw: document.getElementById('admin-title-claw').value.trim() || '3D 디지털 캡슐 뽑기',
+        yabawi: document.getElementById('admin-title-yabawi').value.trim() || '떡 먹는 용만이',
+        kuji: document.getElementById('admin-title-kuji').value.trim() || '피날레 이치방 쿠지'
+    };
+    const newPin = document.getElementById('admin-pin-new').value.trim(); if (newPin) CONFIG.adminPin = newPin;
+    CONFIG.kujiFormula = document.getElementById('admin-kuji-formula').value;
+    CONFIG.logoLeft = document.getElementById('admin-logo-left').value.trim() || 'logo_cj.png';
+    CONFIG.logoLeftSize = Number(document.getElementById('admin-logo-left-sz').value) || 170;
+    CONFIG.logoRight = document.getElementById('admin-logo-right').value.trim() || 'logo_dxe.png';
+    CONFIG.logoRightSize = Number(document.getElementById('admin-logo-right-sz').value) || 170;
+
+    const changedServers = {};
+    ['S1','S2','S3','S4'].forEach(s => {
+        CONFIG.servers[s] = document.getElementById(`admin-srv-${s}`).value.trim() || DEFAULT_CONFIG.servers[s];
+        ensurePrizesByGame(draftServerSettings[s]);
+        ['claw','yabawi','kuji'].forEach(g => {
+            draftServerSettings[s].prizesByGame[g] = (draftServerSettings[s].prizesByGame[g] || []).filter(p => p.name.trim() !== '');
+            if (draftServerSettings[s].prizesByGame[g].length === 0) draftServerSettings[s].prizesByGame[g] = JSON.parse(JSON.stringify(DEFAULT_PRIZES));
+        });
+        changedServers[s] = {
+            capsule: prevSettings[s]?.capsuleCount !== draftServerSettings[s].capsuleCount || prevSettings[s]?.specialRatio !== draftServerSettings[s].specialRatio,
+            yabawi: prevSettings[s]?.yabawiCups !== draftServerSettings[s].yabawiCups
+        };
+    });
+
+    CONFIG.serverSettings = JSON.parse(JSON.stringify(draftServerSettings));
+    localStorage.setItem(STORAGE_KEY_CFG, JSON.stringify(CONFIG));
+    hydrateSavedGlobalConfig(); applyBrandLogos(); renderLobbyFloatingPrizes(); renderEntryServers(); applyThemeSettings(); updateStageTitles(); applyCameraSettingsFromConfig();
+
+    // 현재 실행 중인 게임 화면에도 변경분 즉시 적용
+    if (APP.activeGame === 'claw' && APP.selectedMode === 'event' && renderer && changedServers[APP.selectedServer]?.capsule && STATE.phase === 'IDLE') {
+        spawnHybridCapsules(getActiveGameSettings().capsuleCount);
+    }
+    if (APP.activeGame === 'yabawi' && APP.selectedMode === 'event' && changedServers[APP.selectedServer]?.yabawi && STATE.yabawiPhase === 'READY') {
+        initYabawiStage();
+    }
+    if (APP.activeGame === 'kuji') renderFinaleKujiUI();
+
+    ServerSync.pushLiveServerConfigs(changedServers);
+    const saveBtn = document.getElementById('btn-admin-save');
+    const origTxt = saveBtn.textContent;
+    saveBtn.textContent = '✅ 저장 및 실시간 반영 완료!';
+    setTimeout(() => { saveBtn.textContent = origTxt; }, 1600);
+    showToast('⚙️ 관리자 설정이 저장 및 실시간 반영되었습니다!', 'super');
+});
         }
 
         function onResize() {
@@ -3109,53 +3287,60 @@
             renderer.setViewport(0, 0, w, h);
             renderer.render(scene, camera);
 
-            // 2) ★ 우측 상단 실시간 탑뷰 CCTV (CLAW CAM) PiP 렌더링!
-            // 2) ★ 우측 상단 초근접 탑뷰 CLAW CAM (집게발 가림 0% + 캡슐 3배 확대!)
             const cctvBox = document.getElementById('claw-cctv-frame');
-            if (cctvCamera && cctvBox && STATE.phase !== 'CHUTE_ROLL' && STATE.phase !== 'REVEALING') {
-                cctvBox.classList.remove('hidden');
-                const cRect = c.getBoundingClientRect(), pRect = cctvBox.getBoundingClientRect();
-                const vx = Math.max(0, pRect.left - cRect.left);
-                const vy = Math.max(0, cRect.bottom - pRect.bottom);
-                const vw = Math.max(10, pRect.width), vh = Math.max(10, pRect.height);
+const cctvEnabled = (getActiveGameSettings().cctvMode || 'zoom') !== 'off';
+if (cctvEnabled && cctvCamera && cctvBox && STATE.phase !== 'CHUTE_ROLL' && STATE.phase !== 'REVEALING') {
+    cctvBox.classList.remove('hidden');
+    const cRect = c.getBoundingClientRect(), pRect = cctvBox.getBoundingClientRect();
+    const vx = Math.max(0, pRect.left - cRect.left);
+    const vy = Math.max(0, cRect.bottom - pRect.bottom);
+    const vw = Math.max(10, pRect.width), vh = Math.max(10, pRect.height);
 
-                // 캡슐 표면 바로 위(높이 +4.3)에서 초근접 수직 줌인 촬영!
-                const hp = getClawHeadWorldPos();
-                const camY = Math.min(BOX.height - 1.0, currentBedHeight + 4.9);
-                cctvCamera.position.set(hp.x, camY, hp.z + 0.01);
-                cctvCamera.lookAt(hp.x, currentBedHeight + 0.3, hp.z);
+    const hp = getClawHeadWorldPos();
+    if (cctvWideMode) {
+        cctvCamera.fov = 56; cctvCamera.updateProjectionMatrix();
+        cctvCamera.position.set(0, BOX.height - 0.6, 0.01);
+        cctvCamera.lookAt(0, currentBedHeight, 0);
+    } else {
+        cctvCamera.fov = 34; cctvCamera.updateProjectionMatrix();
+        const camY = Math.min(BOX.height - 1.0, currentBedHeight + 4.9);
+        cctvCamera.position.set(hp.x, camY, hp.z + 0.01);
+        cctvCamera.lookAt(hp.x, currentBedHeight + 0.3, hp.z);
+    }
 
-                // 집게발·와이어·레일을 CCTV 프레임에서만 잠깐 숨겨 시야 가림 완전 제거!
-                if (gantryBeamMesh) gantryBeamMesh.visible = false;
-                if (clawCarriageMesh) clawCarriageMesh.visible = false;
-                if (clawGroup) clawGroup.visible = false;
-                if (aimBeamMesh) aimBeamMesh.visible = false;
-                cableSegments.forEach(s => { s.visible = false; });
+    const prevAimVis = aimBeamMesh ? aimBeamMesh.visible : false;
+    if (gantryBeamMesh) gantryBeamMesh.visible = false;
+    if (clawCarriageMesh) clawCarriageMesh.visible = false;
+    if (clawGroup) clawGroup.visible = false;
+    if (aimBeamMesh) aimBeamMesh.visible = false;
+    cableSegments.forEach(s => { s.visible = false; });
 
-                renderer.setScissorTest(true);
-                renderer.setViewport(vx, vy, vw, vh);
-                renderer.setScissor(vx, vy, vw, vh);
-                renderer.clearDepth();
-                renderer.render(scene, cctvCamera);
-                renderer.setScissorTest(false);
+    renderer.setScissorTest(true);
+    renderer.setViewport(vx, vy, vw, vh);
+    renderer.setScissor(vx, vy, vw, vh);
+    renderer.clearDepth();
+    renderer.render(scene, cctvCamera);
+    renderer.setScissorTest(false);
 
-                if (gantryBeamMesh) gantryBeamMesh.visible = true;
-                if (clawCarriageMesh) clawCarriageMesh.visible = true;
-                if (clawGroup) clawGroup.visible = true;
-                cableSegments.forEach(s => { s.visible = true; });
-            } else if (cctvBox) {
-                cctvBox.classList.add('hidden');
-            }
+    if (gantryBeamMesh) gantryBeamMesh.visible = true;
+    if (clawCarriageMesh) clawCarriageMesh.visible = true;
+    if (clawGroup) clawGroup.visible = true;
+    if (aimBeamMesh) aimBeamMesh.visible = prevAimVis;
+    cableSegments.forEach(s => { s.visible = true; });
+} else if (cctvBox) {
+    cctvBox.classList.add('hidden');
+}
         }
 
         window.onload = function () {
-            SheetAPI.init();
-            if (IS_MOBILE_CONTROLLER) bootMobileControllerApp();
-            else {
-                document.getElementById('mobile-controller-root')?.remove();
-                applyBrandLogos(); initLobby3D(); renderLobbyFloatingPrizes(); bindDesktopEvents(); ServerSync.initLobbyListener();
-            }
-        };
+    SheetAPI.init();
+    if (IS_MOBILE_CONTROLLER) bootMobileControllerApp();
+    else {
+        document.getElementById('mobile-controller-root')?.remove();
+        hydrateSavedGlobalConfig();
+        applyBrandLogos(); initLobby3D(); renderLobbyFloatingPrizes(); bindDesktopEvents(); ServerSync.initLobbyListener();
+    }
+};
     </script>
 </body>
 </html>
