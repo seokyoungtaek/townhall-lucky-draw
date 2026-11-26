@@ -1021,7 +1021,8 @@ const ensurePrizesByGame = (srvObj) => {
         const STATE = {
     playsLeft: 0, remainingCapsules: 220, currentPlayer: null, soundEnabled: true, bgmEnabled: true,
     phase: 'IDLE', phaseTimer: 0, turnTimeLeft: 30.0, turnTimerActive: false,
-    airShakeUsed: false, bedWaveTimer: 0, airParticlesActive: false, introClawActive: false, introClawDelay: 0,
+    airShakeUsed: false, bedWaveTimer: 0, airParticlesActive: false,
+    introClawActive: false, waitingCapsulesSettle: false, introSettleElapsed: 0,
     moveX: 0, moveZ: 0,
     gaugePos: 50, gaugeDir: 1, gaugeBonus: 0,
     grabbedCapsule: null, grabbedIsSpecial: false, willSlip: false, slipY: 0, slipTriggered: false,
@@ -2263,11 +2264,12 @@ body.velocity.set((Math.random()-0.5)*0.6, -2.5 - Math.random()*2.5, (Math.rando
 world.addBody(body);
 capsules.push({ mesh: group, body, radius, isSpecial: isSpec, colorHex: skin.hex });
 }
-STATE.bedWaveTimer = 2.6;
+STATE.bedWaveTimer = 3.2;
 STATE.airParticlesActive = false;
-clawPos.x = BOX.chuteX; clawPos.y = BOX.height - 0.55; clawPos.z = BOX.chuteZ;
+clawPos.x = BOX.chuteX; clawPos.y = BOX.height + 1.1; clawPos.z = BOX.chuteZ;
 clawPrevX = clawPos.x; clawPrevZ = clawPos.z;
-STATE.introClawDelay = 1.55;
+STATE.waitingCapsulesSettle = true;
+STATE.introSettleElapsed = 0;
 STATE.introClawActive = true;
 updateStageHUD();
 }
@@ -2284,53 +2286,69 @@ updateStageHUD();
             v.textContent = Math.max(0, STATE.turnTimeLeft).toFixed(1);
             p.className = (STATE.turnTimeLeft <= 5 && STATE.turnTimerActive) ? 'px-4 py-1 rounded-full bg-rose-600/95 border-2 border-yellow-300 text-white font-mono font-black text-base shadow-lg animate-pulse' : 'px-4 py-1 rounded-full bg-slate-950/85 border-2 border-cyan-400 text-cyan-300 font-mono font-black text-base shadow-lg';
         }
-        function getClawHeadWorldPos() { const dd = Math.max(0.8, BOX.height - 0.18 - clawPos.y); return { x: clawPos.x + Math.sin(swayX)*dd, z: clawPos.z + Math.sin(swayZ)*dd }; }
+        function getClawHeadWorldPos() {
+    const dd = Math.max(0.05, BOX.height - 0.18 - clawPos.y);
+    return { x: clawPos.x + Math.sin(swayX)*dd, z: clawPos.z + Math.sin(swayZ)*dd };
+}
 
-        function updateClawVisuals(dt = 0.016) {
-            if (!clawGroup) return;
-            const sDt = Math.max(0.001, Math.min(dt, 0.05));
-            const vx = (clawPos.x - clawPrevX)/sDt, vz = (clawPos.z - clawPrevZ)/sDt;
-            const ax = (vx - clawVelX)/sDt, az = (vz - clawVelZ)/sDt;
-            clawPrevX = clawPos.x; clawPrevZ = clawPos.z; clawVelX = vx; clawVelZ = vz;
+function updateClawVisuals(dt = 0.016) {
+    if (!clawGroup) return;
+    const sDt = Math.max(0.001, Math.min(dt, 0.05));
+    const vx = (clawPos.x - clawPrevX)/sDt, vz = (clawPos.z - clawPrevZ)/sDt;
+    const ax = (vx - clawVelX)/sDt, az = (vz - clawVelZ)/sDt;
+    clawPrevX = clawPos.x; clawPrevZ = clawPos.z; clawVelX = vx; clawVelZ = vz;
 
-            const py = BOX.height - 0.18, dd = Math.max(1.0, py - clawPos.y), stiff = 20/Math.max(0.9, Math.sqrt(dd*0.55)), damp = (STATE.phase==='DROPPING'||STATE.phase==='LIFTING')?4.4:2.2;
-            const impX = Math.max(-34, Math.min(34, ax))*0.04, impZ = Math.max(-34, Math.min(34, az))*0.04;
-            swayVelX += (-stiff*(swayX + vx*0.05) - damp*swayVelX - impX)*sDt; swayX = Math.max(-0.28, Math.min(0.28, swayX + swayVelX*sDt));
-            swayVelZ += (-stiff*(swayZ + vz*0.05) - damp*swayVelZ - impZ)*sDt; swayZ = Math.max(-0.28, Math.min(0.28, swayZ + swayVelZ*sDt));
-            prongJigVel += (-36*prongJig - 2.6*prongJigVel + (swayVelX + swayVelZ)*1.1)*sDt; prongJig = Math.max(-0.2, Math.min(0.2, prongJig + prongJigVel*sDt));
+    const py = BOX.height - 0.18;
+    const rawDd = py - clawPos.y;
+    const dd = Math.max(0.05, rawDd);
+    const stiff = 20/Math.max(0.9, Math.sqrt(dd*0.55)), damp = (STATE.phase==='DROPPING'||STATE.phase==='LIFTING')?4.4:2.2;
+    const impX = Math.max(-34, Math.min(34, ax))*0.04, impZ = Math.max(-34, Math.min(34, az))*0.04;
+    swayVelX += (-stiff*(swayX + vx*0.05) - damp*swayVelX - impX)*sDt; swayX = Math.max(-0.28, Math.min(0.28, swayX + swayVelX*sDt));
+    swayVelZ += (-stiff*(swayZ + vz*0.05) - damp*swayVelZ - impZ)*sDt; swayZ = Math.max(-0.28, Math.min(0.28, swayZ + swayVelZ*sDt));
+    prongJigVel += (-36*prongJig - 2.6*prongJigVel + (swayVelX + swayVelZ)*1.1)*sDt; prongJig = Math.max(-0.2, Math.min(0.2, prongJig + prongJigVel*sDt));
 
-            if (gantryBeamMesh) gantryBeamMesh.position.z = clawPos.z;
-            clawCarriageMesh.position.set(clawPos.x, py, clawPos.z);
-            const hx = clawPos.x + Math.sin(swayX)*dd, hz = clawPos.z + Math.sin(swayZ)*dd, hy = py - Math.cos(Math.hypot(swayX, swayZ))*dd;
-            clawGroup.position.set(hx, hy, hz); clawGroup.rotation.set(-swayZ*1.15, 0, swayX*1.15);
+    if (gantryBeamMesh) gantryBeamMesh.position.z = clawPos.z;
+    clawCarriageMesh.position.set(clawPos.x, py, clawPos.z);
 
-            // ★ 위쪽(ax2-bx2, ay2-by2) 벡터로 계산해 180° 반전/줄 끊김 원천 차단!
-            const p0x = clawPos.x, p0y = py, p0z = clawPos.z, p2x = hx, p2y = hy + 0.18, p2z = hz;
-            for (let i=0;i<CABLE_SEG_COUNT;i++) {
-                const tA = i/CABLE_SEG_COUNT, tB = (i+1)/CABLE_SEG_COUNT;
-                const ax2 = p0x+(p2x-p0x)*tA, ay2 = p0y+(p2y-p0y)*tA, az2 = p0z+(p2z-p0z)*tA;
-                const bx2 = p0x+(p2x-p0x)*tB, by2 = p0y+(p2y-p0y)*tB, bz2 = p0z+(p2z-p0z)*tB;
-                const s = cableSegments[i], upDir = new THREE.Vector3(ax2-bx2, ay2-by2, az2-bz2);
-                const segLen = Math.max(0.05, upDir.length());
-                s.position.set((ax2+bx2)*0.5, (ay2+by2)*0.5, (az2+bz2)*0.5);
-                s.scale.set(1, segLen * 1.15, 1);
-                s.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), upDir.normalize());
+    // 천장 위 대기 중일 때는 clawPos.y 그대로 위치시켜 화면 밖에서부터 자연스럽게 내려오게 함
+    const hx = rawDd > 0 ? clawPos.x + Math.sin(swayX)*dd : clawPos.x;
+    const hz = rawDd > 0 ? clawPos.z + Math.sin(swayZ)*dd : clawPos.z;
+    const hy = rawDd > 0 ? (py - Math.cos(Math.hypot(swayX, swayZ))*dd) : clawPos.y;
+
+    clawGroup.visible = (hy <= BOX.height + 0.95);
+    clawGroup.position.set(hx, hy, hz); clawGroup.rotation.set(-swayZ*1.15, 0, swayX*1.15);
+
+    const showCable = (hy < py - 0.14);
+    const p0x = clawPos.x, p0y = py, p0z = clawPos.z, p2x = hx, p2y = hy + 0.18, p2z = hz;
+    for (let i=0;i<CABLE_SEG_COUNT;i++) {
+        const s = cableSegments[i];
+        s.visible = showCable;
+        if (!showCable) continue;
+        const tA = i/CABLE_SEG_COUNT, tB = (i+1)/CABLE_SEG_COUNT;
+        const ax2 = p0x+(p2x-p0x)*tA, ay2 = p0y+(p2y-p0y)*tA, az2 = p0z+(p2z-p0z)*tA;
+        const bx2 = p0x+(p2x-p0x)*tB, by2 = p0y+(p2y-p0y)*tB, bz2 = p0z+(p2z-p0z)*tB;
+        const upDir = new THREE.Vector3(ax2-bx2, ay2-by2, az2-bz2);
+        const segLen = Math.max(0.05, upDir.length());
+        s.position.set((ax2+bx2)*0.5, (ay2+by2)*0.5, (az2+bz2)*0.5);
+        s.scale.set(1, segLen * 1.15, 1);
+        s.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), upDir.normalize());
+    }
+    clawOpenAngle += (targetClawOpenAngle - clawOpenAngle)*0.18;
+    const jw = (STATE.phase==='CLOSING'||STATE.grabbedCapsule) ? 0.16 : 1.0;
+    clawProngs.forEach(({pivot, angle}) => { pivot.rotation.z = clawOpenAngle + prongJig*Math.cos(angle)*jw; });
+
+    const clawReadyInView = !STATE.waitingCapsulesSettle && hy <= BOX.clawTopY + 0.8;
+    const showAim = (STATE.phase === 'IDLE' || STATE.phase === 'POWER_GAUGE') && clawReadyInView;
+    aimBeamMesh.position.set(hx, BOX.height/2, hz); aimBeamMesh.visible = showAim;
+    if (targetRingMesh) {
+        let hitY = currentBedHeight + 0.45;
+        for (const c of capsules) {
+            if (Math.hypot(c.body.position.x - hx, c.body.position.z - hz) < 0.65 && c.body.position.y + 0.45 > hitY) {
+                hitY = c.body.position.y + 0.45;
             }
-            clawOpenAngle += (targetClawOpenAngle - clawOpenAngle)*0.18;
-            const jw = (STATE.phase==='CLOSING'||STATE.grabbedCapsule) ? 0.16 : 1.0;
-            clawProngs.forEach(({pivot, angle}) => { pivot.rotation.z = clawOpenAngle + prongJig*Math.cos(angle)*jw; });
-
-            const showAim = (STATE.phase === 'IDLE' || STATE.phase === 'POWER_GAUGE');
-            aimBeamMesh.position.set(hx, BOX.height/2, hz); aimBeamMesh.visible = showAim;
-            if (targetRingMesh) {
-                let hitY = currentBedHeight + 0.45;
-                for (const c of capsules) {
-                    if (Math.hypot(c.body.position.x - hx, c.body.position.z - hz) < 0.65 && c.body.position.y + 0.45 > hitY) {
-                        hitY = c.body.position.y + 0.45;
-                    }
-                }
-                targetRingMesh.position.set(hx, hitY, hz);
-                targetRingMesh.visible = showAim;
+        }
+        targetRingMesh.position.set(hx, hitY, hz);
+        targetRingMesh.visible = showAim;
                 targetRingMesh.material.color.setHex(0xffffff);
                 targetRingMesh.scale.setScalar(1.0);
             }
@@ -2412,6 +2430,7 @@ updateStageHUD();
                 ServerSync.broadcastFastClaw(); ServerSync.broadcastState(); return;
             }
             if (STATE.phase !== 'IDLE') return;
+if (STATE.waitingCapsulesSettle || STATE.introClawActive) { showToast('캡슐과 집게가 준비 중입니다. 잠시만 기다려주세요! ⏳', 'info'); return; }
 if (STATE.playsLeft <= 0) { showToast('현장 QR 스캔 후 사번 인증을 진행해주세요! 📱', 'warn'); return; }
 if (clawPos.x < BOX.chuteX + 1.35 && clawPos.z > BOX.chuteZ - 1.45) {
     showToast('먼저 조이스틱으로 캡슐 쪽으로 이동해 주세요! 🕹️', 'warn'); return;
@@ -2469,20 +2488,42 @@ if (capsules.length === 0) spawnHybridCapsules(gs.capsuleCount);
 
             let activeMotion = false;
             if (STATE.phase === 'IDLE') {
-                if (STATE.turnTimerActive && STATE.playsLeft > 0 && STATE.introClawDelay <= 0) {
-    STATE.turnTimeLeft -= dt; updateTimerUI();
-                    const sec = Math.ceil(STATE.turnTimeLeft);
-                    if (sec <= 5 && sec > 0 && sec < lastWarnSec) { lastWarnSec = sec; SoundFX.beepWarn(); }
-                    if (STATE.turnTimeLeft <= 0) {
-    const limit = Math.max(10, Number(getActiveGameSettings().turnTimeLimit) || 30);
-    STATE.turnTimeLeft = 0; STATE.turnTimerActive = false; lastWarnSec = 6;
-    showToast(`⏱️ ${limit}초 제한 시간 종료! 집게 자동 하강!`, 'warn');
-                        STATE.playsLeft = Math.max(0, STATE.playsLeft - 1); updateStageHUD();
-                        STATE.gaugeBonus = 0; STATE.phase = 'DROPPING'; SoundFX.drop(); targetClawOpenAngle = 0.72; ServerSync.broadcastState();
-                    }
-                }
-                if (STATE.introClawActive) {
-    if (STATE.moveX !== 0 || STATE.moveZ !== 0) {
+    if (STATE.waitingCapsulesSettle) {
+        STATE.introSettleElapsed += dt;
+        const bedSettled = bedCapsData.every(b => b.y <= b.baseY + 0.12 && Math.abs(b.vy) < 1.1);
+        const capSettled = capsules.every(c => c.body.position.y < BOX.height - 1.2 && Math.abs(c.body.velocity.y) < 1.15);
+        if ((STATE.introSettleElapsed > 0.75 && bedSettled && capSettled) || STATE.introSettleElapsed > 4.5) {
+            STATE.waitingCapsulesSettle = false;
+        }
+    }
+    if (STATE.turnTimerActive && STATE.playsLeft > 0 && !STATE.waitingCapsulesSettle && !STATE.introClawActive) {
+        STATE.turnTimeLeft -= dt; updateTimerUI();
+        const sec = Math.ceil(STATE.turnTimeLeft);
+        if (sec <= 5 && sec > 0 && sec < lastWarnSec) { lastWarnSec = sec; SoundFX.beepWarn(); }
+        if (STATE.turnTimeLeft <= 0) {
+            const limit = Math.max(10, Number(getActiveGameSettings().turnTimeLimit) || 30);
+            STATE.turnTimeLeft = 0; STATE.turnTimerActive = false; lastWarnSec = 6;
+            showToast(`⏱️ ${limit}초 제한 시간 종료! 집게 자동 하강!`, 'warn');
+            STATE.playsLeft = Math.max(0, STATE.playsLeft - 1); updateStageHUD();
+            STATE.gaugeBonus = 0; STATE.phase = 'DROPPING'; SoundFX.drop(); targetClawOpenAngle = 0.72; ServerSync.broadcastState();
+        }
+    }
+    if (STATE.introClawActive && !STATE.waitingCapsulesSettle) {
+        // 캡슐이 모두 착지한 뒤 천장 위에서 배출구 위로 일정한 속도로 천천히 하강
+        const dx = BOX.chuteX - clawPos.x, dy = BOX.clawTopY - clawPos.y, dz = BOX.chuteZ - clawPos.z;
+        const d = Math.hypot(dx, dy, dz);
+        const step = 1.65 * dt;
+        if (d <= step) {
+            clawPos.x = BOX.chuteX; clawPos.y = BOX.clawTopY; clawPos.z = BOX.chuteZ;
+            STATE.introClawActive = false;
+        } else {
+            clawPos.x += (dx / d) * step;
+            clawPos.y += (dy / d) * step;
+            clawPos.z += (dz / d) * step;
+            activeMotion = true;
+        }
+    }
+    if (!STATE.waitingCapsulesSettle && !STATE.introClawActive && (STATE.moveX !== 0 || STATE.moveZ !== 0)) {
         STATE.introClawDelay = 0;
         STATE.introClawActive = false;
     } else if (STATE.introClawDelay > 0) {
@@ -2893,9 +2934,16 @@ ServerSync.broadcastFastClaw(); ServerSync.broadcastState();
     document.getElementById('chute-flash').style.opacity = '0'; document.getElementById('chute-cam-banner').classList.add('hidden');
     STATE.phase = 'IDLE'; STATE.chuteRollProgress = 0;
     if (APP.activeGame === 'claw') {
-        clawPos.x = BOX.chuteX; clawPos.y = BOX.height - 0.55; clawPos.z = BOX.chuteZ;
-        clawPrevX = clawPos.x; clawPrevZ = clawPos.z;
-        STATE.introClawActive = true;
+        const c = document.getElementById('canvas-container'); if (c) updateFixedCamera(c.clientWidth, c.clientHeight);
+        if (capsules.length <= 4) {
+            spawnHybridCapsules(getActiveGameSettings().capsuleCount);
+        } else {
+            clawPos.x = BOX.chuteX; clawPos.y = BOX.height + 1.1; clawPos.z = BOX.chuteZ;
+            clawPrevX = clawPos.x; clawPrevZ = clawPos.z;
+            STATE.waitingCapsulesSettle = false;
+            STATE.introClawActive = true;
+        }
+        if (STATE.playsLeft > 0) resetTurnTimer();
         const c = document.getElementById('canvas-container'); if (c) updateFixedCamera(c.clientWidth, c.clientHeight);
         if (capsules.length <= 4) spawnHybridCapsules(getActiveGameSettings().capsuleCount);
         if (STATE.playsLeft > 0) resetTurnTimer();
@@ -3493,24 +3541,26 @@ if (cctvWideMode) {
 }
 
     const prevAimVis = aimBeamMesh ? aimBeamMesh.visible : false;
-    if (gantryBeamMesh) gantryBeamMesh.visible = false;
-    if (clawCarriageMesh) clawCarriageMesh.visible = false;
-    if (clawGroup) clawGroup.visible = false;
-    if (aimBeamMesh) aimBeamMesh.visible = false;
-    cableSegments.forEach(s => { s.visible = false; });
+const prevClawVis = clawGroup ? clawGroup.visible : true;
+const prevCableVis = cableSegments.map(s => s.visible);
+if (gantryBeamMesh) gantryBeamMesh.visible = false;
+if (clawCarriageMesh) clawCarriageMesh.visible = false;
+if (clawGroup) clawGroup.visible = false;
+if (aimBeamMesh) aimBeamMesh.visible = false;
+cableSegments.forEach(s => { s.visible = false; });
 
-    renderer.setScissorTest(true);
-    renderer.setViewport(vx, vy, vw, vh);
-    renderer.setScissor(vx, vy, vw, vh);
-    renderer.clearDepth();
-    renderer.render(scene, cctvCamera);
-    renderer.setScissorTest(false);
+renderer.setScissorTest(true);
+renderer.setViewport(vx, vy, vw, vh);
+renderer.setScissor(vx, vy, vw, vh);
+renderer.clearDepth();
+renderer.render(scene, cctvCamera);
+renderer.setScissorTest(false);
 
-    if (gantryBeamMesh) gantryBeamMesh.visible = true;
-    if (clawCarriageMesh) clawCarriageMesh.visible = true;
-    if (clawGroup) clawGroup.visible = true;
-    if (aimBeamMesh) aimBeamMesh.visible = prevAimVis;
-    cableSegments.forEach(s => { s.visible = true; });
+if (gantryBeamMesh) gantryBeamMesh.visible = true;
+if (clawCarriageMesh) clawCarriageMesh.visible = true;
+if (clawGroup) clawGroup.visible = prevClawVis;
+if (aimBeamMesh) aimBeamMesh.visible = prevAimVis;
+cableSegments.forEach((s, i) => { s.visible = prevCableVis[i]; });
 } else if (cctvBox) {
     cctvBox.classList.add('hidden');
 }
