@@ -604,7 +604,18 @@
                         </div>
                         <label class="flex items-center gap-2 text-[11px] font-bold text-slate-700 pt-0.5 cursor-pointer">
                             <input id="admin-use-gauge" type="checkbox" class="accent-indigo-600 w-4 h-4"><span>타이밍 스탑 게이지 사용</span>
-                        </label>
+                        </label><div class="pt-1">
+    <label class="block text-[10px] font-bold text-slate-500 mb-1">캡슐 디자인</label>
+    <select id="admin-capsule-style" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold bg-white">
+        <option value="gacha">🫧 기본 투톤 가챠 캡슐</option>
+        <option value="macaron">🧁 달콤 마카롱 캡슐</option>
+        <option value="pokeball">🔴 포켓몬 몬스터볼 캡슐</option>
+        <option value="giftbox">🎁 리본 선물상자 캡슐</option>
+    </select>
+</div>
+<label class="flex items-center gap-2 text-[11px] font-bold text-slate-700 pt-0.5 cursor-pointer">
+    <input id="admin-use-gauge" type="checkbox" class="accent-indigo-600 w-4 h-4"><span>타이밍 스탑 게이지 사용</span>
+</label>
                     </div>
                     <div id="apnl-yabawi" class="hidden space-y-2">
                         <div class="font-black text-xs text-rose-800">🍡 떡 먹는 용만이 설정 (<span class="asrv-badge">1서버</span>)</div>
@@ -731,19 +742,25 @@
                     <input id="free-win-rate" type="range" min="0" max="100" step="5" class="w-full accent-emerald-600">
                     <div class="flex justify-between text-xs font-bold"><span>겹침 판정 기준</span><span id="free-ov-val" class="text-emerald-600 font-black">50%</span></div>
                     <input id="free-ov-threshold" type="range" min="30" max="85" step="5" class="w-full accent-emerald-600">
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
-                        <select id="free-yabawi-cups" class="px-2 py-1.5 rounded-lg border text-xs font-bold"><option value="3">용만이 3돔</option><option value="4">용만이 4돔</option><option value="5">용만이 5돔</option></select>
-                        <select id="free-yabawi-speed" class="px-2 py-1.5 rounded-lg border text-xs font-bold"><option value="420">속도: 보통</option><option value="280">속도: 빠름</option><option value="180">속도: 초고속</option></select>
-                        <select id="free-frame-theme" class="px-2 py-1.5 rounded-lg border text-xs font-bold">
-                            <option value="pat-sunburst">패턴: ☀️ 선버스트</option>
-                            <option value="pat-stripe">패턴: 🎪 스트라이프</option>
-                            <option value="pat-dots">패턴: ✨ 도트</option>
-                            <option value="pat-checker">패턴: 🏁 체크</option>
-                            <option value="pat-diamond">패턴: 💎 다이아</option>
-                            <option value="pat-smooth">패턴: 🌊 심플</option>
-                        </select>
-                        <select id="free-interior-theme" class="px-2 py-1.5 rounded-lg border text-xs font-bold"><option value="underwater">3D: 🌊 물속</option><option value="sky">3D: ☁️ 하늘</option><option value="park">3D: 🌳 공원</option><option value="galaxy">3D: 🌌 갤럭시</option></select>
-                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 pt-1">
+    <select id="free-capsule-style" class="px-2 py-1.5 rounded-lg border border-sky-300 bg-sky-50 text-xs font-bold">
+        <option value="gacha">🫧 가챠 캡슐</option>
+        <option value="macaron">🧁 마카롱</option>
+        <option value="pokeball">🔴 몬스터볼</option>
+        <option value="giftbox">🎁 선물상자</option>
+    </select>
+    <select id="free-yabawi-cups" class="px-2 py-1.5 rounded-lg border text-xs font-bold"><option value="3">용만이 3돔</option><option value="4">용만이 4돔</option><option value="5">용만이 5돔</option></select>
+    <select id="free-yabawi-speed" class="px-2 py-1.5 rounded-lg border text-xs font-bold"><option value="420">속도: 보통</option><option value="280">속도: 빠름</option><option value="180">속도: 초고속</option></select>
+    <select id="free-frame-theme" class="px-2 py-1.5 rounded-lg border text-xs font-bold">
+        <option value="pat-sunburst">패턴: ☀️ 선버스트</option>
+        <option value="pat-stripe">패턴: 🎪 스트라이프</option>
+        <option value="pat-dots">패턴: ✨ 도트</option>
+        <option value="pat-checker">패턴: 🏁 체크</option>
+        <option value="pat-diamond">패턴: 💎 다이아</option>
+        <option value="pat-smooth">패턴: 🌊 심플</option>
+    </select>
+    <select id="free-interior-theme" class="px-2 py-1.5 rounded-lg border text-xs font-bold"><option value="underwater">3D: 🌊 물속</option><option value="sky">3D: ☁️ 하늘</option><option value="park">3D: 🌳 공원</option><option value="galaxy">3D: 🌌 갤럭시</option></select>
+</div>
                     <div class="grid grid-cols-3 gap-2">
                         <label class="flex items-center justify-between bg-slate-50 px-2.5 py-1.5 rounded-lg border text-xs font-bold"><span>메인색</span><input id="free-frame-c1" type="color" value="#38bdf8" class="w-7 h-5 cursor-pointer"></label>
                         <label class="flex items-center justify-between bg-slate-50 px-2.5 py-1.5 rounded-lg border text-xs font-bold"><span>포인트색</span><input id="free-frame-c2" type="color" value="#0284c7" class="w-7 h-5 cursor-pointer"></label>
@@ -940,6 +957,7 @@
 
         const makeDefaultServerSetting = () => ({
     capsuleCount: 220, winRate: 65, overlapThreshold: 50,
+    capsuleStyle: 'gacha',
     useTimingGauge: false,
     turnTimeLimit: 30, specialRatio: 22, clawSpeed: 4.4,
     camFov: 34, camDist: 20.2, camHeight: 6.7, cctvMode: 'zoom', cctvZoom: 1.0, cctvSize: 168,
@@ -1555,9 +1573,13 @@ hydrateSavedGlobalConfig(); applyBrandLogos(); renderLobbyFloatingPrizes();
 if (APP.activeGame && APP.selectedMode === 'event' && APP.selectedServer === sid) {
     const gs = getActiveGameSettings();
     applyThemeSettings(); updateStageTitles(); applyCameraSettingsFromConfig();
-    if (APP.activeGame === 'claw' && renderer && (msg.capsuleChanged || prevSrv.capsuleCount !== gs.capsuleCount || prevSrv.specialRatio !== gs.specialRatio) && STATE.phase === 'IDLE') {
+    if (APP.activeGame === 'claw' && renderer && STATE.phase === 'IDLE') {
+    if (msg.capsuleChanged || prevSrv.capsuleCount !== gs.capsuleCount || prevSrv.specialRatio !== gs.specialRatio) {
         spawnHybridCapsules(gs.capsuleCount);
+    } else if ((prevSrv.capsuleStyle || 'gacha') !== (gs.capsuleStyle || 'gacha')) {
+        refreshCapsuleStylesInPlace();
     }
+}
     if (APP.activeGame === 'yabawi' && prevSrv.yabawiCups !== gs.yabawiCups && STATE.yabawiPhase === 'READY') {
         initYabawiStage();
     }
@@ -1823,7 +1845,7 @@ lobbyLogoLeftSize: CONFIG.lobbyLogoLeftSize, lobbyLogoRightSize: CONFIG.lobbyLog
         // =====================================================================
         const BOX = { width: 8.8, height: 11.6, depth: 5.6, clawMinX: -3.3, clawMaxX: 3.45, clawMinZ: -2.05, clawMaxZ: 2.05, chuteX: -3.15, chuteZ: 1.55, chuteTopY: 6.2, clawTopY: 9.8, clawBottomY: 1.85 };
         let scene, camera, cctvCamera, cctvWideMode = false, renderer, world, clock, capPhysMat, wallPhysMat;
-        let capsules = [], bedLowerMesh = null, bedUpperMesh = null, bedCapsData = [], bedFloorBody = null, airParticles = null, interiorRefs = {}, themePropsGroup = null;
+        let capsules = [], bedLowerMesh = null, bedUpperMesh = null, bedAccentMesh = null, bedCapsData = [], bedFloorBody = null, airParticles = null, interiorRefs = {}, themePropsGroup = null;
         let gantryBeamMesh, clawCarriageMesh, clawGroup, aimBeamMesh, targetRingMesh, cableSegments = [], clawProngs = [];
         let chuteRimMesh = null, chuteChevrons = [], chuteLidBody = null, tunnelGroup = null, tunnelBallMesh = null, tunnelFlapPivot = null;
         let chuteDropState = { vx: 0, vy: 0, vz: 0, rx: 0, rz: 0, passedRing: false, bounceCount: 0 };
@@ -2128,11 +2150,9 @@ world.addBody(chuteLidBody);
             tunnelFlapPivot.add(fm, fr); tubePivot.add(tunnelFlapPivot);
             const pb = new THREE.Mesh(new THREE.BoxGeometry(2.6,3.0,2.8), new THREE.MeshBasicMaterial({ color:0xfef08a, transparent:true, opacity:0.85 })); pb.position.set(7.1,-1.35,0); tunnelGroup.add(pb);
             tunnelBallMesh = new THREE.Group();
-            const r = 0.66, lm = new THREE.MeshPhysicalMaterial({ color:0xfbbf24, roughness:0.12, metalness:0.45, clearcoat:1 });
-            tunnelBallMesh.add(new THREE.Mesh(new THREE.SphereGeometry(r,24,14,0,Math.PI*2,Math.PI/2,Math.PI/2), lm));
-            tunnelBallMesh.add(new THREE.Mesh(new THREE.SphereGeometry(r,24,14,0,Math.PI*2,0,Math.PI/2), new THREE.MeshPhysicalMaterial({ color:0xffffff, roughness:0.12, clearcoat:1.0 })));
-            tunnelBallMesh.userData.lowerMat = lm; tunnelGroup.add(tunnelBallMesh);
-        }
+    tunnelGroup.add(tunnelBallMesh);
+    rebuildTunnelBallMesh('gacha', 'specialGold', true);
+}
 
         // ★ 작아진 캡슐(r=0.42)에 딱 맞는 정밀 슬림 집게발 (scale 0.66!)
         function buildPrismClaw() {
@@ -2163,115 +2183,260 @@ world.addBody(chuteLidBody);
         }
 
         // ★ 커튼링 없는 깔끔 투톤 가챠폰 캡슐 + 높이 쌓기(최대 y=5.5) + 바닥 더미 전체 동적 물리!
-        function spawnHybridCapsules(totalCount) {
-            if (!scene) return;
-            capsules.forEach(c => { scene.remove(c.mesh); world.removeBody(c.body); }); capsules = [];
-            if (bedLowerMesh) { scene.remove(bedLowerMesh); bedLowerMesh.dispose(); bedLowerMesh = null; }
-            if (bedUpperMesh) { scene.remove(bedUpperMesh); bedUpperMesh.dispose(); bedUpperMesh = null; }
-            bedCapsData = [];
-            if (bedFloorBody) { world.removeBody(bedFloorBody); bedFloorBody = null; }
-
-            const total = Math.max(20, Math.min(400, Number(totalCount) || 120));
-            STATE.remainingCapsules = total;
-            const radius = 0.42;
-            const activeCount = Math.min(total, 66), bedCount = Math.max(0, total - activeCount);
-            // 높아진 배출구(6.2)에 맞춰 풍성하게 높이 쌓이도록!
-            currentBedHeight = bedCount > 0 ? Math.min(3.4, 0.9 + (bedCount / 334) * 2.5) : 0;
-            const isInChute = (x, z) => (x < BOX.chuteX + 1.65 && z > BOX.chuteZ - 1.7);
-
-            // 하단 대량 캡슐도 상단과 100% 똑같은 투톤 가챠폰 외형 + 개별 에어블로우 물리 데이터!
-           if (bedCount > 0) {
-                const lowGeo = new THREE.SphereGeometry(radius, 14, 10, 0, Math.PI*2, Math.PI/2, Math.PI/2);
-                const upGeo  = new THREE.SphereGeometry(radius, 14, 10, 0, Math.PI*2, 0, Math.PI/2);
-                lowGeo.scale(0.94, 1.18, 0.94); upGeo.scale(0.94, 1.18, 0.94); // ★ 귀여운 달걀형 마카롱 실루엣!
-                bedLowerMesh = new THREE.InstancedMesh(lowGeo, new THREE.MeshPhongMaterial({ shininess: 130, specular: 0xffffff }), bedCount);
-                bedUpperMesh = new THREE.InstancedMesh(upGeo, new THREE.MeshPhongMaterial({ color: 0xffffff, shininess: 150, specular: 0xffffff }), bedCount);
-                bedLowerMesh.castShadow = true; bedLowerMesh.receiveShadow = true;
-bedUpperMesh.castShadow = true; bedUpperMesh.receiveShadow = true;
-
-                const col = new THREE.Color();
-                for (let i = 0; i < bedCount; i++) {
-    let x, z;
-    do { x = -3.7 + Math.random()*7.4; z = -2.2 + Math.random()*4.4; } while (isInChute(x, z));
-    const baseY = radius + Math.random() * Math.max(0.2, currentBedHeight - radius * 1.15);
-    // 화면 위쪽에서 아래로 자연스럽게 쏟아지도록 초기 y를 상단 밖으로 배치
-    const startY = BOX.height + 0.8 + Math.random() * 5.2;
-    const b = {
-        x, baseY, y: startY, z,
-        vy: -2.0 - Math.random() * 4.5,
-        rx: (Math.random()-0.5)*1.2, ry: Math.random()*6.28, rz: (Math.random()-0.5)*1.2,
-        vrx: (Math.random()-0.5)*5, vry: (Math.random()-0.5)*5
-    };
-    bedCapsData.push(b);
-                    _bedDummy.position.set(b.x, b.y, b.z); _bedDummy.rotation.set(b.rx, b.ry, b.rz); _bedDummy.updateMatrix();
-                    bedLowerMesh.setMatrixAt(i, _bedDummy.matrix); bedUpperMesh.setMatrixAt(i, _bedDummy.matrix);
-                    const isSpec = Math.random() < 0.2;
-                    col.setHex((isSpec ? (Math.random()<0.65 ? CAPSULE_SKINS.specialGold : CAPSULE_SKINS.specialBlack) : (Math.random()<0.5 ? CAPSULE_SKINS.normalCyan : CAPSULE_SKINS.normalCoral)).hex);
-                    bedLowerMesh.setColorAt(i, col);
-                }
-                bedLowerMesh.instanceMatrix.needsUpdate = true; bedLowerMesh.instanceColor.needsUpdate = true; bedUpperMesh.instanceMatrix.needsUpdate = true;
-                scene.add(bedLowerMesh); scene.add(bedUpperMesh);
-                bedFloorBody = new CANNON.Body({ mass: 0, material: wallPhysMat, shape: new CANNON.Box(new CANNON.Vec3(BOX.width/2, currentBedHeight/2, BOX.depth/2)) });
-                bedFloorBody.position.set(0, currentBedHeight/2, 0); world.addBody(bedFloorBody);
-            }
-
-            // ★ 뿌연 안개 현상 ZERO! 유리알처럼 쨍한 고광택 에나멜 가챠 캡슐 재질!
-            const creamTopMat = new THREE.MeshPhongMaterial({ color: 0xffffff, shininess: 160, specular: 0xffffff });
-            const starBadgeMat = new THREE.MeshPhongMaterial({ color: 0xfde047, emissive: 0xca8a04, emissiveIntensity: 0.35, shininess: 150, specular: 0xffffff });
-            const specRatio = Math.max(0, Math.min(80, Number(getActiveGameSettings().specialRatio) ?? 22)) / 100;
-const specialCount = specRatio > 0 ? Math.max(1, Math.round(activeCount * specRatio)) : 0;
-            for (let i = 0; i < activeCount; i++) {
-                const isSpec = i < specialCount;
-                const skin = isSpec ? (i%2===0 ? CAPSULE_SKINS.specialGold : CAPSULE_SKINS.specialBlack) : (i%2===0 ? CAPSULE_SKINS.normalCyan : CAPSULE_SKINS.normalCoral);
-                const group = new THREE.Group();
-                const eggGroup = new THREE.Group();
-                eggGroup.scale.set(0.94, 1.18, 0.94);
-
-                const colMat = new THREE.MeshPhongMaterial({
-                    color: skin.hex,
-                    emissive: skin.emissive,
-                    emissiveIntensity: isSpec ? 0.26 : 0.1,
-                    shininess: 145,
-                    specular: 0xffffff
-                });
-                const lower = new THREE.Mesh(new THREE.SphereGeometry(radius, 24, 16, 0, Math.PI*2, Math.PI/2, Math.PI/2), colMat);
-                lower.castShadow = true; lower.receiveShadow = true; eggGroup.add(lower);
-
-                const upper = new THREE.Mesh(new THREE.SphereGeometry(radius, 24, 16, 0, Math.PI*2, 0, Math.PI/2), creamTopMat);
-                upper.castShadow = true; upper.receiveShadow = true; eggGroup.add(upper);
-
-                // Z-fighting(깨짐) 없는 선명한 마카롱 벨트 & 스페셜 꼭지/보석 포인트!
-                const belt = new THREE.Mesh(new THREE.CylinderGeometry(radius*1.025, radius*1.025, 0.048, 24), colMat);
-                eggGroup.add(belt);
-                const topKnob = new THREE.Mesh(new THREE.SphereGeometry(radius*0.24, 14, 12), isSpec ? starBadgeMat : colMat);
-                topKnob.position.y = radius * 0.96; eggGroup.add(topKnob);
-                if (isSpec) {
-                    const frontGem = new THREE.Mesh(new THREE.OctahedronGeometry(radius*0.22), starBadgeMat);
-                    frontGem.position.set(0, 0.02, radius*1.02); eggGroup.add(frontGem);
-                }
-                group.add(eggGroup);
-
-                let sx, sz;
-                do {
-                    sx = -3.5 + Math.random()*7.0;
-                    sz = (isSpec && i < Math.ceil(specialCount * 0.7)) ? (-2.05 + Math.random()*1.7) : (-2.05 + Math.random()*4.1);
-                } while (isInChute(sx, sz));
-                const sy = BOX.height - 0.35 + Math.floor(i / 10) * 0.68 + Math.random() * 0.45;
-group.position.set(sx, sy, sz); scene.add(group);
-const body = new CANNON.Body({ mass: 1.1, material: capPhysMat, shape: new CANNON.Sphere(radius), linearDamping: 0.44, angularDamping: 0.48 });
-body.position.set(sx, sy, sz);
-body.velocity.set((Math.random()-0.5)*0.6, -2.5 - Math.random()*2.5, (Math.random()-0.5)*0.6);
-world.addBody(body);
-capsules.push({ mesh: group, body, radius, isSpecial: isSpec, colorHex: skin.hex });
+        function disposeInstancedMeshSafe(m) {
+    if (!m) return;
+    scene.remove(m);
+    m.geometry?.dispose?.();
+    m.material?.dispose?.();
+    m.dispose?.();
 }
-STATE.bedWaveTimer = 3.2;
-STATE.airParticlesActive = false;
-clawPos.x = BOX.chuteX; clawPos.y = BOX.height + 1.1; clawPos.z = BOX.chuteZ;
-clawPrevX = clawPos.x; clawPrevZ = clawPos.z;
-STATE.waitingCapsulesSettle = true;
-STATE.introSettleElapsed = 0;
-STATE.introClawActive = true;
-updateStageHUD();
+
+function getCapsulePalette(style, skinKey) {
+    const base = CAPSULE_SKINS[skinKey] || CAPSULE_SKINS.normalCyan;
+    if (style === 'pokeball') {
+        if (skinKey === 'normalCoral')  return { hex: 0xef4444, emissive: 0x991b1b, accent: 0x111827 };
+        if (skinKey === 'normalCyan')   return { hex: 0x2563eb, emissive: 0x1e40af, accent: 0x111827 };
+        if (skinKey === 'specialGold')  return { hex: 0xfacc15, emissive: 0xca8a04, accent: 0x111827 };
+        return { hex: 0x9333ea, emissive: 0x6b21a8, accent: 0x111827 };
+    }
+    if (style === 'macaron') {
+        if (skinKey === 'normalCoral')  return { hex: 0xf9a8d4, emissive: 0xf472b6, accent: 0xfffbeb };
+        if (skinKey === 'normalCyan')   return { hex: 0x7dd3fc, emissive: 0x38bdf8, accent: 0xfffbeb };
+        if (skinKey === 'specialGold')  return { hex: 0xfde047, emissive: 0xeab308, accent: 0xfef9c3 };
+        return { hex: 0xd8b4fe, emissive: 0xa855f7, accent: 0xfce7f3 };
+    }
+    if (style === 'giftbox') {
+        return { hex: base.hex, emissive: base.emissive, accent: base.isSpecial ? 0xf43f5e : 0xfde047 };
+    }
+    return { hex: base.hex, emissive: base.emissive, accent: base.hex };
+}
+
+function createCapsuleMeshGroup(style, skinKey, radius, isSpecial) {
+    const pal = getCapsulePalette(style, skinKey);
+    const group = new THREE.Group();
+    const colMat = new THREE.MeshPhongMaterial({ color: pal.hex, emissive: pal.emissive, emissiveIntensity: isSpecial ? 0.24 : 0.1, shininess: 145, specular: 0xffffff });
+    const whiteMat = new THREE.MeshPhongMaterial({ color: 0xffffff, shininess: 160, specular: 0xffffff });
+    const starBadgeMat = new THREE.MeshPhongMaterial({ color: 0xfde047, emissive: 0xca8a04, emissiveIntensity: 0.35, shininess: 150, specular: 0xffffff });
+
+    if (style === 'macaron') {
+        const shellMat = new THREE.MeshPhongMaterial({ color: pal.hex, emissive: pal.emissive, emissiveIntensity: isSpecial ? 0.2 : 0.08, shininess: 65, specular: 0xfff7ed });
+        const creamMat = new THREE.MeshPhongMaterial({ color: pal.accent, shininess: 85, specular: 0xffffff });
+        const topShell = new THREE.Mesh(new THREE.SphereGeometry(radius, 22, 12, 0, Math.PI*2, 0, Math.PI/2), shellMat);
+        topShell.scale.set(1.12, 0.56, 1.12); topShell.position.y = 0.09; topShell.castShadow = true; topShell.receiveShadow = true; group.add(topShell);
+        const botShell = new THREE.Mesh(new THREE.SphereGeometry(radius, 22, 12, 0, Math.PI*2, Math.PI/2, Math.PI/2), shellMat);
+        botShell.scale.set(1.12, 0.56, 1.12); botShell.position.y = -0.09; botShell.castShadow = true; botShell.receiveShadow = true; group.add(botShell);
+        const topFrill = new THREE.Mesh(new THREE.TorusGeometry(radius * 1.03, 0.048, 8, 22), shellMat);
+        topFrill.rotation.x = Math.PI / 2; topFrill.position.y = 0.11; group.add(topFrill);
+        const botFrill = new THREE.Mesh(new THREE.TorusGeometry(radius * 1.03, 0.048, 8, 22), shellMat);
+        botFrill.rotation.x = Math.PI / 2; botFrill.position.y = -0.11; group.add(botFrill);
+        const cream = new THREE.Mesh(new THREE.CylinderGeometry(radius * 1.04, radius * 1.04, 0.2, 22), creamMat);
+        cream.castShadow = true; cream.receiveShadow = true; group.add(cream);
+        if (isSpecial) {
+            const gem = new THREE.Mesh(new THREE.OctahedronGeometry(radius * 0.2), starBadgeMat);
+            gem.position.set(0, 0.34, 0); group.add(gem);
+        }
+        return group;
+    }
+
+    if (style === 'pokeball') {
+        const blackMat = new THREE.MeshPhongMaterial({ color: 0x111827, shininess: 90, specular: 0x94a3b8 });
+        const topHemi = new THREE.Mesh(new THREE.SphereGeometry(radius, 24, 14, 0, Math.PI*2, 0, Math.PI/2), colMat);
+        topHemi.castShadow = true; topHemi.receiveShadow = true; group.add(topHemi);
+        const botHemi = new THREE.Mesh(new THREE.SphereGeometry(radius, 24, 14, 0, Math.PI*2, Math.PI/2, Math.PI/2), whiteMat);
+        botHemi.castShadow = true; botHemi.receiveShadow = true; group.add(botHemi);
+        const band = new THREE.Mesh(new THREE.CylinderGeometry(radius * 1.022, radius * 1.022, 0.11, 24), blackMat);
+        group.add(band);
+        const btnOuter = new THREE.Mesh(new THREE.CylinderGeometry(radius * 0.31, radius * 0.31, 0.08, 18), blackMat);
+        btnOuter.rotation.x = Math.PI / 2; btnOuter.position.set(0, 0, radius * 0.96); group.add(btnOuter);
+        const btnInner = new THREE.Mesh(new THREE.CylinderGeometry(radius * 0.19, radius * 0.19, 0.11, 16), isSpecial ? starBadgeMat : whiteMat);
+        btnInner.rotation.x = Math.PI / 2; btnInner.position.set(0, 0, radius * 0.975); group.add(btnInner);
+        return group;
+    }
+
+    if (style === 'giftbox') {
+        const ribMat = new THREE.MeshPhongMaterial({ color: pal.accent, emissive: isSpecial ? 0x9f1239 : 0xca8a04, emissiveIntensity: 0.22, shininess: 140, specular: 0xffffff });
+        const boxBody = new THREE.Mesh(new THREE.BoxGeometry(radius * 1.66, radius * 1.38, radius * 1.66), colMat);
+        boxBody.position.y = -0.04; boxBody.castShadow = true; boxBody.receiveShadow = true; group.add(boxBody);
+        const boxLid = new THREE.Mesh(new THREE.BoxGeometry(radius * 1.82, radius * 0.36, radius * 1.82), colMat);
+        boxLid.position.y = radius * 0.58; boxLid.castShadow = true; boxLid.receiveShadow = true; group.add(boxLid);
+        const ribX = new THREE.Mesh(new THREE.BoxGeometry(radius * 1.86, radius * 1.68, radius * 0.3), ribMat);
+        ribX.position.y = 0.01; group.add(ribX);
+        const ribZ = new THREE.Mesh(new THREE.BoxGeometry(radius * 0.3, radius * 1.68, radius * 1.86), ribMat);
+        ribZ.position.y = 0.01; group.add(ribZ);
+        [-1, 1].forEach(dir => {
+            const loop = new THREE.Mesh(new THREE.TorusGeometry(radius * 0.26, radius * 0.075, 8, 16), ribMat);
+            loop.position.set(dir * radius * 0.22, radius * 0.88, 0);
+            loop.rotation.y = dir * 0.35; loop.rotation.x = 0.45;
+            group.add(loop);
+        });
+        const knot = new THREE.Mesh(new THREE.SphereGeometry(radius * 0.14, 12, 10), isSpecial ? starBadgeMat : ribMat);
+        knot.position.set(0, radius * 0.84, 0); group.add(knot);
+        return group;
+    }
+
+    // 기본 'gacha'
+    const eggGroup = new THREE.Group();
+    eggGroup.scale.set(0.94, 1.18, 0.94);
+    const lower = new THREE.Mesh(new THREE.SphereGeometry(radius, 24, 16, 0, Math.PI*2, Math.PI/2, Math.PI/2), colMat);
+    lower.castShadow = true; lower.receiveShadow = true; eggGroup.add(lower);
+    const upper = new THREE.Mesh(new THREE.SphereGeometry(radius, 24, 16, 0, Math.PI*2, 0, Math.PI/2), whiteMat);
+    upper.castShadow = true; upper.receiveShadow = true; eggGroup.add(upper);
+    const belt = new THREE.Mesh(new THREE.CylinderGeometry(radius*1.025, radius*1.025, 0.048, 24), colMat);
+    eggGroup.add(belt);
+    const topKnob = new THREE.Mesh(new THREE.SphereGeometry(radius*0.24, 14, 12), isSpecial ? starBadgeMat : colMat);
+    topKnob.position.y = radius * 0.96; eggGroup.add(topKnob);
+    if (isSpecial) {
+        const frontGem = new THREE.Mesh(new THREE.OctahedronGeometry(radius*0.22), starBadgeMat);
+        frontGem.position.set(0, 0.02, radius*1.02); eggGroup.add(frontGem);
+    }
+    group.add(eggGroup);
+    return group;
+}
+
+function buildBedInstancedMeshes(style, radius) {
+    disposeInstancedMeshSafe(bedLowerMesh); bedLowerMesh = null;
+    disposeInstancedMeshSafe(bedUpperMesh); bedUpperMesh = null;
+    disposeInstancedMeshSafe(bedAccentMesh); bedAccentMesh = null;
+    const bedCount = bedCapsData.length;
+    if (bedCount <= 0) return;
+
+    let lowGeo, upGeo, accGeo = null;
+    let upMat = new THREE.MeshPhongMaterial({ color: 0xffffff, shininess: 150, specular: 0xffffff });
+    let accMat = null;
+
+    if (style === 'macaron') {
+        lowGeo = new THREE.SphereGeometry(radius, 14, 10);
+        lowGeo.scale(1.12, 0.72, 1.12);
+        upGeo = new THREE.CylinderGeometry(radius * 1.07, radius * 1.07, 0.2, 14);
+        upMat = new THREE.MeshPhongMaterial({ color: 0xfff8dc, shininess: 95, specular: 0xffffff });
+    } else if (style === 'pokeball') {
+        lowGeo = new THREE.SphereGeometry(radius, 14, 10, 0, Math.PI*2, 0, Math.PI/2);
+        upGeo = new THREE.SphereGeometry(radius, 14, 10, 0, Math.PI*2, Math.PI/2, Math.PI/2);
+        accGeo = new THREE.CylinderGeometry(radius * 1.022, radius * 1.022, 0.11, 14);
+        accMat = new THREE.MeshPhongMaterial({ color: 0x111827, shininess: 85 });
+    } else if (style === 'giftbox') {
+        lowGeo = new THREE.BoxGeometry(radius * 1.68, radius * 1.54, radius * 1.68);
+        upGeo = new THREE.BoxGeometry(radius * 1.75, radius * 1.6, radius * 0.3);
+        upMat = new THREE.MeshPhongMaterial({ color: 0xfde047, shininess: 135, specular: 0xffffff });
+        accGeo = new THREE.BoxGeometry(radius * 0.3, radius * 1.6, radius * 1.75);
+        accMat = new THREE.MeshPhongMaterial({ color: 0xfde047, shininess: 135, specular: 0xffffff });
+    } else {
+        lowGeo = new THREE.SphereGeometry(radius, 14, 10, 0, Math.PI*2, Math.PI/2, Math.PI/2);
+        upGeo  = new THREE.SphereGeometry(radius, 14, 10, 0, Math.PI*2, 0, Math.PI/2);
+        lowGeo.scale(0.94, 1.18, 0.94); upGeo.scale(0.94, 1.18, 0.94);
+    }
+
+    bedLowerMesh = new THREE.InstancedMesh(lowGeo, new THREE.MeshPhongMaterial({ shininess: 130, specular: 0xffffff }), bedCount);
+    bedUpperMesh = new THREE.InstancedMesh(upGeo, upMat, bedCount);
+    bedLowerMesh.castShadow = true; bedLowerMesh.receiveShadow = true;
+    bedUpperMesh.castShadow = true; bedUpperMesh.receiveShadow = true;
+    if (accGeo && accMat) {
+        bedAccentMesh = new THREE.InstancedMesh(accGeo, accMat, bedCount);
+        bedAccentMesh.castShadow = true; bedAccentMesh.receiveShadow = true;
+    }
+
+    const col = new THREE.Color();
+    for (let i = 0; i < bedCount; i++) {
+        const b = bedCapsData[i];
+        _bedDummy.position.set(b.x, b.y, b.z); _bedDummy.rotation.set(b.rx, b.ry, b.rz); _bedDummy.updateMatrix();
+        bedLowerMesh.setMatrixAt(i, _bedDummy.matrix);
+        bedUpperMesh.setMatrixAt(i, _bedDummy.matrix);
+        if (bedAccentMesh) bedAccentMesh.setMatrixAt(i, _bedDummy.matrix);
+        col.setHex(getCapsulePalette(style, b.skinKey).hex);
+        bedLowerMesh.setColorAt(i, col);
+    }
+    bedLowerMesh.instanceMatrix.needsUpdate = true; bedLowerMesh.instanceColor.needsUpdate = true;
+    bedUpperMesh.instanceMatrix.needsUpdate = true;
+    scene.add(bedLowerMesh); scene.add(bedUpperMesh);
+    if (bedAccentMesh) { bedAccentMesh.instanceMatrix.needsUpdate = true; scene.add(bedAccentMesh); }
+}
+
+function refreshCapsuleStylesInPlace() {
+    if (!scene) return;
+    const style = getActiveGameSettings().capsuleStyle || 'gacha';
+    buildBedInstancedMeshes(style, 0.42);
+    capsules.forEach(cap => {
+        scene.remove(cap.mesh);
+        cap.mesh = createCapsuleMeshGroup(style, cap.skinKey, cap.radius, cap.isSpecial);
+        cap.mesh.position.copy(cap.body.position);
+        cap.mesh.quaternion.copy(cap.body.quaternion);
+        scene.add(cap.mesh);
+    });
+}
+
+function rebuildTunnelBallMesh(style, skinKey, isSpecial) {
+    if (!tunnelBallMesh) return;
+    while (tunnelBallMesh.children.length > 0) tunnelBallMesh.remove(tunnelBallMesh.children[0]);
+    const visual = createCapsuleMeshGroup(style || 'gacha', skinKey || 'specialGold', 0.66, Boolean(isSpecial));
+    tunnelBallMesh.add(visual);
+}
+
+function spawnHybridCapsules(totalCount) {
+    if (!scene) return;
+    capsules.forEach(c => { scene.remove(c.mesh); world.removeBody(c.body); }); capsules = [];
+    disposeInstancedMeshSafe(bedLowerMesh); bedLowerMesh = null;
+    disposeInstancedMeshSafe(bedUpperMesh); bedUpperMesh = null;
+    disposeInstancedMeshSafe(bedAccentMesh); bedAccentMesh = null;
+    bedCapsData = [];
+    if (bedFloorBody) { world.removeBody(bedFloorBody); bedFloorBody = null; }
+
+    const gs = getActiveGameSettings();
+    const style = gs.capsuleStyle || 'gacha';
+    const total = Math.max(20, Math.min(400, Number(totalCount) || 120));
+    STATE.remainingCapsules = total;
+    const radius = 0.42;
+    const activeCount = Math.min(total, 66), bedCount = Math.max(0, total - activeCount);
+    currentBedHeight = bedCount > 0 ? Math.min(3.4, 0.9 + (bedCount / 334) * 2.5) : 0;
+    const isInChute = (x, z) => (x < BOX.chuteX + 1.65 && z > BOX.chuteZ - 1.7);
+
+    if (bedCount > 0) {
+        for (let i = 0; i < bedCount; i++) {
+            let x, z;
+            do { x = -3.7 + Math.random()*7.4; z = -2.2 + Math.random()*4.4; } while (isInChute(x, z));
+            const baseY = radius + Math.random() * Math.max(0.2, currentBedHeight - radius * 1.15);
+            const startY = BOX.height + 0.8 + Math.random() * 5.2;
+            const isSpec = Math.random() < 0.2;
+            const skinKey = isSpec ? (Math.random() < 0.65 ? 'specialGold' : 'specialBlack') : (Math.random() < 0.5 ? 'normalCyan' : 'normalCoral');
+            bedCapsData.push({
+                x, baseY, y: startY, z, skinKey,
+                vy: -2.0 - Math.random() * 4.5,
+                rx: (Math.random()-0.5)*1.2, ry: Math.random()*6.28, rz: (Math.random()-0.5)*1.2,
+                vrx: (Math.random()-0.5)*5, vry: (Math.random()-0.5)*5
+            });
+        }
+        buildBedInstancedMeshes(style, radius);
+        bedFloorBody = new CANNON.Body({ mass: 0, material: wallPhysMat, shape: new CANNON.Box(new CANNON.Vec3(BOX.width/2, currentBedHeight/2, BOX.depth/2)) });
+        bedFloorBody.position.set(0, currentBedHeight/2, 0); world.addBody(bedFloorBody);
+    }
+
+    const specRatio = Math.max(0, Math.min(80, Number(gs.specialRatio) ?? 22)) / 100;
+    const specialCount = specRatio > 0 ? Math.max(1, Math.round(activeCount * specRatio)) : 0;
+    for (let i = 0; i < activeCount; i++) {
+        const isSpec = i < specialCount;
+        const skinKey = isSpec ? (i%2===0 ? 'specialGold' : 'specialBlack') : (i%2===0 ? 'normalCyan' : 'normalCoral');
+        const group = createCapsuleMeshGroup(style, skinKey, radius, isSpec);
+
+        let sx, sz;
+        do {
+            sx = -3.5 + Math.random()*7.0;
+            sz = (isSpec && i < Math.ceil(specialCount * 0.7)) ? (-2.05 + Math.random()*1.7) : (-2.05 + Math.random()*4.1);
+        } while (isInChute(sx, sz));
+        const sy = BOX.height - 0.35 + Math.floor(i / 10) * 0.68 + Math.random() * 0.45;
+        group.position.set(sx, sy, sz); scene.add(group);
+        const body = new CANNON.Body({ mass: 1.1, material: capPhysMat, shape: new CANNON.Sphere(radius), linearDamping: 0.44, angularDamping: 0.48 });
+        body.position.set(sx, sy, sz);
+        body.velocity.set((Math.random()-0.5)*0.6, -2.5 - Math.random()*2.5, (Math.random()-0.5)*0.6);
+        world.addBody(body);
+        capsules.push({ mesh: group, body, radius, isSpecial: isSpec, skinKey, colorHex: getCapsulePalette(style, skinKey).hex });
+    }
+    STATE.bedWaveTimer = 3.2;
+    STATE.airParticlesActive = false;
+    clawPos.x = BOX.chuteX; clawPos.y = BOX.height + 1.1; clawPos.z = BOX.chuteZ;
+    clawPrevX = clawPos.x; clawPrevZ = clawPos.z;
+    STATE.waitingCapsulesSettle = true;
+    STATE.introSettleElapsed = 0;
+    STATE.introClawActive = true;
+    updateStageHUD();
 }
 
         function resetTurnTimer() {
@@ -2367,19 +2532,19 @@ function updateClawVisuals(dt = 0.016) {
     if (STATE.bedWaveTimer > 0) {
         STATE.bedWaveTimer = Math.max(0, STATE.bedWaveTimer - dt);
         if (bedLowerMesh && bedUpperMesh && bedCapsData.length > 0) {
-            for (let i = 0; i < bedCapsData.length; i++) {
-                const b = bedCapsData[i];
-                b.vy -= 24.0 * sDt;
-                b.y += b.vy * sDt;
-                if (b.y < b.baseY) { b.y = b.baseY; b.vy = -b.vy * 0.28; b.vrx *= 0.6; b.vry *= 0.6; }
-                b.rx += b.vrx * sDt; b.ry += b.vry * sDt;
-                _bedDummy.position.set(b.x, b.y, b.z); _bedDummy.rotation.set(b.rx, b.ry, b.rz); _bedDummy.updateMatrix();
-                bedLowerMesh.setMatrixAt(i, _bedDummy.matrix); bedUpperMesh.setMatrixAt(i, _bedDummy.matrix);
-                if (bedAccentMesh) bedAccentMesh.setMatrixAt(i, _bedDummy.matrix);
-            }
-            bedLowerMesh.instanceMatrix.needsUpdate = true; bedUpperMesh.instanceMatrix.needsUpdate = true;
-            if (bedAccentMesh) bedAccentMesh.instanceMatrix.needsUpdate = true;
-        }
+    for (let i = 0; i < bedCapsData.length; i++) {
+        const b = bedCapsData[i];
+        b.vy -= 24.0 * sDt;
+        b.y += b.vy * sDt;
+        if (b.y < b.baseY) { b.y = b.baseY; b.vy = -b.vy * 0.28; b.vrx *= 0.6; b.vry *= 0.6; }
+        b.rx += b.vrx * sDt; b.ry += b.vry * sDt;
+        _bedDummy.position.set(b.x, b.y, b.z); _bedDummy.rotation.set(b.rx, b.ry, b.rz); _bedDummy.updateMatrix();
+        bedLowerMesh.setMatrixAt(i, _bedDummy.matrix); bedUpperMesh.setMatrixAt(i, _bedDummy.matrix);
+        if (bedAccentMesh) bedAccentMesh.setMatrixAt(i, _bedDummy.matrix);
+    }
+    bedLowerMesh.instanceMatrix.needsUpdate = true; bedUpperMesh.instanceMatrix.needsUpdate = true;
+    if (bedAccentMesh) bedAccentMesh.instanceMatrix.needsUpdate = true;
+}
         if (airParticles) {
             if (STATE.airParticlesActive) {
                 airParticles.material.opacity = Math.min(1, STATE.bedWaveTimer) * 0.9;
@@ -2602,8 +2767,8 @@ if (capsules.length === 0) spawnHybridCapsules(gs.capsuleCount);
             }
             STATE.phase = 'RELEASING_CHUTE'; STATE.phaseTimer = 0.14; targetClawOpenAngle = 0.84;
             if (STATE.grabbedCapsule) {
-                STATE.grabbedIsSpecial = Boolean(STATE.grabbedCapsule.isSpecial);
-                rebuildTunnelBallMesh(getActiveGameSettings().capsuleStyle || 'gacha', STATE.grabbedCapsule.skinKey, STATE.grabbedIsSpecial);
+    STATE.grabbedIsSpecial = Boolean(STATE.grabbedCapsule.isSpecial);
+    rebuildTunnelBallMesh(getActiveGameSettings().capsuleStyle || 'gacha', STATE.grabbedCapsule.skinKey, STATE.grabbedIsSpecial);
                 STATE.grabbedCapsule.body.collisionResponse = false;
                 chuteDropState = { vx: (Math.random()-0.5)*1.3, vy: -0.5, vz: (Math.random()-0.5)*1.3, rx: 3.5, rz: (Math.random()-0.5)*5.0, passedRing: false, bounceCount: 0 };
             }
@@ -2999,9 +3164,10 @@ if (capsules.length === 0) spawnHybridCapsules(gs.capsuleCount);
     draftServerSettings[adminEditingSrv] = {
         ...cur,
         capsuleCount: Number(document.getElementById('admin-capsule-count').value) || 220,
-        winRate: Number(document.getElementById('admin-win-rate').value),
-        overlapThreshold: Number(document.getElementById('admin-overlap-threshold').value) || 50,
-        useTimingGauge: document.getElementById('admin-use-gauge').checked,
+winRate: Number(document.getElementById('admin-win-rate').value),
+overlapThreshold: Number(document.getElementById('admin-overlap-threshold').value) || 50,
+capsuleStyle: document.getElementById('admin-capsule-style').value || 'gacha',
+useTimingGauge: document.getElementById('admin-use-gauge').checked,
         turnTimeLimit: Math.max(10, Math.min(120, Number(document.getElementById('admin-turn-time').value) || 30)),
         specialRatio: Math.max(0, Math.min(80, Number(document.getElementById('admin-special-ratio').value) ?? 22)),
         clawSpeed: Math.max(2, Math.min(8, Number(document.getElementById('admin-claw-speed').value) || 4.4)),
@@ -3024,9 +3190,10 @@ function loadDraftSrvToDOM(sid) {
     adminEditingSrv = sid; const s = { ...makeDefaultServerSetting(), ...(draftServerSettings[sid] || {}) };
     draftServerSettings[sid] = s;
     document.getElementById('admin-capsule-count').value = s.capsuleCount; document.getElementById('admin-capsule-val').textContent = `${s.capsuleCount}개`;
-    document.getElementById('admin-win-rate').value = s.winRate; document.getElementById('admin-winrate-val').textContent = `${s.winRate}%`;
-    document.getElementById('admin-overlap-threshold').value = s.overlapThreshold; document.getElementById('admin-overlap-val').textContent = `${s.overlapThreshold}%`;
-    document.getElementById('admin-use-gauge').checked = Boolean(s.useTimingGauge);
+document.getElementById('admin-win-rate').value = s.winRate; document.getElementById('admin-winrate-val').textContent = `${s.winRate}%`;
+document.getElementById('admin-overlap-threshold').value = s.overlapThreshold; document.getElementById('admin-overlap-val').textContent = `${s.overlapThreshold}%`;
+document.getElementById('admin-capsule-style').value = s.capsuleStyle || 'gacha';
+document.getElementById('admin-use-gauge').checked = Boolean(s.useTimingGauge);
     document.getElementById('admin-turn-time').value = s.turnTimeLimit;
     document.getElementById('admin-special-ratio').value = s.specialRatio;
     document.getElementById('admin-claw-speed').value = s.clawSpeed;
@@ -3139,8 +3306,9 @@ document.getElementById('admin-lobby-logo-right-sz').value = CONFIG.lobbyLogoRig
         function openFreeConfigModal() {
             const fs = APP.freeSettings;
             document.getElementById('free-cap-count').value = fs.capsuleCount; document.getElementById('free-cap-val').textContent = `${fs.capsuleCount}개`;
-            document.getElementById('free-win-rate').value = fs.winRate; document.getElementById('free-win-val').textContent = `${fs.winRate}%`;
-            document.getElementById('free-ov-threshold').value = fs.overlapThreshold; document.getElementById('free-ov-val').textContent = `${fs.overlapThreshold}%`;
+document.getElementById('free-win-rate').value = fs.winRate; document.getElementById('free-win-val').textContent = `${fs.winRate}%`;
+document.getElementById('free-ov-threshold').value = fs.overlapThreshold; document.getElementById('free-ov-val').textContent = `${fs.overlapThreshold}%`;
+document.getElementById('free-capsule-style').value = fs.capsuleStyle || 'gacha';
             document.getElementById('free-yabawi-cups').value = fs.yabawiCups; document.getElementById('free-yabawi-speed').value = fs.yabawiSpeedMs;
             document.getElementById('free-frame-theme').value = fs.frameTheme && fs.frameTheme.startsWith('pat-') ? fs.frameTheme : 'pat-sunburst';
             document.getElementById('free-frame-c1').value = fs.frameC1 || '#38bdf8';
@@ -3232,9 +3400,17 @@ document.getElementById('admin-lobby-logo-right-sz').value = CONFIG.lobbyLogoRig
             document.getElementById('btn-free-add-plays').addEventListener('click', () => { STATE.playsLeft += 5; if (APP.activeGame==='claw') resetTurnTimer(); updateStageHUD(); showToast('🎮 자율 플레이 +5회 충전!', 'info'); });
             document.getElementById('btn-free-add-prize').addEventListener('click', () => { draftFreePrizes.push({ id:'fp_'+Date.now(), tier:'F상', emoji:'🎁', image:'', name:'새 자율 경품', desc:'당첨 축하합니다!', weight:10 }); renderPrizeEditor('free-prize-list', draftFreePrizes); });
             function applyFreeConfigFromDOM() {
+    const prevStyle = APP.freeSettings.capsuleStyle || 'gacha';
     APP.freeSettings.capsuleCount = Number(document.getElementById('free-cap-count').value) || 220;
     APP.freeSettings.winRate = Number(document.getElementById('free-win-rate').value);
     APP.freeSettings.overlapThreshold = Number(document.getElementById('free-ov-threshold').value) || 50;
+    APP.freeSettings.capsuleStyle = document.getElementById('free-capsule-style').value || 'gacha';
+    ...
+    applyThemeSettings();
+    applyCameraSettingsFromConfig();
+    if (APP.activeGame === 'claw' && renderer && prevStyle !== APP.freeSettings.capsuleStyle) {
+        refreshCapsuleStylesInPlace();
+    }
     APP.freeSettings.yabawiCups = Number(document.getElementById('free-yabawi-cups').value) || 3;
     APP.freeSettings.yabawiSpeedMs = Number(document.getElementById('free-yabawi-speed').value) || 320;
     APP.freeSettings.frameTheme = document.getElementById('free-frame-theme').value;
@@ -3435,9 +3611,10 @@ CONFIG.lobbyLogoRightSize = Math.max(18, Math.min(96, Number(document.getElement
             if (draftServerSettings[s].prizesByGame[g].length === 0) draftServerSettings[s].prizesByGame[g] = JSON.parse(JSON.stringify(DEFAULT_PRIZES));
         });
         changedServers[s] = {
-            capsule: prevSettings[s]?.capsuleCount !== draftServerSettings[s].capsuleCount || prevSettings[s]?.specialRatio !== draftServerSettings[s].specialRatio,
-            yabawi: prevSettings[s]?.yabawiCups !== draftServerSettings[s].yabawiCups
-        };
+    capsule: prevSettings[s]?.capsuleCount !== draftServerSettings[s].capsuleCount || prevSettings[s]?.specialRatio !== draftServerSettings[s].specialRatio,
+    style: (prevSettings[s]?.capsuleStyle || 'gacha') !== (draftServerSettings[s].capsuleStyle || 'gacha'),
+    yabawi: prevSettings[s]?.yabawiCups !== draftServerSettings[s].yabawiCups
+};
     });
 
     CONFIG.serverSettings = JSON.parse(JSON.stringify(draftServerSettings));
@@ -3445,9 +3622,10 @@ CONFIG.lobbyLogoRightSize = Math.max(18, Math.min(96, Number(document.getElement
     hydrateSavedGlobalConfig(); applyBrandLogos(); renderLobbyFloatingPrizes(); renderEntryServers(); applyThemeSettings(); updateStageTitles(); applyCameraSettingsFromConfig();
 
     // 현재 실행 중인 게임 화면에도 변경분 즉시 적용
-    if (APP.activeGame === 'claw' && APP.selectedMode === 'event' && renderer && changedServers[APP.selectedServer]?.capsule && STATE.phase === 'IDLE') {
-        spawnHybridCapsules(getActiveGameSettings().capsuleCount);
-    }
+    if (APP.activeGame === 'claw' && APP.selectedMode === 'event' && renderer && STATE.phase === 'IDLE') {
+    if (changedServers[APP.selectedServer]?.capsule) spawnHybridCapsules(getActiveGameSettings().capsuleCount);
+    else if (changedServers[APP.selectedServer]?.style) refreshCapsuleStylesInPlace();
+}
     if (APP.activeGame === 'yabawi' && APP.selectedMode === 'event' && changedServers[APP.selectedServer]?.yabawi && STATE.yabawiPhase === 'READY') {
         initYabawiStage();
     }
