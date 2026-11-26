@@ -2922,10 +2922,9 @@ if (capsules.length === 0) spawnHybridCapsules(gs.capsuleCount);
             STATE.introClawActive = true;
         }
         if (STATE.playsLeft > 0) resetTurnTimer();
-        const c = document.getElementById('canvas-container'); if (c) updateFixedCamera(c.clientWidth, c.clientHeight);
-        if (capsules.length <= 4) spawnHybridCapsules(getActiveGameSettings().capsuleCount);
-        if (STATE.playsLeft > 0) resetTurnTimer();
-    } else if (APP.activeGame === 'yabawi') { STATE.yabawiPhase = 'READY'; renderYabawiStage(); }
+    } else if (APP.activeGame === 'yabawi') {
+        STATE.yabawiPhase = 'READY'; renderYabawiStage();
+    }
     updateStageHUD(); ServerSync.broadcastState();
 }
         function startPlayerSession(emp, playCount) {
@@ -3464,85 +3463,86 @@ CONFIG.lobbyLogoRightSize = Math.max(18, Math.min(96, Number(document.getElement
         }
 
         function onResize() {
-            const c = document.getElementById('canvas-container'); if (!c || !renderer || !camera || c.clientWidth === 0) return;
-            if (STATE.phase !== 'CHUTE_ROLL') updateFixedCamera(c.clientWidth, c.clientHeight);
-            renderer.setSize(c.clientWidth, c.clientHeight);
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            if (APP.activeGame !== 'claw' || !renderer) return;
-            const dt = Math.min(clock.getDelta(), 0.05);
-            if (STATE.phase !== 'CHUTE_ROLL') {
-                if (chuteLidBody) chuteLidBody.collisionResponse = (STATE.phase !== 'RELEASING_CHUTE');
-world.step(dt < 0.011 ? 1 / 144 : 1 / 60, dt, 3);
-updateClawVisuals(dt);
-for (const cap of capsules) {
-    if (cap !== STATE.grabbedCapsule && cap.body.position.x < BOX.chuteX + 1.38 && cap.body.position.z > BOX.chuteZ - 1.48) {
-        cap.body.position.x = BOX.chuteX + 1.42;
-        cap.body.velocity.x = Math.max(1.8, cap.body.velocity.x);
-    }
-    cap.mesh.position.copy(cap.body.position); cap.mesh.quaternion.copy(cap.body.quaternion);
+    const c = document.getElementById('canvas-container'); if (!c || !renderer || !camera || c.clientWidth === 0) return;
+    if (STATE.phase !== 'CHUTE_ROLL') updateFixedCamera(c.clientWidth, c.clientHeight);
+    renderer.setSize(c.clientWidth, c.clientHeight);
 }
+
+function animate() {
+    requestAnimationFrame(animate);
+    if (APP.activeGame !== 'claw' || !renderer) return;
+    const dt = Math.min(clock.getDelta(), 0.05);
+    if (STATE.phase !== 'CHUTE_ROLL') {
+        if (chuteLidBody) chuteLidBody.collisionResponse = (STATE.phase !== 'RELEASING_CHUTE');
+        world.step(dt < 0.011 ? 1 / 144 : 1 / 60, dt, 3);
+        updateClawVisuals(dt);
+        for (const cap of capsules) {
+            if (cap !== STATE.grabbedCapsule && cap.body.position.x < BOX.chuteX + 1.38 && cap.body.position.z > BOX.chuteZ - 1.48) {
+                cap.body.position.x = BOX.chuteX + 1.42;
+                cap.body.velocity.x = Math.max(1.8, cap.body.velocity.x);
             }
-            updateClawGame(dt);
-
-            // 1) 메인 정면 3D 화면 렌더링
-            const c = document.getElementById('canvas-container');
-            const w = c.clientWidth || 1, h = c.clientHeight || 1;
-            renderer.setScissorTest(false);
-            renderer.setViewport(0, 0, w, h);
-            renderer.render(scene, camera);
-
-            const cctvBox = document.getElementById('claw-cctv-frame');
-const cctvEnabled = (getActiveGameSettings().cctvMode || 'zoom') !== 'off';
-if (cctvEnabled && cctvCamera && cctvBox && STATE.phase !== 'CHUTE_ROLL' && STATE.phase !== 'REVEALING') {
-    cctvBox.classList.remove('hidden');
-    const cRect = c.getBoundingClientRect(), pRect = cctvBox.getBoundingClientRect();
-    const vx = Math.max(0, pRect.left - cRect.left);
-    const vy = Math.max(0, cRect.bottom - pRect.bottom);
-    const vw = Math.max(10, pRect.width), vh = Math.max(10, pRect.height);
-
-    const hp = getClawHeadWorldPos();
-    const zoom = Math.max(0.6, Math.min(2.5, Number(getActiveGameSettings().cctvZoom) || 1.0));
-if (cctvWideMode) {
-    cctvCamera.fov = Math.max(18, Math.min(76, 56 / zoom));
-    cctvCamera.updateProjectionMatrix();
-    cctvCamera.position.set(0, BOX.height - 0.6, 0.01);
-    cctvCamera.lookAt(0, currentBedHeight, 0);
-} else {
-    cctvCamera.fov = Math.max(12, Math.min(62, 34 / zoom));
-    cctvCamera.updateProjectionMatrix();
-    const camY = Math.min(BOX.height - 1.0, currentBedHeight + 4.9);
-    cctvCamera.position.set(hp.x, camY, hp.z + 0.01);
-    cctvCamera.lookAt(hp.x, currentBedHeight + 0.3, hp.z);
-}
-
-    const prevAimVis = aimBeamMesh ? aimBeamMesh.visible : false;
-const prevClawVis = clawGroup ? clawGroup.visible : true;
-const prevCableVis = cableSegments.map(s => s.visible);
-if (gantryBeamMesh) gantryBeamMesh.visible = false;
-if (clawCarriageMesh) clawCarriageMesh.visible = false;
-if (clawGroup) clawGroup.visible = false;
-if (aimBeamMesh) aimBeamMesh.visible = false;
-cableSegments.forEach(s => { s.visible = false; });
-
-renderer.setScissorTest(true);
-renderer.setViewport(vx, vy, vw, vh);
-renderer.setScissor(vx, vy, vw, vh);
-renderer.clearDepth();
-renderer.render(scene, cctvCamera);
-renderer.setScissorTest(false);
-
-if (gantryBeamMesh) gantryBeamMesh.visible = true;
-if (clawCarriageMesh) clawCarriageMesh.visible = true;
-if (clawGroup) clawGroup.visible = prevClawVis;
-if (aimBeamMesh) aimBeamMesh.visible = prevAimVis;
-cableSegments.forEach((s, i) => { s.visible = prevCableVis[i]; });
-} else if (cctvBox) {
-    cctvBox.classList.add('hidden');
-}
+            cap.mesh.position.copy(cap.body.position); cap.mesh.quaternion.copy(cap.body.quaternion);
         }
+    }
+    updateClawGame(dt);
+
+    // 1) 메인 정면 3D 화면 렌더링
+    const c = document.getElementById('canvas-container');
+    const w = c.clientWidth || 1, h = c.clientHeight || 1;
+    renderer.setScissorTest(false);
+    renderer.setViewport(0, 0, w, h);
+    renderer.render(scene, camera);
+
+    // 2) 우측 상단 CLAW CAM PiP 렌더링
+    const cctvBox = document.getElementById('claw-cctv-frame');
+    const cctvEnabled = (getActiveGameSettings().cctvMode || 'zoom') !== 'off';
+    if (cctvEnabled && cctvCamera && cctvBox && STATE.phase !== 'CHUTE_ROLL' && STATE.phase !== 'REVEALING') {
+        cctvBox.classList.remove('hidden');
+        const cRect = c.getBoundingClientRect(), pRect = cctvBox.getBoundingClientRect();
+        const vx = Math.max(0, pRect.left - cRect.left);
+        const vy = Math.max(0, cRect.bottom - pRect.bottom);
+        const vw = Math.max(10, pRect.width), vh = Math.max(10, pRect.height);
+
+        const hp = getClawHeadWorldPos();
+        const zoom = Math.max(0.6, Math.min(2.5, Number(getActiveGameSettings().cctvZoom) || 1.0));
+        if (cctvWideMode) {
+            cctvCamera.fov = Math.max(18, Math.min(76, 56 / zoom));
+            cctvCamera.updateProjectionMatrix();
+            cctvCamera.position.set(0, BOX.height - 0.6, 0.01);
+            cctvCamera.lookAt(0, currentBedHeight, 0);
+        } else {
+            cctvCamera.fov = Math.max(12, Math.min(62, 34 / zoom));
+            cctvCamera.updateProjectionMatrix();
+            const camY = Math.min(BOX.height - 1.0, currentBedHeight + 4.9);
+            cctvCamera.position.set(hp.x, camY, hp.z + 0.01);
+            cctvCamera.lookAt(hp.x, currentBedHeight + 0.3, hp.z);
+        }
+
+        const prevAimVis = aimBeamMesh ? aimBeamMesh.visible : false;
+        const prevClawVis = clawGroup ? clawGroup.visible : true;
+        const prevCableVis = cableSegments.map(s => s.visible);
+        if (gantryBeamMesh) gantryBeamMesh.visible = false;
+        if (clawCarriageMesh) clawCarriageMesh.visible = false;
+        if (clawGroup) clawGroup.visible = false;
+        if (aimBeamMesh) aimBeamMesh.visible = false;
+        cableSegments.forEach(s => { s.visible = false; });
+
+        renderer.setScissorTest(true);
+        renderer.setViewport(vx, vy, vw, vh);
+        renderer.setScissor(vx, vy, vw, vh);
+        renderer.clearDepth();
+        renderer.render(scene, cctvCamera);
+        renderer.setScissorTest(false);
+
+        if (gantryBeamMesh) gantryBeamMesh.visible = true;
+        if (clawCarriageMesh) clawCarriageMesh.visible = true;
+        if (clawGroup) clawGroup.visible = prevClawVis;
+        if (aimBeamMesh) aimBeamMesh.visible = prevAimVis;
+        cableSegments.forEach((s, i) => { s.visible = prevCableVis[i]; });
+    } else if (cctvBox) {
+        cctvBox.classList.add('hidden');
+    }
+}
 
         window.onload = function () {
     SheetAPI.init();
